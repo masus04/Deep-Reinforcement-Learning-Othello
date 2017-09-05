@@ -2,6 +2,7 @@ from copy import deepcopy
 from config import EMPTY, BLACK, WHITE
 import numpy as np
 from ctypes import *
+import random
 
 
 class Board:
@@ -147,8 +148,8 @@ class Board:
 
         valid_moves = []
 
-        for i in xrange(8):
-            for j in xrange(8):
+        for i in range(8):
+            for j in range(8):
                 if self.board[i][j] == color:
                     valid_moves = valid_moves + self.get_possible_moves(i, j, color)
         valid_moves = list(set(valid_moves)) # Make each move in valid_moves unique
@@ -161,10 +162,10 @@ class Board:
 
         # For each empty space on the board, check if there are
         # any of the opponents pieces available to flip
-        for i in xrange(8):
-            for j in xrange(8):
+        for i in range(8):
+            for j in range(8):
                 if self.board[i][j] == EMPTY:
-                    for direction in xrange(1,9):
+                    for direction in range(1,9):
                         (num, valid) = self.pieces_to_flip_in_row((i, j), color, direction)
                         if num > 0:
                             moves = moves + [(i, j)]
@@ -182,7 +183,7 @@ class Board:
         self.flip_pieces(move, color)
 
     def flip_pieces(self, position, color):
-        for direction in xrange(1,9): # Flip row for each of the 8 possible directions
+        for direction in range(1,9): # Flip row for each of the 8 possible directions
             (num_pieces, pieces_to_flip) = self.pieces_to_flip_in_row(position, color, direction)
             for i in range(num_pieces):
                 self.board[pieces_to_flip[i][0]][pieces_to_flip[i][1]] = color
@@ -217,19 +218,19 @@ class Board:
         else:
             other = WHITE
 
-        if i in xrange(8) and j in xrange(8) and self.board[i][j] == other:
+        if i in range(8) and j in range(8) and self.board[i][j] == other:
             # assures there is at least one piece to flip
             pieces[pieces_flipped] = (i,j)
             pieces_flipped += 1
             i = i + row_inc
             j = j + col_inc
-            while i in xrange(8) and j in xrange(8) and self.board[i][j] == other:
+            while i in range(8) and j in range(8) and self.board[i][j] == other:
                 # search for more pieces to flip
                 pieces[pieces_flipped] = (i,j)
                 pieces_flipped += 1
                 i = i + row_inc
                 j = j + col_inc
-            if i in xrange(8) and j in xrange(8) and self.board[i][j] == color:
+            if i in range(8) and j in range(8) and self.board[i][j] == color:
                 # found a piece of the right color to flip the pieces between
                 return (pieces_flipped, pieces)
         return (0, [])
@@ -238,8 +239,8 @@ class Board:
         self.white_pieces = 0
         self.black_pieces = 0
         self.empty_spaces = 64
-        for i in xrange(8):
-            for j in xrange(8):
+        for i in range(8):
+            for j in range(8):
                 if self.board[i][j] == WHITE:
                     self.white_pieces += 1
                     self.empty_spaces -= 1
@@ -280,18 +281,21 @@ class Board:
 
     # Function to print board for text based game
     def print_board(self):
-        print '  ',
-        for i in xrange(8):
-            print ' ', i,
-        print
-        for i in xrange(8):
-            print i, ' |',
-            for j in xrange(8):
+        print('  ', end=' ')
+        for i in range(8):
+            print(' ', i, end=' ')
+        print()
+        for i in range(8):
+            print(i, ' |', end=' ')
+            for j in range(8):
                 if self.board[i][j] == BLACK:
-                    print 'B',
+                    print('B', end=' ')
                 elif self.board[i][j] == WHITE:
-                    print 'W',
+                    print('W', end=' ')
                 else:
-                    print ' ',
-                print '|',
-            print
+                    print(' ', end=' ')
+                print('|', end=' ')
+            print()
+
+    def __lt__(self, other):
+        return random.randint(0,1) -0.5

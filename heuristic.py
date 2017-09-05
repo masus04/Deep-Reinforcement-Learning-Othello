@@ -3,7 +3,7 @@ from config import BLACK, WHITE, EMPTY
 
 class OthelloHeuristic(object):
 
-    WIN = sys.maxint - 1000
+    WIN = sys.maxsize - 1000
     PIECE_COUNT_FACTOR = [0, 0, 1]
     CORNER_FACTOR = [1000, 1000, 0]
     MOBILITY_FACTOR = [250, 300, 0]

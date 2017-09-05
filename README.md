@@ -18,7 +18,7 @@ Cooper Union taught by Professor Carl Sable in the Fall 2013 Term
 * gcc
 * python-numpy (install using apt-get or pip)
 * python-pygame (install using apt-get or from source)
-* python-tk (install using apt-get)
+* python-tk (install using 'sudo apt-get install python3-tk')
 * ctypes (comes default with python)
 
 ## How to Run ##
