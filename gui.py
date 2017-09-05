@@ -49,7 +49,7 @@ class Gui:
         self.ingame_menu.set_center(True, True)
         self.ingame_menu.set_alignment('center', 'center')
 
-    def show_game (self, board):
+    def show_game(self, board):
         self.background = pygame.Surface(self.screen.get_size()).convert()
         self.update(board)
 
@@ -241,24 +241,6 @@ class Gui:
         self.showGameInformation(board, next_player)
         pygame.display.flip()
 
-    def save_board_to_file(self, gui=True, file_name='board.txt'):
-        if gui:
-            Tk().withdraw()
-            file_name = asksaveasfilename()
-        if not file_name:
-            return
-        f = open(file_name, 'w')
-        for i in range(8):
-            for j in range(8):
-                f.write(str(int(self.board.board[i][j])))
-                if j == 7:
-                    f.write('\n')
-                else:
-                    f.write(' ')
-        f.write(str(self.player.color) + '\n')
-        f.write(str(self.player.time_limit))
-        f.close()
-
     def showGameInformation(self, board, next_player=None):
         title = self.title_font.render("Othello", True, self.WHITE, self.BACKGROUND)
         blacks_str = 'Black Pieces: %02d ' % int(board.black_pieces)
@@ -276,3 +258,28 @@ class Gui:
         self.screen.blit(black_pieces_text,(565, 70))
         self.screen.blit(white_pieces_text,(565, 110))
         self.screen.blit(save_state, (520, 200))
+
+
+class NoGui:
+    """ None object which is used if no Gui should be used """
+
+    def __init__(self):
+        pass
+
+    def show_game(self, board):
+        pass
+
+    def highlight_valid_moves(self, valid_moves):
+        pass
+
+    def flash_move(self, color):
+        pass
+
+    def put_stone(self):
+        pass
+
+    def clear_square(self):
+        pass
+
+    def update(self, board, other_player):
+        pass

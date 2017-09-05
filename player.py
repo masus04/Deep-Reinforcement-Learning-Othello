@@ -2,6 +2,7 @@ import random
 from config import BLACK, WHITE, HEADLESS
 from game_ai import GameArtificialIntelligence
 from heuristic import OthelloHeuristic
+from gui import NoGui
 
 
 class Player(object):
@@ -29,6 +30,8 @@ class Player(object):
 class HumanPlayer(Player):
 
     def __init__(self, color, gui):
+        if isinstance(gui, NoGui):
+            raise Exception("Human Player cannot be used in headless games")
         super(ComputerPlayer, self).__init__(color, 0, gui)
 
     def get_move(self):

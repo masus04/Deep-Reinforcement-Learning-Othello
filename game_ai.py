@@ -14,7 +14,7 @@ class GameArtificialIntelligence(object):
         self.other_player = other_player
         possible_moves = starting_node.get_valid_moves(current_player)
         if len(possible_moves) == 1:
-            print("Only 1 Possible Move:", possible_moves[0])
+            # print("Only 1 Possible Move:", possible_moves[0])
             return possible_moves[0]
         depth = 0
         score = -sys.maxsize - 1

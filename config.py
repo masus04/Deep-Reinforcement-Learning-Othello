@@ -1,12 +1,12 @@
 # Constants and configuration options.
 
-TIMEOUT = 0.5
+TIMEOUT = 0.2
 
 EMPTY = 0
 BLACK = 1
 WHITE = 2
 
-HEADLESS = False
+HEADLESS = True
 HUMAN = "Human"
 COMPUTER = "Computer"
 

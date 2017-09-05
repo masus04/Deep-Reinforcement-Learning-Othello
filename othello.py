@@ -2,7 +2,7 @@
 
 import board
 import player
-from gui import Gui
+from gui import Gui, NoGui
 from config import BLACK, WHITE, HEADLESS, TIMEOUT, get_color_from_player_number
 
 
@@ -12,7 +12,7 @@ class Othello:
         pass
 
     def setup_game(self):
-        self.gui = Gui()
+        self.gui = NoGui() if HEADLESS else Gui()
 
         self.now_playing = player.ComputerPlayer(BLACK, TIMEOUT, self.gui)
         self.other_player = player.ComputerPlayer(WHITE, TIMEOUT, self.gui)
@@ -21,8 +21,7 @@ class Othello:
 
     def run(self):
         self.setup_game()
-        if not HEADLESS:
-            self.gui.show_game(self.board)
+        self.gui.show_game(self.board)
         while True:
             winner = self.board.game_won()
             if winner is not None:
