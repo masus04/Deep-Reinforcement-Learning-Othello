@@ -1,11 +1,18 @@
 # Constants and configuration options.
 
+TIMEOUT = 0.2
+
 EMPTY = 0
 BLACK = 1
 WHITE = 2
-INFINITY = 999999999
-MAX = 0
-MIN = 1
-DEFAULT_LEVEL = 2
+
+HEADLESS = False
 HUMAN = "Human"
 COMPUTER = "Computer"
+
+
+def get_color_from_player_number(number):
+    if number == BLACK:
+        return "Black"
+    else:
+        return "White"

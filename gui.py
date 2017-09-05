@@ -1,14 +1,14 @@
-import pygame
 import sys
 from pygame.locals import *
 import time
-from config import BLACK, WHITE, DEFAULT_LEVEL, HUMAN, COMPUTER
+from config import BLACK, WHITE
 import os
 from menu import *
 from Tkinter import Tk
 from tkFileDialog import askopenfilename, asksaveasfilename
 
-class Gui :
+
+class Gui:
 
     def __init__ (self):
         pygame.init()
@@ -152,8 +152,6 @@ class Gui :
                 elif event.type == QUIT:
                     sys.exit(0)
             time.sleep(.05)
-
-
 
     def highlight_valid_moves(self, valid_moves):
         for move in valid_moves:

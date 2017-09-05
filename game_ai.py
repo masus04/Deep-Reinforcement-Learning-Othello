@@ -32,9 +32,10 @@ class GameArtificialIntelligence(object):
             if new_move is not None and not self.cutoff:
                 move = new_move
                 score = new_score
-                print "Got to Depth:", depth
+                # print "Got to Depth:", depth
             else:
-                print "Cutoff at depth", depth
+                # print "Cutoff at depth", depth
+                pass
         return move
 
     def alpha_beta_wrapper(self, node, depth, current_player, other_player):
