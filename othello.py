@@ -4,6 +4,7 @@ import board
 import player
 from gui import Gui, NoGui
 from config import BLACK, WHITE, HEADLESS, TIMEOUT, get_color_from_player_number
+from heuristic import OthelloHeuristic
 
 
 class Othello:
@@ -14,8 +15,8 @@ class Othello:
     def setup_game(self):
         self.gui = NoGui() if HEADLESS else Gui()
 
-        self.now_playing = player.ComputerPlayer(BLACK, TIMEOUT, self.gui)
-        self.other_player = player.ComputerPlayer(WHITE, TIMEOUT, self.gui)
+        self.now_playing = player.ComputerPlayer(BLACK, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
+        self.other_player = player.ComputerPlayer(WHITE, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
 
         self.board = board.Board()
 

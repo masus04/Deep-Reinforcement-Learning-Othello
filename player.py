@@ -55,9 +55,9 @@ class RandomPlayer(Player):
 
 class ComputerPlayer(Player):
 
-    def __init__(self, color="black", time_limit=5, gui=None):
+    def __init__(self, color="black", time_limit=5, gui=None, strategy=OthelloHeuristic.DEFAULT_STRATEGY):
         super(ComputerPlayer, self).__init__(color, time_limit, gui)
-        heuristic = OthelloHeuristic()
+        heuristic = OthelloHeuristic(strategy)
         self.ai = GameArtificialIntelligence(heuristic.evaluate)
 
     def get_move(self):

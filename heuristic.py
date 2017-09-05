@@ -49,7 +49,6 @@ class OthelloHeuristic(object):
             self.STABILITY_FACTOR = [0, 0, 0]
 
     def evaluate(self, board, current_player, other_player):
-
         # Check for win conditions
         winner = board.game_won()
         if winner is not None:
@@ -67,28 +66,28 @@ class OthelloHeuristic(object):
             game_state = OthelloHeuristic.END_GAME
 
         score = 0
-        if OthelloHeuristic.CORNER_FACTOR[game_state] != 0:
+        if self.CORNER_FACTOR[game_state] != 0:
             score += self.evaluate_corner_pieces(board, current_player, other_player, game_state)
-        if OthelloHeuristic.PIECE_COUNT_FACTOR[game_state] != 0:
+        if self.PIECE_COUNT_FACTOR[game_state] != 0:
             score += self.evaluate_piece_count(board, current_player, other_player, game_state)
-        if OthelloHeuristic.MOBILITY_FACTOR[game_state] != 0:
+        if self.MOBILITY_FACTOR[game_state] != 0:
             score += self.evaluate_mobility(board, current_player, other_player, game_state)
-        if OthelloHeuristic.EDGE_FACTOR[game_state] != 0:
+        if self.EDGE_FACTOR[game_state] != 0:
             score += self.evaluate_edge_pieces(board, current_player, other_player, game_state)
-        if OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] != 0:
+        if self.CORNER_EDGE_FACTOR[game_state] != 0:
             score += self.evaluate_corner_edge(board, current_player, other_player, game_state)
-        if OthelloHeuristic.STABILITY_FACTOR[game_state] != 0:
+        if self.STABILITY_FACTOR[game_state] != 0:
             score += self.evaluate_stability(board, current_player, other_player, game_state)
         return score
 
     def evaluate_piece_count(self, board, current_player, other_player, game_state):
         score = 0
         if current_player == WHITE:
-            score += OthelloHeuristic.PIECE_COUNT_FACTOR[game_state]*board.white_pieces
-            score -= OthelloHeuristic.PIECE_COUNT_FACTOR[game_state]*board.black_pieces
+            score += self.PIECE_COUNT_FACTOR[game_state]*board.white_pieces
+            score -= self.PIECE_COUNT_FACTOR[game_state]*board.black_pieces
         else:
-            score += OthelloHeuristic.PIECE_COUNT_FACTOR[game_state]*board.black_pieces
-            score -= OthelloHeuristic.PIECE_COUNT_FACTOR[game_state]*board.white_pieces
+            score += self.PIECE_COUNT_FACTOR[game_state]*board.black_pieces
+            score -= self.PIECE_COUNT_FACTOR[game_state]*board.white_pieces
         return score
 
     def evaluate_corner_pieces(self, board, current_player, other_player, game_state):
@@ -96,9 +95,9 @@ class OthelloHeuristic(object):
         for i in [0, 7]:
             for j in [0, 7]:
                 if board.board[i][j] == current_player:
-                    score += OthelloHeuristic.CORNER_FACTOR[game_state]
+                    score += self.CORNER_FACTOR[game_state]
                 elif board.board[i][j] == other_player:
-                    score -= OthelloHeuristic.CORNER_FACTOR[game_state]
+                    score -= self.CORNER_FACTOR[game_state]
         return score
 
     def evaluate_edge_pieces(self, board, current_player, other_player, game_state):
@@ -107,16 +106,16 @@ class OthelloHeuristic(object):
         for i in [0, 7]:
             for j in range(2, 6):
                 if board.board[i][j] == current_player:
-                    score += OthelloHeuristic.EDGE_FACTOR[game_state]
+                    score += self.EDGE_FACTOR[game_state]
                 elif board.board[i][j] == other_player:
-                    score -= OthelloHeuristic.EDGE_FACTOR[game_state]
+                    score -= self.EDGE_FACTOR[game_state]
         # Comput Vertical Edges
         for i in range(2, 6):
             for j in [0, 7]:
                 if board.board[i][j] == current_player:
-                    score += OthelloHeuristic.EDGE_FACTOR[game_state]
+                    score += self.EDGE_FACTOR[game_state]
                 elif board.board[i][j] == other_player:
-                    score -= OthelloHeuristic.EDGE_FACTOR[game_state]
+                    score -= self.EDGE_FACTOR[game_state]
         return score
 
     def evaluate_stability(self, board, current_player, other_player, game_state):
@@ -130,44 +129,44 @@ class OthelloHeuristic(object):
     def edge_stability(self, board, corner, current_player, game_state):
         score = 0
         if corner == (0, 0) and board.board[corner[0]][corner[1]] == current_player:
-            score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+            score += self.STABILITY_FACTOR[game_state]
             i = 1
             while i < 7 and board.board[i][corner[1]] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i += 1
             i = 1
             while i < 7 and board.board[corner[0]][i] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i += 1
         elif corner == (0, 7) and board.board[corner[0]][corner[1]] == current_player:
-            score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+            score += self.STABILITY_FACTOR[game_state]
             i = 1
             while i < 7 and board.board[i][corner[1]] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i += 1
             i = 6
             while i > 0 and board.board[corner[0]][i] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i -= 1
         elif corner == (7, 0) and board.board[corner[0]][corner[1]] == current_player:
-            score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+            score += self.STABILITY_FACTOR[game_state]
             i = 6
             while i > 0 and board.board[i][corner[1]] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i -= 1
             i = 1
             while i < 7 and board.board[corner[0]][i] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i += 1
         elif corner == (7, 7) and board.board[corner[0]][corner[1]] == current_player:
-            score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+            score += self.STABILITY_FACTOR[game_state]
             i = 6
             while i > 0 and board.board[i][corner[1]] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i -= 1
             i = 6
             while i > 0 and board.board[corner[0]][i] == current_player:
-                score += OthelloHeuristic.STABILITY_FACTOR[game_state]
+                score += self.STABILITY_FACTOR[game_state]
                 i -= 1
         return score
 
@@ -178,58 +177,58 @@ class OthelloHeuristic(object):
             if board.board[corner[0]][corner[1]] == EMPTY:
                 if board.board[i][j] == current_player:
                     if i == 1 and j == 1:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score -= self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score -= self.CORNER_EDGE_FACTOR[game_state] / 2
                 elif board.board[i][j] == other_player:
                     if i == 1 and j == 1:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score += self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score += self.CORNER_EDGE_FACTOR[game_state] / 2
         corner = (7, 0)
         for (i, j) in [(6, 0), (6, 1), (7, 1)]:
             if board.board[corner[0]][corner[1]] == EMPTY:
                 if board.board[i][j] == current_player:
                     if i == 6 and j == 1:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score -= self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score -= self.CORNER_EDGE_FACTOR[game_state] / 2
                 elif board.board[i][j] == other_player:
                     if i == 6 and j == 1:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score += self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score += self.CORNER_EDGE_FACTOR[game_state] / 2
         corner = (7, 7)
         for (i, j) in [(7, 6), (6, 6), (6, 7)]:
             if board.board[corner[0]][corner[1]] == EMPTY:
                 if board.board[i][j] == current_player:
                     if i == 6 and j == 6:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score -= self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score -= self.CORNER_EDGE_FACTOR[game_state] / 2
                 elif board.board[i][j] == other_player:
                     if i == 6 and j == 6:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score += self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score += self.CORNER_EDGE_FACTOR[game_state] / 2
         corner = (0, 7)
         for (i, j) in [(0, 6), (1, 6), (1, 7)]:
             if board.board[corner[0]][corner[1]] == EMPTY:
                 if board.board[i][j] == current_player:
                     if i == 1 and j == 6:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score -= self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score -= OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score -= self.CORNER_EDGE_FACTOR[game_state] / 2
                 elif board.board[i][j] == other_player:
                     if i == 1 and j == 6:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state]
+                        score += self.CORNER_EDGE_FACTOR[game_state]
                     else:
-                        score += OthelloHeuristic.CORNER_EDGE_FACTOR[game_state] / 2
+                        score += self.CORNER_EDGE_FACTOR[game_state] / 2
         return score
 
     def evaluate_mobility(self, board, current_player, other_player, game_state):
         score = 0
-        score += len(board.get_valid_moves(current_player))*OthelloHeuristic.MOBILITY_FACTOR[game_state]
-        score -= len(board.get_valid_moves(other_player))*OthelloHeuristic.MOBILITY_FACTOR[game_state]
+        score += len(board.get_valid_moves(current_player))*self.MOBILITY_FACTOR[game_state]
+        score -= len(board.get_valid_moves(other_player))*self.MOBILITY_FACTOR[game_state]
         return score
 
