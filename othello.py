@@ -9,19 +9,14 @@ from heuristic import OthelloHeuristic
 
 class Othello:
 
-    def __init__(self):
-        pass
-
-    def setup_game(self):
+    def __init__(self, player1, player2):
         self.gui = NoGui() if HEADLESS else Gui()
 
-        self.now_playing = player.ComputerPlayer(BLACK, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
-        self.other_player = player.ComputerPlayer(WHITE, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
-
-        self.board = board.Board()
+        self.now_playing = player1(BLACK, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
+        self.other_player = player2(WHITE, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
 
     def run(self):
-        self.setup_game()
+        self.board = board.Board()
         self.gui.show_game(self.board)
         while True:
             winner = self.board.game_won()
@@ -34,10 +29,5 @@ class Othello:
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
-
-def main():
-    game = Othello()
-    print(("winner: %s" % get_color_from_player_number(game.run())))
-
-if __name__ == '__main__':
-    main()
+    def print_winner(self):
+        print(("Winner: %s" % get_color_from_player_number(self.run())))
