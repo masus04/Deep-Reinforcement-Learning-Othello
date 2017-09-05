@@ -37,7 +37,7 @@ class Othello:
 
 def main():
     game = Othello()
-    print("winner: %s" % get_color_from_player_number(game.run()))
+    print(("winner: %s" % get_color_from_player_number(game.run())))
 
 if __name__ == '__main__':
     main()

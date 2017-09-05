@@ -1,6 +1,6 @@
 # Constants and configuration options.
 
-TIMEOUT = 0.2
+TIMEOUT = 150
 
 EMPTY = 0
 BLACK = 1

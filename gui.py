@@ -4,8 +4,8 @@ import time
 from config import BLACK, WHITE
 import os
 from menu import *
-from Tkinter import Tk
-from tkFileDialog import askopenfilename, asksaveasfilename
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 
 class Gui:
