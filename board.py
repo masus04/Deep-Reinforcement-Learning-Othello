@@ -2,6 +2,7 @@ from copy import deepcopy
 from config import EMPTY, BLACK, WHITE
 import numpy as np
 from ctypes import *
+import random
 
 
 class Board:
@@ -295,3 +296,6 @@ class Board:
                     print(' ', end=' ')
                 print('|', end=' ')
             print()
+
+    def __lt__(self, other):
+        return random.randint(0,1) -0.5

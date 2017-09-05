@@ -73,7 +73,7 @@ class GameArtificialIntelligence(object):
 
     def keyify(self, node, player):
         from hashlib import sha1
-        return sha1(node.board.data)
+        return sha1(node.board.data).hexdigest()
 
     def alpha_beta_search(self, node, depth, current_player, other_player, alpha=-sys.maxsize-1, beta=sys.maxsize, maximizing=True):
         if datetime.datetime.now() > self.time_done - datetime.timedelta(milliseconds=10):
