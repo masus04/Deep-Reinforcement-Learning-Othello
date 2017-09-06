@@ -307,7 +307,7 @@ class Board:
     def get_representation(self, color):
         """ Return a board where the current player is always black """
         if color == BLACK:
-            return self.board
+            return self.board.copy()
 
         representation = []
         for row in self.board:

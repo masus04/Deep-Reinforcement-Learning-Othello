@@ -22,10 +22,12 @@ class Othello:
             winner = self.board.game_won()
             if winner is not None:
                 return winner
-
-            if self.board.get_valid_moves(self.now_playing.color) != []:
+            valid_moves = self.board.get_valid_moves(self.now_playing.color)
+            if valid_moves != []:
                 move = self.now_playing.get_move(self.board)
                 self.gui.flash_move(move, self.now_playing.color)
+                if not move in valid_moves:
+                    raise Exception("Player %s performed an illegal move: %s" % (get_color_from_player_number(self.now_playing.color), move))
                 self.board.apply_move(move, self.now_playing.color)
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing

@@ -72,3 +72,4 @@ class DeepRLPlayer(Player):
     def behaviour_policy(self, board):
         afterstates = [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
         return max(((self.valueFunction.evaluate(afterstate[0]), afterstate[1]) for afterstate in afterstates))[1]
+
