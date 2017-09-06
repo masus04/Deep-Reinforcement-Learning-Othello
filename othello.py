@@ -12,8 +12,8 @@ class Othello:
     def __init__(self, player1, player2):
         self.gui = NoGui() if HEADLESS else Gui()
 
-        self.now_playing = player1(BLACK, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
-        self.other_player = player2(WHITE, TIMEOUT, self.gui, OthelloHeuristic.DEFAULT_STRATEGY)
+        self.now_playing = player1.set_gui(self.gui)
+        self.other_player = player2.set_gui(self.gui)
 
     def run(self):
         self.board = board.Board()

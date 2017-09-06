@@ -1,5 +1,5 @@
 import random
-from config import BLACK, WHITE, HEADLESS
+import config
 from game_ai import GameArtificialIntelligence
 from heuristic import OthelloHeuristic
 from gui import NoGui
@@ -8,7 +8,7 @@ from valueFunction import ValueFunction
 
 class Player(object):
 
-    def __init__(self, color, time_limit=-1, gui=None, strategy=None):
+    def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui()):
         self.color = color
         self.time_limit = time_limit
         self.gui = gui
@@ -16,16 +16,17 @@ class Player(object):
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
 
-    def set_time_limit(self, new_limit):
-        self.time_limit = new_limit
+    def set_gui(self, gui):
+        self.gui = gui
+        return self
 
 
 class HumanPlayer(Player):
 
-    def __init__(self, color, time_limit=-1, gui=None, strategy=None):
+    def __init__(self, color, time_limit=-1, gui=None):
         if isinstance(gui, NoGui):
             raise Exception("Human Player cannot be used in headless games")
-        super(ComputerPlayer, self).__init__(color, time_limit, gui, strategy)
+        super(HumanPlayer, self).__init__(color, time_limit, gui)
 
     def get_move(self, board):
         valid_moves = board.get_valid_moves(self.color)
@@ -45,23 +46,23 @@ class RandomPlayer(Player):
 
 class ComputerPlayer(Player):
 
-    def __init__(self, color, time_limit=5, gui=None, strategy=OthelloHeuristic.DEFAULT_STRATEGY):
-        super(ComputerPlayer, self).__init__(color, time_limit, gui, strategy)
+    def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui(), strategy=OthelloHeuristic.DEFAULT_STRATEGY):
+        super(ComputerPlayer, self).__init__(color, time_limit, gui)
         heuristic = OthelloHeuristic(strategy)
         self.ai = GameArtificialIntelligence(heuristic.evaluate)
 
     def get_move(self, board):
-        other_color = BLACK
-        if self.color == BLACK:
-            other_color = WHITE
+        other_color = config.BLACK
+        if self.color == config.BLACK:
+            other_color = config.WHITE
 
         return self.ai.move_search(board, self.time_limit, self.color, other_color)
 
 
 class DeepRLPlayer(Player):
 
-    def __init__(self, color, time_limit=5, gui=None, strategy=None):
-        super(DeepRLPlayer, self).__init__(color, time_limit, gui, strategy)
+    def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui(), strategy=None):
+        super(DeepRLPlayer, self).__init__(color, time_limit, gui)
         self.valueFunction = ValueFunction()
 
     def get_move(self, board):
