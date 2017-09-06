@@ -2,6 +2,7 @@
 
 TIMEOUT = 0.2
 
+# Caution: Adjust those in functions.c as well
 EMPTY = 0
 BLACK = 1
 WHITE = 2

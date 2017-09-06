@@ -4,6 +4,7 @@ from game_ai import GameArtificialIntelligence
 from heuristic import OthelloHeuristic
 from gui import NoGui
 from valueFunction import ValueFunction
+from board import Board
 
 
 class Player(object):
@@ -66,5 +67,8 @@ class DeepRLPlayer(Player):
         self.valueFunction = ValueFunction()
 
     def get_move(self, board):
-        pass
-        # TODO: continue here
+        return self.behaviour_policy(board)
+
+    def behaviour_policy(self, board):
+        afterstates = [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
+        return max(((self.valueFunction.evaluate(afterstate[0]), afterstate[1]) for afterstate in afterstates))[1]

@@ -1,6 +1,6 @@
 import torch
 import torch.nn.functional as F
-
+from torch.autograd import Variable
 import config
 
 
@@ -8,6 +8,14 @@ class ValueFunction:
 
     def __init__(self):
         self.model = Model()
+
+    def evaluate(self, board):
+        tensor = torch.FloatTensor([[board.board]])
+
+        if torch.cuda.is_available():
+            tensor = tensor.cuda(0)
+
+        return self.model(Variable(tensor)).data[0][0]
 
 
 class Model(torch.nn.Module):
@@ -41,5 +49,5 @@ class Model(torch.nn.Module):
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
         x = F.relu(self.conv8(x))
-        x.view(-1, self.conv_to_linear_params_size)
+        x = x.view(-1, self.conv_to_linear_params_size)
         return F.sigmoid(self.fc1(x)) # + config.LABEL_LOSS

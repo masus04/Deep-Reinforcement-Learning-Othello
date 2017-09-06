@@ -7,14 +7,17 @@ import random
 
 class Board:
 
-    LIBFUNCTIONS = cdll.LoadLibrary("./libfunctions.so")
+    try:
+        LIBFUNCTIONS = cdll.LoadLibrary("./libfunctions.so")
+    except OSError:
+        LIBFUNCTIONS = cdll.LoadLibrary("./../libfunctions.so")
 
     def __init__(self, board = None):
         if board is not None:
             self.board = board
             self.count_pieces()
         else:
-            self.board = np.zeros((8, 8), dtype=np.integer) # 8 by 8 empty board
+            self.board = np.full((8, 8), EMPTY, dtype=np.float64)  # 8 by 8 empty board
             self.board[3][4] = BLACK
             self.board[4][3] = BLACK
             self.board[3][3] = WHITE
@@ -181,6 +184,7 @@ class Board:
             self.white_pieces += 1
         self.empty_spaces -= 1
         self.flip_pieces(move, color)
+        return self
 
     def flip_pieces(self, position, color):
         for direction in range(1,9): # Flip row for each of the 8 possible directions
@@ -299,3 +303,26 @@ class Board:
 
     def __lt__(self, other):
         return random.randint(0,1) -0.5
+
+    def get_representation(self, color):
+        """ Return a board where the current player is always black """
+        if color == BLACK:
+            return self.board
+
+        representation = []
+        for row in self.board:
+            new_row = []
+            for field in row:
+                if field == EMPTY:
+                    new_row.append(EMPTY)
+                elif field == BLACK:
+                    new_row.append(WHITE)
+                else:
+                    new_row.append(BLACK)
+            representation.append(new_row)
+
+        return np.array(representation, dtype=np.float64)
+
+    def copy(self):
+        return Board(np.copy(self.board))
+

@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Adjust those the same way as in config.py */
 #define EMPTY 0
 #define BLACK 1
 #define WHITE 2
 
 #if __GNUC__
 #if __x86_64__ || __ppc64__
-#define BOARD_TYPE long long int
+#define BOARD_TYPE double
 #else
-#define BOARD_TYPE int
+#define BOARD_TYPE double
 #endif
 #endif
 
