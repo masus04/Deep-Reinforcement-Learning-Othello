@@ -1,4 +1,3 @@
-from copy import deepcopy
 from config import EMPTY, BLACK, WHITE
 import numpy as np
 from ctypes import *
@@ -237,7 +236,7 @@ class Board:
             if i in range(8) and j in range(8) and self.board[i][j] == color:
                 # found a piece of the right color to flip the pieces between
                 return (pieces_flipped, pieces)
-        return (0, [])
+        return 0, []
 
     def count_pieces(self):
         self.white_pieces = 0

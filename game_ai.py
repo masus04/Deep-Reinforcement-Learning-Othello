@@ -3,6 +3,7 @@ import sys
 import random
 from queue import PriorityQueue
 
+
 class GameArtificialIntelligence(object):
 
     def __init__(self, heuristic_fn):

@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
 import board
-import player
 from gui import Gui, NoGui
-from config import BLACK, WHITE, HEADLESS, TIMEOUT, get_color_from_player_number
-from heuristic import OthelloHeuristic
+from config import HEADLESS, get_color_from_player_number
 
 
 class Othello:
@@ -21,8 +19,11 @@ class Othello:
         while True:
             winner = self.board.game_won()
             if winner is not None:
+                self.now_playing.register_winner(winner)
+                self.other_player.register_winner(winner)
                 return winner
             valid_moves = self.board.get_valid_moves(self.now_playing.color)
+            self.gui.highlight_valid_moves(valid_moves)
             if valid_moves != []:
                 move = self.now_playing.get_move(self.board)
                 self.gui.flash_move(move, self.now_playing.color)
@@ -31,6 +32,3 @@ class Othello:
                 self.board.apply_move(move, self.now_playing.color)
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
-
-    def print_winner(self):
-        print(("Winner: %s" % get_color_from_player_number(self.run())))

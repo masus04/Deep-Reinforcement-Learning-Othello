@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 /* Adjust those the same way as in config.py */
-#define EMPTY 0
+#define EMPTY 1.5
 #define BLACK 1
 #define WHITE 2
 

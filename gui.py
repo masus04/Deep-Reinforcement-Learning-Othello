@@ -5,7 +5,7 @@ from config import BLACK, WHITE
 import os
 from menu import *
 from tkinter import Tk
-from tkinter.filedialog import askopenfilename, asksaveasfilename
+from tkinter.filedialog import askopenfilename
 
 
 class Gui:
@@ -184,7 +184,7 @@ class Gui:
         elif color == WHITE:
             img = self.white_img
         else:
-            img = self.tip_img
+            img = self.clear_img
 
         x = pos[0]*self.SQUARE_SIZE + self.BOARD[0]
         y = pos[1]*self.SQUARE_SIZE + self.BOARD[1]
