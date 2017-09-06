@@ -23,9 +23,10 @@ class Othello:
             if winner is not None:
                 return winner
 
-            self.now_playing.set_current_board(self.board)
             if self.board.get_valid_moves(self.now_playing.color) != []:
-                self.board = self.now_playing.get_move()
+                move = self.now_playing.get_move(self.board)
+                self.gui.flash_move(move, self.now_playing.color)
+                self.board.apply_move(move, self.now_playing.color)
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 

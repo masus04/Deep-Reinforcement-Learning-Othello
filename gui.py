@@ -272,7 +272,7 @@ class NoGui:
     def highlight_valid_moves(self, valid_moves):
         pass
 
-    def flash_move(self, color):
+    def flash_move(self, pos, color):
         pass
 
     def put_stone(self):
