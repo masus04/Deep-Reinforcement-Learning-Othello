@@ -1,4 +1,7 @@
+import os
 import random
+import torch
+
 import config
 from game_ai import GameArtificialIntelligence
 from heuristic import OthelloHeuristic
@@ -65,13 +68,44 @@ class ComputerPlayer(Player):
 
 class DeepRLPlayer(Player):
 
+    """ DeepRLPlayers handle the interaction between the game and their value function.
+        Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
+
     def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui(), strategy=None):
         super(DeepRLPlayer, self).__init__(color, time_limit, gui)
         self.valueFunction = ValueFunction()
+        self.training_samples = []
+        self.training_labels = []
 
     def get_move(self, board):
-        return self.behaviour_policy(board)
+        return self.__behaviour_policy__(board)
 
-    def behaviour_policy(self, board):
-        afterstates = [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
-        return max(((self.valueFunction.evaluate(afterstate[0]), afterstate[1]) for afterstate in afterstates))[1]
+    def register_winner(self, winner_color):
+        raise NotImplementedError("function register_winner must be implemented by subclass")
+
+    def save_params(self):
+        if not os.path.exists("./Weights"):
+            os.makedirs("./Weights")
+        torch.save(self.valueFunction, "./Weights/%s.pth" % self.__class__.__name__)
+
+    def __generate_afterstates__(self, board):
+        """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
+        return [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
+
+    def __behaviour_policy__(self, board):
+        raise NotImplementedError("function behaviour_policy must be implemented by subclass")
+
+
+class MCPlayer(DeepRLPlayer):
+
+    def __behaviour_policy__(self, board):
+        afterstates = self.__generate_afterstates__(board)
+        afterstate = max(((self.valueFunction.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates))
+        self.training_samples += [afterstate[1].board]  # Add afterstate board_sample
+        return afterstate[2]
+
+    def register_winner(self, winner_color):
+        self.training_labels = [config.LABEL_WIN if (self.color == winner_color) else config.LABEL_LOSS for sample in self.training_samples]
+        self.valueFunction.update(self.training_samples, self.training_labels)
+        self.training_labels = []
+        self.training_labels = []

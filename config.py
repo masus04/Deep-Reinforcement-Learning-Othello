@@ -15,6 +15,7 @@ COMPUTER = "Computer"
 LABEL_LOSS = 0
 LABEL_WIN = 1
 
+MINIBATCH_SIZE = 1
 
 def get_color_from_player_number(number):
     if number == BLACK:
