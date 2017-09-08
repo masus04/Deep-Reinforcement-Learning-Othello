@@ -66,6 +66,32 @@ class ComputerPlayer(Player):
         return self.ai.move_search(board, self.time_limit, self.color, other_color)
 
 
+class ReportingPlayer:
+    """ A wrapper for players that stores all of their afterstates and makes them accessible """
+
+    def __init__(self, player):
+        self.player = player
+        self.color = player.color
+        self.reportedBoards = []
+
+    def get_move(self, board):
+        move = self.player.get_move(board)
+        self.reportedBoards.append(board.copy().apply_move(move, self.color))
+        return move
+
+    def set_gui(self, gui):
+        self.player.set_gui(gui)
+        return self
+
+    def register_winner(self, winner_color):
+        self.player.register_winner(winner_color)
+
+    def pop_report(self):
+        report = self.reportedBoards
+        self.reportedBoards = []
+        return report
+
+
 class DeepRLPlayer(Player):
 
     """ DeepRLPlayers handle the interaction between the game and their value function.

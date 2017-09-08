@@ -105,6 +105,3 @@ ENV/
 
 # libfunctions
 functions.o
-
-# testscripts
-testScripts/

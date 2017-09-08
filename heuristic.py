@@ -80,6 +80,25 @@ class OthelloHeuristic(object):
             score += self.evaluate_stability(board, current_player, other_player, game_state)
         return score
 
+    def evaluate_heuristical_strategy(self, board, current_player, other_player):
+        """ Ebaluates the given board according to a given table of board values often used for comparison in research """
+        values = [[100], [-25], [10], [5], [5], [10], [-25], [100]
+                  [-25], [-25], [ 2], [2], [2], [ 2], [-25], [-25],
+                  [ 10], [  2], [ 5], [1], [1], [ 5], [  2], [ 10],
+                  [  5], [  2], [ 1], [2], [2], [ 1], [  2], [  5],
+                  [  5], [  2], [ 1], [2], [2], [ 1], [  2], [  5],
+                  [ 10], [  2], [ 5], [1], [1], [ 5], [  2], [ 10],
+                  [-25], [-25], [ 2], [2], [2], [ 2], [-25], [-25],
+                  [100], [-25], [10], [5], [5], [10], [-25], [100]]
+        score = 0
+        for i in range(len(board.board)):
+            for j in range(len(board.board[0])):
+                if board.board[i][j] == current_player:
+                    score += values[i][j]
+                elif board.board[i][j] == other_player:
+                    score -= values[i][j]
+        return score
+
     def evaluate_piece_count(self, board, current_player, other_player, game_state):
         score = 0
         if current_player == WHITE:

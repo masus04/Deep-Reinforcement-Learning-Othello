@@ -2,7 +2,6 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-
 import config
 
 
@@ -11,7 +10,7 @@ class ValueFunction:
     def __init__(self, plotter):
         self.plotter = plotter
         self.model = Model()
-        self.learning_rate = 0.01
+        self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
         self.criterion = torch.nn.MSELoss(size_average=False)
         # self.criterion = torch.nn.CrossEntropyLoss(weight=None, size_average=True)
@@ -68,7 +67,7 @@ class Model(torch.nn.Module):
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
 
         self.learning_rate = 0.01
-        self.criterion = torch.nn.MSELoss(size_average=False)
+        self.criterion = torch.nn.MSELoss()
         # self.criterion = torch.nn.CrossEntropyLoss(weight=None, size_average=True)
 
     def forward(self, x):
@@ -81,4 +80,4 @@ class Model(torch.nn.Module):
         x = F.relu(self.conv7(x))
         x = F.relu(self.conv8(x))
         x = x.view(-1, self.conv_to_linear_params_size)
-        return F.sigmoid(self.fc1(x))  # + config.LABEL_LOSS
+        return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS

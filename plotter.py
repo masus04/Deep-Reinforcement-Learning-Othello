@@ -7,7 +7,9 @@ class Plotter:
     def add_loss(self, loss):
         self.losses.append(loss)
 
-    def plot_losses(self):
+    def plot_losses(self, plotName):
         plt.plot(self.losses)
-        plt.xlabel("Average loss per episode")
+        plt.ylabel("Average loss")
+        plt.xlabel("Episode")
+        plt.savefig('%s.png' % plotName);
         plt.show()
