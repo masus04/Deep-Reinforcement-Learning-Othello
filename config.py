@@ -17,6 +17,9 @@ LABEL_WIN = 1
 
 MINIBATCH_SIZE = 1
 
+EPSILON = 0.01
+EPSILON_REDUCE = .99995
+
 def get_color_from_player_number(number):
     if number == BLACK:
         return "Black"

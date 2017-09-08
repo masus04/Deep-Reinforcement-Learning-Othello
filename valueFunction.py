@@ -1,5 +1,3 @@
-import os
-import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
@@ -10,7 +8,8 @@ import config
 
 class ValueFunction:
 
-    def __init__(self):
+    def __init__(self, plotter):
+        self.plotter = plotter
         self.model = Model()
         self.learning_rate = 0.01
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
@@ -42,7 +41,8 @@ class ValueFunction:
 
             accumulated_loss += loss.data[0]
 
-        print("Average episode loss: %s for final label: %s" % (accumulated_loss/len(minibatches_s), minibatches_l[-1][-1]))
+        # print("Average episode loss: %s for final label: %s" % (accumulated_loss/len(minibatches_s), minibatches_l[-1][-1].data[0]))
+        self.plotter.add_loss(accumulated_loss/len(minibatches_s))
 
     @staticmethod
     def __generate_minibatches__(lst):

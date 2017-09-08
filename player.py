@@ -71,9 +71,10 @@ class DeepRLPlayer(Player):
     """ DeepRLPlayers handle the interaction between the game and their value function.
         Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
 
-    def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui(), strategy=None):
-        super(DeepRLPlayer, self).__init__(color, time_limit, gui)
-        self.valueFunction = ValueFunction()
+    def __init__(self, color, strategy, e, time_limit=config.TIMEOUT, gui=NoGui()):
+        super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
+        self.e = e
+        self.valueFunction = strategy
         self.training_samples = []
         self.training_labels = []
 
@@ -88,6 +89,9 @@ class DeepRLPlayer(Player):
             os.makedirs("./Weights")
         torch.save(self.valueFunction, "./Weights/%s.pth" % self.__class__.__name__)
 
+    def load_params(self):
+        self.valueFunction = torch.load("./Weights/%s.pth" % self.__class__.__name__)
+
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
         return [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
@@ -95,12 +99,21 @@ class DeepRLPlayer(Player):
     def __behaviour_policy__(self, board):
         raise NotImplementedError("function behaviour_policy must be implemented by subclass")
 
+    def __e_greedy__(self, lst):
+        if random.random() > self.e:
+            result = max(lst)
+        else:
+            result = random.choice(lst)
+
+        self.e = self.e*config.EPSILON_REDUCE
+        return result
+
 
 class MCPlayer(DeepRLPlayer):
 
     def __behaviour_policy__(self, board):
         afterstates = self.__generate_afterstates__(board)
-        afterstate = max(((self.valueFunction.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates))
+        afterstate = self.__e_greedy__([(self.valueFunction.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates])
         self.training_samples += [afterstate[1].board]  # Add afterstate board_sample
         return afterstate[2]
 

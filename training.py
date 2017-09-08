@@ -3,12 +3,16 @@ from othello import Othello
 from player import ComputerPlayer, RandomPlayer, MCPlayer
 from heuristic import OthelloHeuristic
 from valueFunction import ValueFunction
+from plotter import Plotter
 from datetime import datetime
 
 # player1 = ComputerPlayer(color=config.BLACK, time_limit=config.TIMEOUT, strategy=OthelloHeuristic.DEFAULT_STRATEGY)
 # player1 = DeepRLPlayer(color=config.BLACK, time_limit=config.TIMEOUT, strategy=ValueFunction())
 # player1 = RandomPlayer(color=config.BLACK, time_limit=config.TIMEOUT)
-player1 = MCPlayer(color=config.BLACK, time_limit=config.TIMEOUT, strategy=ValueFunction())
+
+plotter = Plotter()
+
+player1 = MCPlayer(color=config.BLACK, strategy=ValueFunction(plotter=plotter), e=config.EPSILON, time_limit=config.TIMEOUT)
 player2 = RandomPlayer(color=config.WHITE, time_limit=config.TIMEOUT)
 
 simulation = Othello(player1, player2)
@@ -30,9 +34,14 @@ def run_simulations(episodes, print_winner=False):
 """ | Training script | """
 
 # training
+print("Started training")
 print("Average result of simulation: %s" % (run_simulations(episodes=100, print_winner=False)))
 # evaluation
+print("Started evaluation")
 print("Average result of simulation: %s" % (run_simulations(episodes=10, print_winner=True)))
+
+plotter.plot_losses()
+player1.save_params()
 
 """ | Training script | """
 
