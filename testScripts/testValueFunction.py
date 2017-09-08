@@ -1,5 +1,5 @@
 import config
-from valueFunction import ValueFunction
+from valueFunction import ValueFunction, SimpleValueFunction
 from testScripts.generateDataSet import generate_greedy_data_set
 from plotter import Plotter
 from datetime import datetime
@@ -7,14 +7,14 @@ from datetime import datetime
 start_time = datetime.now()
 
 games = 10
-training_episodes = 50
+training_episodes = 500
 plotter = Plotter()
 
 samples, labels = generate_greedy_data_set(games, silent=True)
 print("Simulating %s games took %s" % (games, datetime.now()-start_time))
 start_time = datetime.now()
 
-valueFunction = ValueFunction(plotter)
+valueFunction = SimpleValueFunction(plotter)
 for i in range(training_episodes):
     print("Training episode no. %s" % i)
     valueFunction.update(samples, labels)
