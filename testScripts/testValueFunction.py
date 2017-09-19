@@ -14,15 +14,15 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     value_function = SimpleValueFunction(plotter=plotter, learning_rate=learning_rate)
     for i in range(training_episodes):
         samples, labels = generate_greedy_data_set(games)
-        print_inplace("Training episode no. %s/%s" % (i+1, training_episodes))
+        print_inplace("Training episode no. %s/%s. Time passed: %s" % (i+1, training_episodes, datetime.now()-start_time))
         plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, value_function))
         value_function.update(samples, labels)
     print()  # in order not to overwrite inplace
 
     print("Evaluation:")
     evaluate_accuracy(test_samples, test_labels, value_function, silent=True)
-    print("Training %s episodes for %s games took %s" % (training_episodes, games ,datetime.now()-start_time))
-    print("Final accuracy: %s" % plotter.accuracies[-1])
+    print("Training %s episodes for %s games took %s" % (training_episodes, games, datetime.now()-start_time))
+    print("Final accuracy: %s\n" % plotter.accuracies[-1])
     plotter.plot("%s, %sGames, %sEpisodes, LRate:%s, Accuracy: %s" % ("./testValueFunction plots/" + plot_name, games, training_episodes, learning_rate, "{0:.3g}".format(plotter.accuracies[-1])))
 
 
