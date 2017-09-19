@@ -1,3 +1,5 @@
+from distutils.command.config import config
+
 import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
@@ -7,11 +9,11 @@ import config
 
 class ValueFunction:
 
-    def __init__(self, plotter):
+    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         self.plotter = plotter
         self.model = Model()
         self.learning_rate = config.LEARNING_RATE
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
         # self.criterion = torch.nn.CrossEntropyLoss(weight=None, size_average=True)
 
@@ -79,11 +81,11 @@ class Model(torch.nn.Module):
 
 class SimpleValueFunction(ValueFunction):
 
-    def __init__(self, plotter):
+    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         super(SimpleValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = SimpleModel()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
 
 
 class SimpleModel(torch.nn.Module):
@@ -110,8 +112,8 @@ class SimpleModel(torch.nn.Module):
 
     def forward(self, x):
 
-        x = F.sigmoid(self.conv1(x))
-        x = F.sigmoid(self.conv2(x))
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
         # x = F.relu(self.conv3(x))
         # x = F.relu(self.conv4(x))
 
@@ -121,11 +123,11 @@ class SimpleModel(torch.nn.Module):
 
 class FCValueFunction(ValueFunction):
 
-    def __init__(self, plotter):
+    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         super(FCValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = FCModel()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
 
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
@@ -148,8 +150,8 @@ class FCModel(torch.nn.Module):
     def forward(self, x):
 
         x = x.view(-1, 64)
-        x = F.sigmoid(self.fc1(x))
-        x = F.sigmoid(self.fc2(x))
-        x = F.sigmoid(self.fc3(x))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
 
         return F.sigmoid(x) + config.LABEL_LOSS

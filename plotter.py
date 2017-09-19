@@ -23,3 +23,9 @@ class Plotter:
         plt.title = plot_name
         plt.xlabel = "Episodes"
         plt.savefig('%s.png' % plot_name)
+
+
+def print_inplace(text):
+    import sys
+    sys.stdout.write("\r%s" % (text))
+    sys.stdout.flush()
