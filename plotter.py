@@ -12,4 +12,4 @@ class Plotter:
         plt.ylabel("Average loss")
         plt.xlabel("Episode")
         plt.savefig('%s.png' % plotName);
-        plt.show()
+        # plt.show()

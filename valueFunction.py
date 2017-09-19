@@ -96,7 +96,27 @@ class SimpleModel(torch.nn.Module):
     def __init__(self):
         super(SimpleModel, self).__init__()
 
-        self.conv1 = torch.nn.Conv2d(in_channels= 1, out_channels=1, kernel_size=8, padding=0)
+        # Experiment 1
+        # self.final = torch.nn.Conv2d(in_channels=1, out_channels=1, kernel_size=8, padding=0)
+
+        # Experiment 2
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=9, padding=4)
+        self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=9, padding=4)
+
+        # Experiment 3
+        # self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=2)
+        # self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+        # self.conv3 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+        # self.conv4 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+
+        # Final Layer
+        self.final = torch.nn.Conv2d(in_channels=4, out_channels=1, kernel_size=8, padding=0)
 
     def forward(self, x):
-        return F.sigmoid(self.conv1(x)) + config.LABEL_LOSS
+
+        x = F.sigmoid(self.conv1(x))
+        x = F.sigmoid(self.conv2(x))
+        # x = F.relu(self.conv3(x))
+        # x = F.relu(self.conv4(x))
+
+        return F.sigmoid(self.final(x)) + config.LABEL_LOSS
