@@ -22,7 +22,7 @@ def generate_greedy_data_set(games, silent=True):
 
     for board in boards:
         samples.append(board.board)
-        labels.append((board.white_pieces < board.black_pieces) + 1)
+        labels.append(int(board.white_pieces < board.black_pieces))
 
     return samples, labels
 

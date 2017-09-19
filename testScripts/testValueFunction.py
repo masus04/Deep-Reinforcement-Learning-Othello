@@ -30,7 +30,7 @@ def test_with_parameters(games, training_episodes, layers_for_plotter):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-for game_episodes in [(10, 50), (20, 50), (30, 50), (50, 50), (100, 50), (1000, 10)]:
-    test_with_parameters(game_episodes[0],game_episodes[1], 2)
+# for game_episodes in [(10, 50), (20, 50), (30, 50), (50, 50), (100, 50), (1000, 10)]:
+#    test_with_parameters(game_episodes[0],game_episodes[1], 2)
 
-# test_with_parameters(1000,10, 1)
+test_with_parameters(1000, 10, 3)

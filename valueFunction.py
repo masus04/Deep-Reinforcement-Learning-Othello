@@ -13,7 +13,7 @@ class ValueFunction:
         self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
         self.criterion = torch.nn.MSELoss()
-        # self.criterion = torch.nn.CrossEntropyLoss(weight=None, size_average=True)
+        # self.criterion = torch.nn.CrossEntropyLoss()
 
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
@@ -82,13 +82,48 @@ class Model(torch.nn.Module):
         # return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
 
 
-class SimpleValueFunction(ValueFunction):
+class SimpleValueFunction():
 
     def __init__(self, plotter):
-        super(SimpleValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = SimpleModel()
+        self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+        # self.criterion = torch.nn.MSELoss()
+        self.criterion = torch.nn.CrossEntropyLoss()
+
+    def evaluate(self, board_sample):
+        tensor = torch.FloatTensor([[board_sample]])
+
+        if torch.cuda.is_available():
+            tensor = tensor.cuda(0)
+
+        result = self.model(Variable(tensor)).data[0]
+        arr = [result[0], result[1]]
+        return arr.index(max(result[0], result[1]))
+
+    def update(self, training_samples, training_labels):
+        minibatches_s = self.__generate_minibatches__(training_samples)
+        minibatches_l = Variable(torch.LongTensor(training_labels))
+
+        accumulated_loss = 0
+        if torch.cuda.is_available():
+            minibatches_s, minibatches_l = minibatches_s.cuda(0), minibatches_l.cuda(0)
+
+        self.optimizer.zero_grad()
+        output = self.model(minibatches_s)
+        loss = self.criterion(output, minibatches_l)
+        loss.backward()
+        self.optimizer.step()
+
+        accumulated_loss += loss.data[0]
+
+        # print("Average episode loss: %s for final label: %s" % (accumulated_loss/len(minibatches_s), minibatches_l[-1][-1].data[0]))
+        self.plotter.add_loss(accumulated_loss/len(minibatches_s))
+
+    @staticmethod
+    def __generate_minibatches__(lst, tensor=torch.FloatTensor):
+        return Variable(tensor([[elem] for elem in lst]))
 
 
 class SimpleModel(torch.nn.Module):
@@ -102,6 +137,9 @@ class SimpleModel(torch.nn.Module):
         # Experiment 2
         self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=9, padding=4)
         self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=9, padding=4)
+
+        self.convToLinearFeatures = 8*8*4
+        self.fc = torch.nn.Linear(in_features=self.convToLinearFeatures, out_features=2)
 
         # Experiment 3
         # self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=2)
@@ -119,4 +157,8 @@ class SimpleModel(torch.nn.Module):
         # x = F.relu(self.conv3(x))
         # x = F.relu(self.conv4(x))
 
-        return F.sigmoid(self.final(x)) + config.LABEL_LOSS
+        x = x.view(-1, self.convToLinearFeatures)
+        x = self.fc(x)
+        return x
+
+        # return F.sigmoid(self.final(x)) + config.LABEL_LOSS
