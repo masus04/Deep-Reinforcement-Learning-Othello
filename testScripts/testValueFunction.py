@@ -20,7 +20,7 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     print()  # in order not to overwrite inplace
 
     print("Evaluation:")
-    evaluate_accuracy(test_samples, test_labels, value_function, silent=False)
+    evaluate_accuracy(test_samples, test_labels, value_function, silent=True)
     print("Training %s episodes for %s games took %s" % (training_episodes, games ,datetime.now()-start_time))
     print("Final accuracy: %s" % plotter.accuracies[-1])
     plotter.plot("%s, %sGames, %sEpisodes, LRate:%s, Accuracy: %s" % ("./testValueFunction plots/" + plot_name, games, training_episodes, learning_rate, "{0:.3g}".format(plotter.accuracies[-1])))
@@ -39,7 +39,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**4, 4)), plot_name="ReLU 2Layers")
+# test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**4, 4)), plot_name="ReLU 2Layers")
 
-#for i in range(3, 5):
-#    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 4)), plot_name="ReLU 2Layers")
+for i in range(1, 5):
+    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 4)), plot_name="ReLU 2Layers")
