@@ -40,7 +40,7 @@ print("Average result of simulation: %s" % (run_simulations(episodes=100, print_
 print("Started evaluation")
 print("Average result of simulation: %s" % (run_simulations(episodes=10, print_winner=True)))
 
-plotter.plot_losses("MCPlayer")
+plotter.plot("MCPlayer")
 player1.save_params()
 
 """ | Training script | """

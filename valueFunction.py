@@ -21,7 +21,7 @@ class ValueFunction:
         if torch.cuda.is_available():
             tensor = tensor.cuda(0)
 
-        return self.model(Variable(tensor)).data[0][0][0][0]
+        return self.model(Variable(tensor)).data[0][0]
 
     def update(self, training_samples, training_labels):
         minibatches_s = self.__generate_minibatches__(training_samples)
@@ -54,7 +54,7 @@ class Model(torch.nn.Module):
         super(Model, self).__init__()
 
         self.conv_channels = 8
-        self.conv_to_linear_params_size = 1*8*8
+        self.conv_to_linear_params_size = self.conv_channels*8*8
 
         self.conv1 = torch.nn.Conv2d(in_channels= 1, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
@@ -63,10 +63,7 @@ class Model(torch.nn.Module):
         self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv8 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1,                  kernel_size=1, padding=0)
-        self.conv9 = torch.nn.Conv2d(in_channels=1,                  out_channels=1,                  kernel_size=8, padding=0)
-
-        # self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
+        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -76,10 +73,8 @@ class Model(torch.nn.Module):
         x = F.relu(self.conv5(x))
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
-        x = F.relu(self.conv8(x))
-        return F.sigmoid(self.conv9(x)) + config.LABEL_LOSS
-        # x = x.view(-1, self.conv_to_linear_params_size)
-        # return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
+        x = x.view(-1, self.conv_to_linear_params_size)
+        return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
 
 
 class SimpleValueFunction(ValueFunction):
@@ -110,7 +105,8 @@ class SimpleModel(torch.nn.Module):
         # self.conv4 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
 
         # Final Layer
-        self.final = torch.nn.Conv2d(in_channels=4, out_channels=1, kernel_size=8, padding=0)
+        # self.final = torch.nn.Conv2d(in_channels=4, out_channels=1, kernel_size=8, padding=0)
+        self.final = torch.nn.Linear(in_features=8*8*4, out_features=1)
 
     def forward(self, x):
 
@@ -119,4 +115,41 @@ class SimpleModel(torch.nn.Module):
         # x = F.relu(self.conv3(x))
         # x = F.relu(self.conv4(x))
 
+        x = x.view(-1, 8*8*4)
         return F.sigmoid(self.final(x)) + config.LABEL_LOSS
+
+
+class FCValueFunction(ValueFunction):
+
+    def __init__(self, plotter):
+        super(FCValueFunction, self).__init__(plotter)
+        self.plotter = plotter
+        self.model = FCModel()
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+
+    def evaluate(self, board_sample):
+        tensor = torch.FloatTensor([[board_sample]])
+
+        if torch.cuda.is_available():
+            tensor = tensor.cuda(0)
+
+        return self.model(Variable(tensor)).data[0][0]
+
+
+class FCModel(torch.nn.Module):
+
+    def __init__(self):
+        super(FCModel, self).__init__()
+
+        self.fc1 = torch.nn.Linear(in_features=64, out_features=64*10)
+        self.fc2 = torch.nn.Linear(in_features=64*10, out_features=64*10)
+        self.fc3 = torch.nn.Linear(in_features=64*10, out_features=1)
+
+    def forward(self, x):
+
+        x = x.view(-1, 64)
+        x = F.sigmoid(self.fc1(x))
+        x = F.sigmoid(self.fc2(x))
+        x = F.sigmoid(self.fc3(x))
+
+        return F.sigmoid(x) + config.LABEL_LOSS
