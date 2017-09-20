@@ -11,7 +11,7 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     test_samples, test_labels = generate_greedy_data_set(10)
     start_time = datetime.now()
 
-    value_function = SimpleValueFunction(plotter=plotter, learning_rate=learning_rate)
+    value_function = FCValueFunction(plotter=plotter, learning_rate=learning_rate)
     for i in range(training_episodes):
         samples, labels = generate_greedy_data_set(games)
         print_inplace("Training episode no. %s/%s. Time passed: %s" % (i+1, training_episodes, datetime.now()-start_time))
@@ -39,7 +39,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-# test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**4, 4)), plot_name="ReLU 2Layers")
+# test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**3, 7)), plot_name="ReLU 2Layers")
 
-for i in range(1, 5):
-    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 4)), plot_name="ReLU 2Layers")
+for i in [2, 3, 4, 3.5]:
+    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 7)), plot_name="ReLU 3FCLayers")

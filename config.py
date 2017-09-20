@@ -15,11 +15,13 @@ COMPUTER = "Computer"
 LABEL_LOSS = 0
 LABEL_WIN = 1
 
-LEARNING_RATE = 0.001
+# Hyperparameters
+LEARNING_RATE = float(round(0.1**4, 7))
 MINIBATCH_SIZE = 1
 
 EPSILON = 0.01
 EPSILON_REDUCE = .99995
+
 
 def get_color_from_player_number(number):
     if number == BLACK:

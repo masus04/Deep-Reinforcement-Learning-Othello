@@ -19,10 +19,11 @@ simulation = Othello(player1, player2)
 start_time = datetime.now()
 
 
-def run_simulations(episodes, print_winner=False):
+def run_simulations(episodes, silent=True):
     sum = 0
     for result in (simulation.run() for i in range(episodes)):
-        if print_winner: print("Winner: %s" % config.get_color_from_player_number(result))
+        if not silent:
+            print("Winner: %s" % config.get_color_from_player_number(result))
         if result == config.EMPTY:
             episodes -= 1
         else:
@@ -35,10 +36,10 @@ def run_simulations(episodes, print_winner=False):
 
 # training
 print("Started training")
-print("Average result of simulation: %s" % (run_simulations(episodes=100, print_winner=False)))
+print("Average result of simulation: %s" % (run_simulations(episodes=1000)))
 # evaluation
 print("Started evaluation")
-print("Average result of simulation: %s" % (run_simulations(episodes=10, print_winner=True)))
+print("Average result of simulation: %s" % (run_simulations(episodes=10)))
 
 plotter.plot("MCPlayer")
 player1.save_params()

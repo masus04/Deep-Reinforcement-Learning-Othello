@@ -15,7 +15,6 @@ class ValueFunction:
         self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
-        # self.criterion = torch.nn.CrossEntropyLoss(weight=None, size_average=True)
 
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
