@@ -1,5 +1,5 @@
 import sys
-from config import BLACK, WHITE, EMPTY
+from src.config import BLACK, WHITE, EMPTY
 
 
 class OthelloHeuristic(object):

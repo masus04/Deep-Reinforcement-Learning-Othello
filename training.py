@@ -1,9 +1,9 @@
-import config
-from othello import Othello
-from player import ComputerPlayer, RandomPlayer, MCPlayer
-from heuristic import OthelloHeuristic
-from valueFunction import ValueFunction
-from plotter import Plotter
+import src.config as config
+from src.othello import Othello
+from src.player import ComputerPlayer, RandomPlayer, MCPlayer
+from src.heuristic import OthelloHeuristic
+from src.valueFunction import ValueFunction
+from src.plotter import Plotter
 from datetime import datetime
 
 # player1 = ComputerPlayer(color=config.BLACK, time_limit=config.TIMEOUT, strategy=OthelloHeuristic.DEFAULT_STRATEGY)

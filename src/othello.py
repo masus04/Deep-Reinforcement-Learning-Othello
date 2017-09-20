@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-
-import board
-from gui import Gui, NoGui
-from config import HEADLESS, get_color_from_player_number
+#!/usr/bin/env python3
+import src.board as board
+from src.gui import Gui, NoGui
+from src.config import HEADLESS, get_color_from_player_number
 
 
 class Othello:

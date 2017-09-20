@@ -2,12 +2,12 @@ import os
 import random
 import torch
 
-import config
-from game_ai import GameArtificialIntelligence
-from heuristic import OthelloHeuristic
-from gui import NoGui
-from valueFunction import ValueFunction
-from board import Board
+import src.config as config
+from src.game_ai import GameArtificialIntelligence
+from src.heuristic import OthelloHeuristic
+from src.gui import NoGui
+from src.valueFunction import ValueFunction
+from src.board import Board
 
 
 class Player(object):

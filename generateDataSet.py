@@ -1,6 +1,6 @@
-import config
-from othello import Othello
-from player import ReportingPlayer, RandomPlayer
+import src.config as config
+from src.othello import Othello
+from src.player import ReportingPlayer, RandomPlayer
 
 player1 = ReportingPlayer(RandomPlayer(color=config.BLACK, time_limit=config.TIMEOUT))
 player2 = ReportingPlayer(RandomPlayer(color=config.WHITE, time_limit=config.TIMEOUT))

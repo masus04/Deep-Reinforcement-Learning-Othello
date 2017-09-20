@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 
 # This file has been altered by Robert Gruener to set options inline
 # Credit given to original creator below
