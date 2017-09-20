@@ -146,5 +146,5 @@ class MCPlayer(DeepRLPlayer):
     def register_winner(self, winner_color):
         self.training_labels = [config.LABEL_WIN if (self.color == winner_color) else config.LABEL_LOSS for sample in self.training_samples]
         self.valueFunction.update(self.training_samples, self.training_labels)
-        self.training_labels = []
+        self.training_samples = []
         self.training_labels = []

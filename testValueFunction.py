@@ -15,7 +15,7 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     value_function = FCValueFunction(plotter=plotter, learning_rate=learning_rate)
     for i in range(training_episodes):
         samples, labels = generate_greedy_data_set(games)
-        print_inplace("Training episode no. %s/%s. Time passed: %s" % (i+1, training_episodes, datetime.now()-start_time))
+        print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
         plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, value_function))
         value_function.update(samples, labels)
     print()  # in order not to overwrite inplace
@@ -24,12 +24,12 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     evaluate_accuracy(test_samples, test_labels, value_function, silent=True)
     print("Training %s episodes for %s games took %s" % (training_episodes, games, datetime.now()-start_time))
     print("Final accuracy: %s\n" % plotter.accuracies[-1])
-    plotter.plot("%s, %sGames, %sEpisodes, LRate:%s, Accuracy: %s" % ("./plots/" + plot_name, games, training_episodes, learning_rate, "{0:.3g}".format(plotter.accuracies[-1])))
+    plotter.plot_accuracy("%s, %sGames, %sEpisodes, LRate:%s, Accuracy: %s" % (plot_name, games, training_episodes, learning_rate, "{0:.3g}".format(plotter.accuracies[-1])))
 
 
 def evaluate_accuracy(samples, labels, value_function, silent=True):
     accuracy_sum = 0
-    evaluation_samples = len(samples)//10
+    evaluation_samples = round(len(samples)/10)
     for i in range(evaluation_samples):
         prediction = value_function.evaluate(samples[i])
         accuracy_sum += (prediction > (config.LABEL_WIN - config.LABEL_LOSS)/2) + config.LABEL_LOSS == labels[i]
@@ -40,7 +40,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-# test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**3, 7)), plot_name="ReLU 2Layers")
+test_with_parameters(games=3, training_episodes=3, learning_rate=float(round(0.1**3, 7)), plot_name="ReLU 2Layers")
 
-for i in [3, 4, 3.5]:
-    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 7)), plot_name="ReLU 3FCLayers")
+#for i in [3.5]:
+#    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 7)), plot_name="ReLU 3FCLayers")

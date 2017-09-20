@@ -16,7 +16,7 @@ LABEL_LOSS = 0
 LABEL_WIN = 1
 
 # Hyperparameters
-LEARNING_RATE = float(round(0.1**4, 7))
+LEARNING_RATE = float(round(0.1**3, 7))
 MINIBATCH_SIZE = 1
 
 EPSILON = 0.01
