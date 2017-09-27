@@ -14,15 +14,14 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 10000
+TOTAL_GAMES = 100000
 EVALUATION_GAMES = 0
 
 # training
 print("Started training")
-for i in range(3):
-    simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES)
-    player1.plotter.plot_results(resolution=100)
-    player1.save_params()
+simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES)
+player1.plotter.plot_results(resolution=100)
+player1.save_params()
 # evaluation
 print("Started evaluation")
 

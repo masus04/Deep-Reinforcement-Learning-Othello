@@ -14,7 +14,7 @@ This project was created for ECE469 Artificial Intelligence at
 Cooper Union taught by Professor Carl Sable in the Fall 2013 Term
 
 ## Dependencies ##
-* Python 2.7
+* Python 3.5^
 * gcc
 * python-numpy (install using apt-get or pip)
 * python-pygame (install using apt-get or from source)

@@ -36,8 +36,8 @@ def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name
     """
     @plot_name: The name under which to save the plot
     @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-    line1 = pd.Series(chunk_list(line1_values, resolution) if resolution else line1_values, name=line1_name)
-    line2 = pd.Series(chunk_list(line2_values, resolution) if resolution else line2_values, name=line2_name)
+    line1 = pd.Series(chunk_list(line1_values, resolution) if resolution <= len(line1_values) else line1_values, name=line1_name)
+    line2 = pd.Series(chunk_list(line2_values, resolution) if resolution <= len(line2_values) else line2_values, name=line2_name)
     df = pd.DataFrame([line1, line2])
     df = df.transpose()
     df.plot(secondary_y=[line2_name], title=plot_name, legend=True)
@@ -50,7 +50,7 @@ def print_inplace(text, percentage, time_taken=None):
     import sys
     length_factor = 5
     progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
-    progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(round(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
+    progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
     sys.stdout.write("\r%s |%s|" % (text, progress_bar) + (" Time: %s" % str(time_taken).split(".")[0] if time_taken else ""))
     sys.stdout.flush()
 
