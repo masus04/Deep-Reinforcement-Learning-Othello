@@ -100,7 +100,7 @@ class DeepRLPlayer(Player):
     def __init__(self, color, strategy, e, time_limit=config.TIMEOUT, gui=NoGui()):
         super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
         self.e = e
-        self.valueFunction = strategy
+        self.value_function = strategy
         self.training_samples = []
         self.training_labels = []
 
@@ -113,10 +113,10 @@ class DeepRLPlayer(Player):
     def save_params(self):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
-        torch.save(self.valueFunction, "./Weights/%s.pth" % self.__class__.__name__)
+        torch.save(self.value_function, "./Weights/%s.pth" % self.__class__.__name__)
 
     def load_params(self):
-        self.valueFunction = torch.load("./Weights/%s.pth" % self.__class__.__name__)
+        self.value_function = torch.load("./Weights/%s.pth" % self.__class__.__name__)
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
@@ -131,20 +131,40 @@ class DeepRLPlayer(Player):
         else:
             result = random.choice(lst)
 
-        self.e = self.e*config.EPSILON_REDUCE
+        # self.e = self.e*config.EPSILON_REDUCE  # This is experimental
         return result
+
+    def __label_from_winner_color__(self, winner_color):
+        return config.LABEL_WIN if winner_color == self.color else config.LABEL_LOSS
 
 
 class MCPlayer(DeepRLPlayer):
 
     def __behaviour_policy__(self, board):
         afterstates = self.__generate_afterstates__(board)
-        afterstate = self.__e_greedy__([(self.valueFunction.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates])
+        afterstate = self.__e_greedy__([(self.value_function.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates])
         self.training_samples += [afterstate[1].board]  # Add afterstate board_sample
         return afterstate[2]
 
     def register_winner(self, winner_color):
         self.training_labels = [config.LABEL_WIN if (self.color == winner_color) else config.LABEL_LOSS for sample in self.training_samples]
-        self.valueFunction.update(self.training_samples, self.training_labels)
+        self.value_function.update(self.training_samples, self.training_labels)
         self.training_samples = []
         self.training_labels = []
+
+
+class TDPlayer(MCPlayer):
+
+    def register_winner(self, winner_color):
+        for i in range(len(self.training_samples)-1):
+            self.training_labels.append(self.__td_error__(self.training_samples[i], self.training_samples[i+1]))
+        self.training_labels.append(self.__label_from_winner_color__(winner_color))
+
+        self.value_function.update(self.training_samples, self.training_labels)
+        self.training_samples = []
+        self.training_labels = []
+
+    def __td_error__(self, state, next_state, alpha=config.ALPHA):
+        v_state = self.value_function.evaluate(state)
+        v_next_state = self.value_function.evaluate(next_state)
+        return v_state + alpha * (v_next_state - v_state)

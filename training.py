@@ -1,6 +1,6 @@
 import src.config as config
 from src.othello import Othello
-from src.player import ComputerPlayer, RandomPlayer, MCPlayer
+from src.player import ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 from src.heuristic import OthelloHeuristic
 from src.valueFunction import ValueFunction
 from src.plotter import Plotter, print_inplace
@@ -12,7 +12,7 @@ from datetime import datetime
 
 plotter = Plotter()
 
-player1 = MCPlayer(color=config.BLACK, strategy=ValueFunction(plotter=plotter), e=config.EPSILON, time_limit=config.TIMEOUT)
+player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction(plotter=plotter), e=config.EPSILON, time_limit=config.TIMEOUT)
 player2 = RandomPlayer(color=config.WHITE, time_limit=config.TIMEOUT)
 
 simulation = Othello(player1, player2)
