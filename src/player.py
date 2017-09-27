@@ -6,7 +6,7 @@ import src.config as config
 from src.game_ai import GameArtificialIntelligence
 from src.heuristic import OthelloHeuristic
 from src.gui import NoGui
-from src.valueFunction import ValueFunction
+from src.valueFunction import ValueFunction, NoValueFunction
 from src.board import Board
 from src.plotter import Plotter, NoPlotter
 
@@ -18,6 +18,7 @@ class Player(object):
         self.time_limit = time_limit
         self.gui = gui
         self.plotter = NoPlotter()
+        self.value_function = NoValueFunction()
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")

@@ -39,13 +39,16 @@ class Othello:
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
-    def run_training_simulations(self, episodes):
+    def run_training_simulations(self, episodes, cuda=True):
         players = [self.players1, self.players2]
-        start_time = datetime.now()
+        for player in players:
+            player.value_function.cuda = cuda
 
+        start_time = datetime.now()
         for i in range(episodes):
             result = self.run(players[i % 2], players[(i+1) % 2])
             for player in players:
                 player.plotter.add_result(result)
 
             print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
+        print()

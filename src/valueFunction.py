@@ -17,11 +17,12 @@ class ValueFunction:
         self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
+        self.cuda = True
 
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
 
-        if torch.cuda.is_available():
+        if self.cuda and torch.cuda.is_available():
             tensor = tensor.cuda(torch.cuda.current_device())
 
         return self.model(Variable(tensor)).data[0][0]
@@ -32,7 +33,7 @@ class ValueFunction:
 
         accumulated_loss = 0
         for minibatch_samples, minibatch_labels in zip(minibatches_s, minibatches_l):
-            if torch.cuda.is_available():
+            if self.cuda and torch.cuda.is_available():
                 minibatch_samples, minibatch_labels = minibatch_samples.cuda(torch.cuda.current_device()), minibatch_labels.cuda(torch.cuda.current_device())
 
             self.optimizer.zero_grad()
@@ -86,7 +87,7 @@ class SimpleValueFunction(ValueFunction):
         super(SimpleValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = SimpleModel()
-        if torch.cuda.is_available():
+        if self.cuda and torch.cuda.is_available():
             self.model.cuda(torch.cuda.current_device())
 
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
@@ -131,14 +132,14 @@ class FCValueFunction(ValueFunction):
         super(FCValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = FCModel()
-        if torch.cuda.is_available():
+        if self.cuda and torch.cuda.is_available():
             self.model.cuda(torch.cuda.current_device())
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
 
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
 
-        if torch.cuda.is_available():
+        if self.cuda and torch.cuda.is_available():
             tensor = tensor.cuda(torch.cuda.current_device())
 
         return self.model(Variable(tensor)).data[0][0]
@@ -161,3 +162,12 @@ class FCModel(torch.nn.Module):
         x = F.relu(self.fc3(x))
 
         return F.sigmoid(x) + config.LABEL_LOSS
+
+
+class NoValueFunction:
+
+    def evaluate(self, board_sample):
+        pass
+
+    def update(self, training_samples, training_labels):
+        pass
