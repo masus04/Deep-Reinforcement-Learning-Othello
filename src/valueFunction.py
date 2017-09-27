@@ -177,3 +177,6 @@ class NoValueFunction:
 
     def update(self, training_samples, training_labels):
         pass
+
+    def use_cuda(self, cuda):
+        pass

@@ -30,6 +30,12 @@ class Player(object):
     def register_winner(self, winner_color):
         pass
 
+    def save_params(self):
+        pass
+
+    def load_params(self):
+        pass
+
 
 class HumanPlayer(Player):
 

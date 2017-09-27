@@ -51,4 +51,11 @@ class Othello:
                 player.plotter.add_result(result)
 
             print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
+
+            # Plot and save every 5000 episodes
+            if i>0 and (i+1)%5000 == 0:
+                for player in players:
+                    player.plotter.plot_results(resolution=200)
+                    player.value_function.trained_parameters = i
+                    player.save_params()
         print()
