@@ -8,6 +8,7 @@ from src.heuristic import OthelloHeuristic
 from src.gui import NoGui
 from src.valueFunction import ValueFunction
 from src.board import Board
+from src.plotter import Plotter, NoPlotter
 
 
 class Player(object):
@@ -16,6 +17,7 @@ class Player(object):
         self.color = color
         self.time_limit = time_limit
         self.gui = gui
+        self.plotter = NoPlotter()
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
@@ -97,10 +99,11 @@ class DeepRLPlayer(Player):
     """ DeepRLPlayers handle the interaction between the game and their value function.
         Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
 
-    def __init__(self, color, strategy=ValueFunction(), e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
         self.e = e
-        self.value_function = strategy
+        self.plotter = Plotter("%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color)))
+        self.value_function = ValueFunction(self.plotter)
         self.training_samples = []
         self.training_labels = []
 
@@ -113,10 +116,10 @@ class DeepRLPlayer(Player):
     def save_params(self):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
-        torch.save(self.value_function, "./Weights/%s_%s.pth" % (self.__class__.__name__, self.color))
+        torch.save(self.value_function, "./Weights/%s_%s.pth" % (self.__class__.__name__, config.get_color_from_player_number(self.color)))
 
     def load_params(self):
-        self.value_function = torch.load("./Weights/%s_%s.pth" % (self.__class__.__name__, self.color))
+        self.value_function = torch.load("./Weights/%s_%s.pth" % (self.__class__.__name__, config.get_color_from_player_number(self.color)))
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """

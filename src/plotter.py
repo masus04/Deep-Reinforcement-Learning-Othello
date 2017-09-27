@@ -3,9 +3,12 @@ import pandas as pd
 
 
 class Plotter:
-    losses = []
-    accuracies = []
-    results = []
+
+    def __init__(self, plot_name):
+        self.plot_name = plot_name
+        self.losses = []
+        self.accuracies = []
+        self.results = []
 
     def add_loss(self, loss):
         self.losses.append(loss)
@@ -20,13 +23,13 @@ class Plotter:
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        return plot_two_lines("losses", self.losses, "accuracies", self.accuracies, plot_name, resolution)
+        return plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
 
-    def plot_results(self, plot_name, resolution=False):
+    def plot_results(self, resolution=False):
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        return plot_two_lines("losses", self.losses, "results", self.results, plot_name, resolution)
+        return plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
 
 
 def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name, resolution=False):
@@ -58,3 +61,21 @@ def chunk_list(lst, lst_size):
 
   sublist = lst[0:len(lst)//lst_size]
   return [sum(sublist)/len(sublist)] + chunk_list(lst[len(lst)//lst_size:], lst_size-1)
+
+
+class NoPlotter:
+
+    def add_loss(self, loss):
+        pass
+
+    def add_accuracy(self, accuracy):
+        pass
+
+    def add_result(self, result):
+        pass
+
+    def plot_accuracy(self, plot_name, resolution=False):
+        pass
+
+    def plot_results(self, plot_name, resolution=False):
+        pass
