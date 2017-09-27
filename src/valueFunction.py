@@ -12,6 +12,8 @@ class ValueFunction:
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         self.plotter = plotter
         self.model = Model()
+        if torch.cuda.is_available():
+            self.model.cuda(torch.cuda.current_device())
         self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
@@ -20,7 +22,7 @@ class ValueFunction:
         tensor = torch.FloatTensor([[board_sample]])
 
         if torch.cuda.is_available():
-            tensor = tensor.cuda(0)
+            tensor = tensor.cuda(torch.cuda.current_device())
 
         return self.model(Variable(tensor)).data[0][0]
 
@@ -31,7 +33,7 @@ class ValueFunction:
         accumulated_loss = 0
         for minibatch_samples, minibatch_labels in zip(minibatches_s, minibatches_l):
             if torch.cuda.is_available():
-                minibatch_samples, minibatch_labels = minibatch_samples.cuda(0), minibatch_labels.cuda(0)
+                minibatch_samples, minibatch_labels = minibatch_samples.cuda(torch.cuda.current_device()), minibatch_labels.cuda(torch.cuda.current_device())
 
             self.optimizer.zero_grad()
             output = self.model(minibatch_samples)
@@ -84,6 +86,9 @@ class SimpleValueFunction(ValueFunction):
         super(SimpleValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = SimpleModel()
+        if torch.cuda.is_available():
+            self.model.cuda(torch.cuda.current_device())
+
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
 
 
@@ -126,13 +131,15 @@ class FCValueFunction(ValueFunction):
         super(FCValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = FCModel()
+        if torch.cuda.is_available():
+            self.model.cuda(torch.cuda.current_device())
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
 
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
 
         if torch.cuda.is_available():
-            tensor = tensor.cuda(0)
+            tensor = tensor.cuda(torch.cuda.current_device())
 
         return self.model(Variable(tensor)).data[0][0]
 
