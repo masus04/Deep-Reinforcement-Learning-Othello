@@ -5,12 +5,13 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 import src.config as config
+from src.plotter import Plotter
 
 
 class ValueFunction:
 
-    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
-        self.plotter = plotter
+    def __init__(self, learning_rate=config.LEARNING_RATE):
+        self.plotter = Plotter()
         self.model = Model()
         self.learning_rate = config.LEARNING_RATE
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)

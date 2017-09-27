@@ -1,19 +1,11 @@
 import src.config as config
 from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.heuristic import OthelloHeuristic
-from src.valueFunction import ValueFunction
-from src.plotter import Plotter, print_inplace
+from src.plotter import print_inplace
 from datetime import datetime
 
-# player1 = ComputerPlayer(color=config.BLACK, time_limit=config.TIMEOUT, strategy=OthelloHeuristic.DEFAULT_STRATEGY)
-# player1 = DeepRLPlayer(color=config.BLACK, time_limit=config.TIMEOUT, strategy=ValueFunction())
-# player1 = RandomPlayer(color=config.BLACK, time_limit=config.TIMEOUT)
-
-plotter = Plotter()
-
-player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction(plotter=plotter), e=config.EPSILON, time_limit=config.TIMEOUT)
-player2 = RandomPlayer(color=config.WHITE, time_limit=config.TIMEOUT)
+player1 = TDPlayer(color=config.BLACK)
+player2 = RandomPlayer(color=config.WHITE)
 
 simulation = Othello(player1, player2)
 start_time = datetime.now()
@@ -30,7 +22,7 @@ def run_simulations(episodes, silent=True):
             print("Winner: %s" % config.get_color_from_player_number(result))
         if result == config.BLACK:
             sum += 1
-        plotter.add_result(result)
+        player1.value_function.plotter.add_result(result)
         print_inplace("Episode %s/%s" % (i+1, episodes), (i+1)/episodes*100, datetime.now()-start_time)
 
     print()
@@ -49,7 +41,7 @@ print("Player 1 won " + str(run_simulations(episodes=TOTAL_GAMES-EVALUATION_GAME
 print("Started evaluation")
 print("Player 1 won " + str(run_simulations(episodes=EVALUATION_GAMES)) + "% of games in evaluation")
 
-plotter.plot_results("MCPlayer: %s Episodes" % TOTAL_GAMES, resolution=100)
+player1.value_function.plotter.plot_results("MCPlayer: %s Episodes" % TOTAL_GAMES, resolution=100)
 player1.save_params()
 
 """ | Training script | """

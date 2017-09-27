@@ -97,7 +97,7 @@ class DeepRLPlayer(Player):
     """ DeepRLPlayers handle the interaction between the game and their value function.
         Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
 
-    def __init__(self, color, strategy, e, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, strategy=ValueFunction(), e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
         self.e = e
         self.value_function = strategy
@@ -113,10 +113,10 @@ class DeepRLPlayer(Player):
     def save_params(self):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
-        torch.save(self.value_function, "./Weights/%s.pth" % self.__class__.__name__)
+        torch.save(self.value_function, "./Weights/%s_%s.pth" % (self.__class__.__name__, self.color))
 
     def load_params(self):
-        self.value_function = torch.load("./Weights/%s.pth" % self.__class__.__name__)
+        self.value_function = torch.load("./Weights/%s_%s.pth" % (self.__class__.__name__, self.color))
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
