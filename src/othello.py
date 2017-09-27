@@ -39,7 +39,7 @@ class Othello:
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
-    def run_training_simulations(self, episodes, cuda=False):
+    def run_training_simulations(self, episodes, cuda=True):
         players = [self.players1, self.players2]
         for player in players:
             player.value_function.use_cuda(cuda)

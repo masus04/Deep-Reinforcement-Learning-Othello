@@ -19,7 +19,7 @@ EVALUATION_GAMES = 0
 
 # training
 print("Started training")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES)
+simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True)
 player1.plotter.plot_results(resolution=100)
 player1.save_params()
 # evaluation

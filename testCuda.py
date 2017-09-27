@@ -16,10 +16,10 @@ TOTAL_GAMES = 200
 EVALUATION_GAMES = 0
 
 # training
-print("Started training without cuda")
+print("Started training with cuda")
 simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True)
 
-print("Started training with cuda")
+print("Started training without cuda")
 simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=False)
 
 """ | Training script | """
