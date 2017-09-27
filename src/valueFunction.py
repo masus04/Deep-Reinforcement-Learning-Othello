@@ -20,7 +20,7 @@ class ValueFunction:
     def use_cuda(self, cuda):
         if cuda and torch.cuda.is_available():
             self.cuda = cuda
-            self.model = self.module.cuda(0)
+            self.model = self.model.cuda(0)
         else:
             self.cuda = False
             self.model = self.model.cpu()
