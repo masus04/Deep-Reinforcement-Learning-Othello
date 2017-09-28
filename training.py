@@ -7,7 +7,7 @@ silent = "-silent" in sys.argv or "-s" in sys.argv
 print("\nSilent mode: %s" % silent)
 
 player1 = TDPlayer(color=config.BLACK)
-player2 = RandomPlayer(color=config.WHITE)
+player2 = TDPlayer(color=config.WHITE)
 
 simulation = Othello(player1, player2)
 
@@ -17,7 +17,7 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 100
+TOTAL_GAMES = 200000
 EVALUATION_GAMES = 0
 
 # training
@@ -26,7 +26,7 @@ simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True, sil
 
 # save artifacts
 for player in (player1, player2):
-    player.plotter.plot_results(resolution=200)
+    player.plotter.plot_results(resolution=100)
     player.save_params()
 
 # evaluation
