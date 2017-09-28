@@ -39,7 +39,7 @@ class Othello:
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
-    def run_training_simulations(self, episodes, cuda=True):
+    def run_training_simulations(self, episodes, cuda=True, silent=False):
         players = [self.players1, self.players2]
         for player in players:
             player.value_function.use_cuda(cuda)
@@ -49,8 +49,8 @@ class Othello:
             result = self.run(players[i % 2], players[(i+1) % 2])
             for player in players:
                 player.plotter.add_result(result)
-
-            print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
+            if not silent:
+                print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
 
             # Plot and save every 5000 episodes
             if i>0 and (i+1)%5000 == 0:
@@ -58,4 +58,7 @@ class Othello:
                     player.plotter.plot_results(resolution=200)
                     player.value_function.trained_parameters = i
                     player.save_params()
-        print()
+        if silent:
+            print("Training %s episodes took %s" % (episodes, str(datetime.now()-start_time).split(".")[0]))
+        else:
+            print()

@@ -1,3 +1,4 @@
+import sys
 import src.config as config
 from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
@@ -15,12 +16,12 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 100000
+TOTAL_GAMES = 10
 EVALUATION_GAMES = 0
 
 # training
 print("Started training")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True)
+simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True, silent="-silent" in sys.argv or "-s" in sys.argv)
 
 # evaluation
 print("Started evaluation")
