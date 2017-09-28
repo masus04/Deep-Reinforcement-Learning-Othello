@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from datetime import datetime
 
+import src.config as config
 import src.board as board
 from src.gui import Gui, NoGui
 from src.config import HEADLESS, get_color_from_player_number
@@ -50,7 +51,7 @@ class Othello:
         for i in range(episodes):
             result = self.run(players[i % 2], players[(i+1) % 2])
             for player in players:
-                player.plotter.add_result(result)
+                player.plotter.add_result(config.LABEL_WIN if result == player.color else config.LABEL_LOSS)
             if not silent:
                 self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
 

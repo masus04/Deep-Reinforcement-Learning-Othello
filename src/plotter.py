@@ -37,12 +37,12 @@ class Plotter:
         return self.plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
 
     @staticmethod
-    def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name, resolution=False):
+    def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name, resolution=10):
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        line1 = pd.Series(chunk_list(line1_values, resolution) if resolution <= len(line1_values) else line1_values, name=line1_name)
-        line2 = pd.Series(chunk_list(line2_values, resolution) if resolution <= len(line2_values) else line2_values, name=line2_name)
+        line1 = pd.Series(chunk_list(line1_values, resolution) if resolution and resolution <= len(line1_values) else line1_values, name=line1_name)
+        line2 = pd.Series(chunk_list(line2_values, resolution) if resolution and resolution <= len(line2_values) else line2_values, name=line2_name)
         df = pd.DataFrame([line1, line2])
         df = df.transpose()
         df.plot(secondary_y=[line2_name], title=plot_name, legend=True)
@@ -77,10 +77,10 @@ class NoPlotter:
     def add_result(self, result):
         pass
 
-    def plot_accuracy(self, plot_name, resolution=False):
+    def plot_accuracy(self, resolution=False):
         pass
 
-    def plot_results(self, plot_name, resolution=False):
+    def plot_results(self, resolution=False):
         pass
 
 
