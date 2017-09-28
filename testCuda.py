@@ -1,3 +1,5 @@
+import sys
+
 import src.config as config
 from src.othello import Othello
 from src.player import MCPlayer, TDPlayer
@@ -17,9 +19,9 @@ EVALUATION_GAMES = 0
 
 # training
 print("Started training with cuda")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True)
+simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True, silent="-silent" in sys.argv or "-s" in sys.argv)
 
 print("Started training without cuda")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=False)
+simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=False, silent="-silent" in sys.argv or "-s" in sys.argv)
 
 """ | Training script | """
