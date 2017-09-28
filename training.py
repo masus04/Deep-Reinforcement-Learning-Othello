@@ -4,7 +4,7 @@ from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 
 silent = "-silent" in sys.argv or "-s" in sys.argv
-print("Silent mode: %s" % silent)
+print("\nSilent mode: %s" % silent)
 
 player1 = TDPlayer(color=config.BLACK)
 player2 = RandomPlayer(color=config.WHITE)
@@ -17,7 +17,7 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 100000
+TOTAL_GAMES = 100
 EVALUATION_GAMES = 0
 
 # training
@@ -33,3 +33,5 @@ for player in (player1, player2):
 print("Started evaluation")
 
 """ | Training script | """
+
+print("Training completed")
