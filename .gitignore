@@ -105,3 +105,6 @@ ENV/
 
 # libfunctions
 functions.o
+
+# logging
+.log.*
