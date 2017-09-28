@@ -2,8 +2,6 @@ import sys
 import src.config as config
 from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.plotter import print_inplace
-from datetime import datetime
 
 player1 = TDPlayer(color=config.BLACK)
 player2 = TDPlayer(color=config.WHITE)
@@ -16,7 +14,7 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 100000
+TOTAL_GAMES = 100
 EVALUATION_GAMES = 0
 
 # training

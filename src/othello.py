@@ -4,7 +4,7 @@ from datetime import datetime
 import src.board as board
 from src.gui import Gui, NoGui
 from src.config import HEADLESS, get_color_from_player_number
-from src.plotter import print_inplace
+from src.plotter import Printer
 
 
 class Othello:
@@ -14,6 +14,8 @@ class Othello:
 
         self.players1 = player1.set_gui(self.gui)
         self.players2 = player2.set_gui(self.gui)
+
+        self.printer = Printer()
 
     def run(self, player1, player2):
         self.board = board.Board()
@@ -50,7 +52,7 @@ class Othello:
             for player in players:
                 player.plotter.add_result(result)
             if not silent:
-                print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
+                self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
 
             # Plot and save every 5000 episodes
             if i>0 and (i+1)%5000 == 0:
@@ -60,5 +62,3 @@ class Othello:
                     player.save_params()
         if silent:
             print("Training %s episodes took %s" % (episodes, str(datetime.now()-start_time).split(".")[0]))
-        else:
-            print()

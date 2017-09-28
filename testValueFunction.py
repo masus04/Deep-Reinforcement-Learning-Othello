@@ -2,23 +2,23 @@
 import src.config as config
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 from generateDataSet import generate_greedy_data_set
-from src.plotter import print_inplace
+from src.plotter import Printer
 from src.plotter import Plotter
 from datetime import datetime
 
 
 def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE, plot_name="unnamed"):
     plotter = Plotter()
+    printer = Printer()
     test_samples, test_labels = generate_greedy_data_set(10)
     start_time = datetime.now()
 
     value_function = FCValueFunction(plotter=plotter, learning_rate=learning_rate)
     for i in range(training_episodes):
         samples, labels = generate_greedy_data_set(games)
-        print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
+        printer.print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
         plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, value_function))
         value_function.update(samples, labels)
-    print()  # in order not to overwrite inplace
 
     print("Evaluation:")
     evaluate_accuracy(test_samples, test_labels, value_function, silent=True)
