@@ -87,11 +87,12 @@ class NoPlotter:
 class Printer:
 
     def __init__(self):
-        self.percentage = 0
+        self.percentage = -1
 
     def print_inplace(self, text, percentage, time_taken=None):
         percentage = int(percentage)
         if percentage > self.percentage:
+            self.percentage = percentage
             length_factor = 5
             progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
             progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
