@@ -3,6 +3,9 @@ import src.config as config
 from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 
+silent = "-silent" in sys.argv or "-s" in sys.argv
+print("Silent mode: %s" % silent)
+
 player1 = TDPlayer(color=config.BLACK)
 player2 = RandomPlayer(color=config.WHITE)
 
@@ -19,7 +22,7 @@ EVALUATION_GAMES = 0
 
 # training
 print("Started training")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True, silent="-silent" in sys.argv or "-s" in sys.argv)
+simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True, silent=silent)
 
 # save artifacts
 for player in (player1, player2):
