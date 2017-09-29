@@ -15,10 +15,12 @@ class Player(object):
 
     def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui()):
         self.color = color
+        self.player_name = "%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color))
         self.time_limit = time_limit
         self.gui = gui
         self.plotter = NoPlotter()
         self.value_function = NoValueFunction()
+        self.train = True
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
@@ -109,7 +111,7 @@ class DeepRLPlayer(Player):
     def __init__(self, color, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
         self.e = e
-        self.plotter = Plotter("%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color)))
+        self.plotter = Plotter(self.player_name)
         self.value_function = ValueFunction(self.plotter)
         self.training_samples = []
         self.training_labels = []
@@ -118,15 +120,28 @@ class DeepRLPlayer(Player):
         return self.__behaviour_policy__(board)
 
     def register_winner(self, winner_color):
-        raise NotImplementedError("function register_winner must be implemented by subclass")
+        if self.train:
+            self.__generate_training_labels__(winner_color)
+            self.value_function.update(self.training_samples, self.training_labels)
+        self.training_samples = []
+        self.training_labels = []
 
     def save_params(self):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
-        torch.save(self.value_function, "./Weights/%s_%s.pth" % (self.__class__.__name__, config.get_color_from_player_number(self.color)))
+        # Model needs to be moved to cpu in order to store and reuse on different machine
+        if torch.cuda.is_available():
+            self.value_function.model.cpu()
+        torch.save(self.value_function, "./Weights/%s.pth" % (self.player_name))
+        if torch.cuda.is_available():
+            self.value_function.model.cuda(0)
+
 
     def load_params(self):
-        self.value_function = torch.load("./Weights/%s_%s.pth" % (self.__class__.__name__, config.get_color_from_player_number(self.color)))
+        self.value_function = torch.load("./Weights/%s.pth" % (self.player_name))
+        self.plotter = self.value_function.plotter
+        if torch.cuda.is_available():
+            self.value_function.model.cuda(0)
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
@@ -156,23 +171,16 @@ class MCPlayer(DeepRLPlayer):
         self.training_samples += [afterstate[1].board]  # Add afterstate board_sample
         return afterstate[2]
 
-    def register_winner(self, winner_color):
+    def __generate_training_labels__(self, winner_color):
         self.training_labels = [config.LABEL_WIN if (self.color == winner_color) else config.LABEL_LOSS for sample in self.training_samples]
-        self.value_function.update(self.training_samples, self.training_labels)
-        self.training_samples = []
-        self.training_labels = []
 
 
 class TDPlayer(MCPlayer):
 
-    def register_winner(self, winner_color):
+    def __generate_training_labels__(self, winner_color):
         for i in range(len(self.training_samples)-1):
             self.training_labels.append(self.__td_error__(self.training_samples[i], self.training_samples[i+1]))
         self.training_labels.append(self.__label_from_winner_color__(winner_color))
-
-        self.value_function.update(self.training_samples, self.training_labels)
-        self.training_samples = []
-        self.training_labels = []
 
     def __td_error__(self, state, next_state, alpha=config.ALPHA):
         v_state = self.value_function.evaluate(state)

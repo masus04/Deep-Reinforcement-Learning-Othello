@@ -19,9 +19,9 @@ EVALUATION_GAMES = 0
 
 # training
 print("Started training with cuda")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=True, silent="-silent" in sys.argv or "-s" in sys.argv)
+simulation.run_simulations(TOTAL_GAMES-EVALUATION_GAMES)
 
 print("Started training without cuda")
-simulation.run_training_simulations(TOTAL_GAMES-EVALUATION_GAMES, cuda=False, silent="-silent" in sys.argv or "-s" in sys.argv)
+simulation.run_simulations(TOTAL_GAMES-EVALUATION_GAMES)
 
 """ | Training script | """
