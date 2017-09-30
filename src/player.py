@@ -129,19 +129,13 @@ class DeepRLPlayer(Player):
     def save_params(self):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
-        # Model needs to be moved to cpu in order to store and reuse on different machine
-        if torch.cuda.is_available():
-            self.value_function.model.cpu()
         torch.save(self.value_function, "./Weights/%s.pth" % (self.player_name))
-        if torch.cuda.is_available():
-            self.value_function.model.cuda(0)
-
 
     def load_params(self):
-        self.value_function = torch.load("./Weights/%s.pth" % (self.player_name))
+        """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
+        map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+        self.value_function = torch.load("./Weights/%s.pth" % (self.player_name), map_location=map_location)
         self.plotter = self.value_function.plotter
-        if torch.cuda.is_available():
-            self.value_function.model.cuda(0)
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """

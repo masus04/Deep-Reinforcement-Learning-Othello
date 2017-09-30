@@ -13,6 +13,7 @@ players = [player1, player2]
 
 EVALUATION_GAMES = 100
 
+print("Evaluation:")
 for player in players:
     player.load_params()
     player.train = False
@@ -21,5 +22,4 @@ for player in players:
         simulation = Othello(player, reference_player)
         results = simulation.run_simulations(EVALUATION_GAMES)
 
-        print("Evaluation:")
-        print("%s won %s of games agains %s" % (player.player_name, str(sum(results)/EVALUATION_GAMES * 100) + "%", reference_player.player_name))
+        print("%s won %s of games agains %s" % (player.player_name, "{0:.3g}".format((sum(results)/EVALUATION_GAMES-config.BLACK) * 100) + "%", reference_player.player_name))
