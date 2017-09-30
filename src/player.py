@@ -38,6 +38,10 @@ class Player(object):
     def load_params(self):
         pass
 
+    def __generate_afterstates__(self, board):
+        """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
+        return [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
+
 
 class HumanPlayer(Player):
 
@@ -75,6 +79,34 @@ class ComputerPlayer(Player):
             other_color = config.WHITE
 
         return self.ai.move_search(board, self.time_limit, self.color, other_color)
+
+
+class HeuristicPlayer(Player):
+
+    heuristic_table =[[100, -25, 10, 5, 5, 10, -25, 100],
+                      [-25, -25,  2, 2, 2, 2,  -25, -25],
+                      [ 10,   2,  5, 1, 1, 5,    2,  10],
+                      [  5,   2,  1, 2, 2, 1,    2,   5],
+                      [  5,   2,  1, 2, 2, 1,    2,   5],
+                      [ 10,   2,  5, 1, 1, 5,    2,  10],
+                      [-25, -25,  2, 2, 2, 2,  -25, -25],
+                      [100, -25, 10, 5, 5, 10, -25, 100]]
+
+    def get_move(self, board):
+        afterstates = [[self.evaluate(afterstate[0]), afterstate[1]] for afterstate in self.__generate_afterstates__(board)]
+        return max(afterstates)[1]
+
+    def evaluate(self, board):
+        board = board.board
+        value = 0
+        for i in range(len(self.heuristic_table)):
+            for j in range(len(self.heuristic_table[0])):
+                # afterstates are always from the perspective of the Black player
+                if board[i][j] == config.BLACK:
+                    value += self.heuristic_table[i][j] * int(board[i][j])
+                elif board[i][j] == config.WHITE:
+                    value -= self.heuristic_table[i][j] * int(board[i][j])
+        return value
 
 
 class ReportingPlayer:
@@ -135,11 +167,7 @@ class DeepRLPlayer(Player):
         """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
         map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
         self.value_function = torch.load("./Weights/%s.pth" % (self.player_name), map_location=map_location)
-        self.plotter = self.value_function.plotter
-
-    def __generate_afterstates__(self, board):
-        """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
-        return [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
+        # self.plotter = self.value_function.plotter !! This does not seem to work anyway plus it does not work with older valueFunctions!!
 
     def __behaviour_policy__(self, board):
         raise NotImplementedError("function behaviour_policy must be implemented by subclass")

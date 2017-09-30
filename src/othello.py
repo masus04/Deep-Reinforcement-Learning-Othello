@@ -13,9 +13,8 @@ class Othello:
     def __init__(self, player1, player2):
         self.gui = NoGui() if HEADLESS else Gui()
 
-        self.players1 = player1.set_gui(self.gui)
-        self.players2 = player2.set_gui(self.gui)
-
+        self.player1 = player1.set_gui(self.gui)
+        self.player2 = player2.set_gui(self.gui)
         self.printer = Printer()
 
     def run(self, player1, player2):
@@ -43,14 +42,15 @@ class Othello:
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
     def run_simulations(self, episodes):
-        players = [self.players1, self.players2]
+        players = [self.player1, self.player2]
         results = []
 
         start_time = datetime.now()
         for i in range(episodes):
-            results.append(self.run(players[i % 2], players[(i+1) % 2]))
+            result = config.LABEL_WIN if self.run(players[i % 2], players[(i+1) % 2]) == self.player1.color else config.LABEL_LOSS
+            results.append(result)
             for player in players:
-                player.plotter.add_result(config.LABEL_WIN if results[-1] == player.color else config.LABEL_LOSS)
+                player.plotter.add_result(result)
 
             self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
 
