@@ -38,6 +38,9 @@ class Player(object):
     def load_params(self):
         pass
 
+    def load_params(self):
+        pass
+
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
         return [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
