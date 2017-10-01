@@ -17,8 +17,8 @@ def generate_greedy_data_set(games, silent=True):
     for i in range(games):
         if not silent:
             print("Running simulation no. %s" % i)
-        simulation.run()
-        boards += player1.pop_report() + player1.pop_report()
+        simulation.run_simulations(1)
+        boards += player1.pop_report() + player2.pop_report()
 
     for board in boards:
         samples.append(board.board)

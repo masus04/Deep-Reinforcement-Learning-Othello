@@ -17,7 +17,7 @@ class Othello:
         self.player2 = player2.set_gui(self.gui)
         self.printer = Printer()
 
-    def run(self, player1, player2):
+    def __run__(self, player1, player2):
         self.board = board.Board()
 
         self.now_playing = player1
@@ -47,7 +47,7 @@ class Othello:
 
         start_time = datetime.now()
         for i in range(episodes):
-            result = config.LABEL_WIN if self.run(players[i % 2], players[(i+1) % 2]) == self.player1.color else config.LABEL_LOSS
+            result = config.LABEL_WIN if self.__run__(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
             results.append(result)
             for player in players:
                 player.plotter.add_result(result)

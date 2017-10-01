@@ -1,5 +1,6 @@
 
 Evaluation of 70k Games:
+
 Episode 100/100 |**********|100%|**********| Time: 0:00:27
 TDPlayer_Black won 35% of games against TDPlayer_White
 
@@ -26,4 +27,62 @@ RandomPlayer_Black won 52% of games against RandomPlayer_White
 
 Episode 100/100 |**********|100%|**********| Time: 0:00:03
 RandomPlayer_Black won 16% of games against HeuristicPlayer_White
+
+
+Evaluation of 100k Games:
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:25
+TDPlayer_Black won 92% of games against TDPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:17
+TDPlayer_Black won 51% of games against RandomPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:18
+TDPlayer_Black won 81% of games against HeuristicPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:22
+MCPlayer_Black won 33% of games against TDPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:13
+MCPlayer_Black won 84% of games against RandomPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:13
+MCPlayer_Black won 8% of games against HeuristicPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:13
+RandomPlayer_Black won 40% of games against TDPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:00
+RandomPlayer_Black won 45% of games against RandomPlayer_White
+
+Episode 100/100 |**********|100%|**********| Time: 0:00:03
+RandomPlayer_Black won 14% of games against HeuristicPlayer_White
+
+
+Additional verification of 3:
+Episode 2000/2000 |**********|100%|**********| Time: 0:08:30
+TDPlayer_Black won 37.8% of games against HeuristicPlayer_White
+
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:03:07
+TDPlayer_Black won 85.4% of games against HeuristicPlayer_White
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:33
+MCPlayer_Black won 3.3% of games against HeuristicPlayer_White
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:00:39
+RandomPlayer_Black won 16.2% of games against HeuristicPlayer_White
+
+
+Episode 10000/10000 |**********|100%|**********| Time: 0:46:35
+TDPlayer_Black won 10.5% of games against TDPlayer_White
+
+Episode 10000/10000 |**********|100%|**********| Time: 0:29:55
+TDPlayer_Black won 84.5% of games against HeuristicPlayer_White
+
+Episode 10000/10000 |**********|100%|**********| Time: 0:28:16
+HeuristicPlayer_Black won 55.4% of games against TDPlayer_White
+
+Episode 10000/10000 |**********|100%|**********| Time: 0:11:51
+HeuristicPlayer_Black won 100% of games against HeuristicPlayer_White
 
