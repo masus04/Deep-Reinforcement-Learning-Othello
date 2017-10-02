@@ -15,7 +15,7 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 100
+TOTAL_GAMES = 100000
 EVALUATION_GAMES = 0
 
 # training
