@@ -164,12 +164,12 @@ class DeepRLPlayer(Player):
     def save_params(self):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
-        torch.save(self.value_function, "./Weights/%s.pth" % (self.player_name))
+        torch.save(self.value_function, "./Weights/%s.pth" % self.player_name)
 
     def load_params(self):
         """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
         map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
-        self.value_function = torch.load("./Weights/%s.pth" % (self.player_name), map_location=map_location)
+        self.value_function = torch.load("./Weights/%s.pth" % self.player_name, map_location=map_location)
         # self.plotter = self.value_function.plotter !! This does not seem to work anyway plus it does not work with older valueFunctions!!
 
     def __behaviour_policy__(self, board):

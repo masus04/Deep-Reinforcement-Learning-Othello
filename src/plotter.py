@@ -14,6 +14,7 @@ class Plotter:
         self.losses = []
         self.accuracies = []
         self.results = []
+        self.last10Results = []
 
     def add_loss(self, loss):
         self.losses.append(loss)
@@ -23,6 +24,7 @@ class Plotter:
 
     def add_result(self, result):
         self.results.append(result)
+        self.last10Results.append(sum(self.results[-10:])/(10 if len(self.results)>10 else len(self.results)))
 
     def plot_accuracy(self, plot_name, resolution=False):
         """
@@ -35,7 +37,7 @@ class Plotter:
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
         self.plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
-        self.plot_two_lines("losses", self.losses, "results", self.results, "HighRes - %s, %s Episodes" % (self.plot_name, len(self.results)), resolution=False)
+        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "HighRes - %s, %s Episodes" % (self.plot_name, len(self.results)), resolution=False)
 
     @staticmethod
     def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name, resolution):
