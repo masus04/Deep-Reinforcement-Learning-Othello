@@ -95,31 +95,33 @@ class SimpleModel(torch.nn.Module):
     def __init__(self):
         super(SimpleModel, self).__init__()
 
+        self.conv_to_linear_params_size = 8*8*4
+
         # Experiment 1
         # self.final = torch.nn.Conv2d(in_channels=1, out_channels=1, kernel_size=8, padding=0)
 
         # Experiment 2
-        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=9, padding=4)
-        self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=9, padding=4)
+        # self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=9, padding=4)
+        # self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=9, padding=4)
 
         # Experiment 3
-        # self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=2)
-        # self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
-        # self.conv3 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
-        # self.conv4 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=2)
+        self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+        self.conv3 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+        self.conv4 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
 
         # Final Layer
         # self.final = torch.nn.Conv2d(in_channels=4, out_channels=1, kernel_size=8, padding=0)
-        self.final = torch.nn.Linear(in_features=8*8*4, out_features=1)
+        self.final = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
 
     def forward(self, x):
 
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
-        # x = F.relu(self.conv3(x))
-        # x = F.relu(self.conv4(x))
+        x = F.relu(self.conv3(x))
+        x = F.relu(self.conv4(x))
 
-        x = x.view(-1, 8*8*4)
+        x = x.view(-1, self.conv_to_linear_params_size)
         return F.sigmoid(self.final(x)) + config.LABEL_LOSS
 
 

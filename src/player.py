@@ -143,11 +143,11 @@ class DeepRLPlayer(Player):
     """ DeepRLPlayers handle the interaction between the game and their value function.
         Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
 
-    def __init__(self, color, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, strategy=ValueFunction, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
         self.e = e
         self.plotter = Plotter(self.player_name)
-        self.value_function = ValueFunction(self.plotter)
+        self.value_function = strategy(self.plotter)
         self.training_samples = []
         self.training_labels = []
 

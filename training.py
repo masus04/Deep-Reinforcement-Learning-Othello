@@ -2,9 +2,10 @@ import sys
 import src.config as config
 from src.othello import Othello
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
+from src.valueFunction import SimpleValueFunction, FCValueFunction
 
-player1 = TDPlayer(color=config.BLACK)
-player2 = HeuristicPlayer(color=config.WHITE)
+player1 = TDPlayer(color=config.BLACK, strategy=SimpleValueFunction)
+player2 = TDPlayer(color=config.WHITE, strategy=SimpleValueFunction)
 
 simulation = Othello(player1, player2)
 
@@ -14,7 +15,7 @@ simulation = Othello(player1, player2)
 
 """ | Training script | """
 
-TOTAL_GAMES = 100000
+TOTAL_GAMES = 100
 EVALUATION_GAMES = 0
 
 # training
@@ -24,7 +25,6 @@ simulation.run_simulations(TOTAL_GAMES-EVALUATION_GAMES)
 # save artifacts
 for player in (player1, player2):
     player.plotter.plot_results(resolution=100)
-    player.save_params()
 
 """ | Training script | """
 
