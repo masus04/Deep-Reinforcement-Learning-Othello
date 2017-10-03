@@ -21,6 +21,7 @@ class Player(object):
         self.plotter = NoPlotter()
         self.value_function = NoValueFunction()
         self.train = True
+        self.opponents = []
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
@@ -32,11 +33,16 @@ class Player(object):
     def register_winner(self, winner_color):
         pass
 
-    def save_params(self):
+    def save(self):
         pass
 
-    def load_params(self):
-        pass
+    @classmethod
+    def load_player(cls, color):
+        return cls(color)
+
+    def add_opponent(self, opponent):
+        if self.train:
+            self.opponents.append([opponent.__class__.__name__, 0])
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
@@ -157,19 +163,9 @@ class DeepRLPlayer(Player):
             self.__generate_training_labels__(winner_color)
             self.value_function.update(self.training_samples, self.training_labels)
             self.alpha *= config.ALPHA_REDUCE
+            self.opponents[-1][1] += 1
         self.training_samples = []
         self.training_labels = []
-
-    def save_params(self):
-        if not os.path.exists("./Weights"):
-            os.makedirs("./Weights")
-        torch.save(self.value_function, "./Weights/%s.pth" % self.player_name)
-
-    def load_params(self):
-        """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
-        map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
-        self.value_function = torch.load("./Weights/%s.pth" % self.player_name, map_location=map_location)
-        # self.plotter = self.value_function.plotter !! This does not seem to work anyway plus it does not work with older valueFunctions!!
 
     def __behaviour_policy__(self, board):
         raise NotImplementedError("function behaviour_policy must be implemented by subclass")
@@ -185,6 +181,30 @@ class DeepRLPlayer(Player):
 
     def __label_from_winner_color__(self, winner_color):
         return config.LABEL_WIN if winner_color == self.color else config.LABEL_LOSS
+
+    def save(self):
+        if not os.path.exists("./Players"):
+            os.makedirs("./Players")
+        torch.save(self, "./Players/%s.pth" % self.player_name)
+
+    @classmethod
+    def load_player(cls, color):
+        """ Loads model to the device it was saved to, except if cuda is not available -> load to cpu """
+        player_name = "%s_%s" % (cls.__name__, config.get_color_from_player_number(color))
+        map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+        return torch.load("./Players/%s.pth" % player_name, map_location=map_location)
+
+    def save_params(self):
+        """  DEPRECATED """
+        if not os.path.exists("./Weights"):
+            os.makedirs("./Weights")
+        torch.save(self.value_function, "./Weights/%s.pth" % self.player_name)
+
+    def load_params(self):
+        """  DEPRECATED: Loads model to the device it was saved to, except if cuda is not available -> load to cpu """
+        map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+        self.value_function = torch.load("./Weights/%s.pth" % self.player_name, map_location=map_location)
+        self.plotter = self.value_function.plotter
 
 
 class MCPlayer(DeepRLPlayer):

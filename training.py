@@ -16,15 +16,15 @@ simulation = Othello(player1, player2)
 """ | Training script | """
 
 TOTAL_GAMES = 100000
-EVALUATION_GAMES = 0
 
 # training
 print("\nStarted training")
-simulation.run_simulations(TOTAL_GAMES-EVALUATION_GAMES)
+simulation.run_simulations(TOTAL_GAMES)
 
 # save artifacts
 for player in (player1, player2):
     player.plotter.plot_results(resolution=100)
+    player.save()
 
 """ | Training script | """
 

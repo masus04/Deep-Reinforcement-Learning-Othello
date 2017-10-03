@@ -1,3 +1,5 @@
+import torch
+
 # Constants and configuration options.
 
 TIMEOUT = 0.2
@@ -31,3 +33,9 @@ def get_color_from_player_number(number):
         return "Black"
     else:
         return "White"
+
+
+def load_player(filename):
+    """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
+    map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+    return torch.load("./Players/%s.pth" % filename, map_location=map_location)

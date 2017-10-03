@@ -42,6 +42,8 @@ class Othello:
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
     def run_simulations(self, episodes):
+        self.player1.add_opponent(self.player2)
+        self.player2.add_opponent(self.player1)
         players = [self.player1, self.player2]
         results = []
 
@@ -59,6 +61,6 @@ class Othello:
                 for player in players:
                     player.plotter.plot_results(resolution=200)
                     player.value_function.trained_parameters = i
-                    player.save_params()
+                    player.save()
 
         return results
