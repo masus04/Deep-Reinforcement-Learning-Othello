@@ -24,7 +24,7 @@ class Plotter:
 
     def add_result(self, result):
         self.results.append(result)
-        self.last10Results.append(sum(self.results[-10:])/(10 if len(self.results)>10 else len(self.results)))
+        self.last10Results.append(sum(self.results[-20:])/(20 if len(self.results)>20 else len(self.results)))
 
     def plot_accuracy(self, plot_name, resolution=False):
         """

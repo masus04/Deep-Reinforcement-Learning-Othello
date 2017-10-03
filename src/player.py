@@ -13,9 +13,9 @@ from src.plotter import Plotter, NoPlotter
 
 class Player(object):
 
-    def __init__(self, color, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, strategy=NoGui, time_limit=config.TIMEOUT, gui=NoGui()):
         self.color = color
-        self.player_name = "%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color))
+        self.player_name = "%s_%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color), strategy.__name__)
         self.time_limit = time_limit
         self.gui = gui
         self.plotter = NoPlotter()
@@ -151,7 +151,7 @@ class DeepRLPlayer(Player):
         Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
 
     def __init__(self, color, strategy=ValueFunction, e=config.EPSILON, alpha=config.ALPHA, time_limit=config.TIMEOUT, gui=NoGui()):
-        super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
+        super(DeepRLPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
         self.e = e
         self.alpha = alpha
         self.plotter = Plotter(self.player_name)
@@ -192,9 +192,9 @@ class DeepRLPlayer(Player):
         torch.save(self, "./Players/%s.pth" % self.player_name)
 
     @classmethod
-    def load_player(cls, color):
+    def load_player(cls, color, strategy):
         """ Loads model to the device it was saved to, except if cuda is not available -> load to cpu """
-        player_name = "%s_%s" % (cls.__name__, config.get_color_from_player_number(color))
+        player_name = "%s_%s_%s" % (cls.__name__, config.get_color_from_player_number(color), strategy.__name__)
         map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
         return torch.load("./Players/%s.pth" % player_name, map_location=map_location)
 

@@ -51,8 +51,8 @@ class Othello:
         for i in range(episodes):
             result = config.LABEL_WIN if self.__run__(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
             results.append(result)
-            for player in players:
-                player.plotter.add_result(result)
+            players[0].plotter.add_result(result)
+            players[1].plotter.add_result((result+1) % 2)
 
             self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
 
@@ -60,7 +60,6 @@ class Othello:
             if i>0 and (i+1)%5000 == 0:
                 for player in players:
                     player.plotter.plot_results(resolution=200)
-                    player.value_function.trained_parameters = i
                     player.save()
 
         return results

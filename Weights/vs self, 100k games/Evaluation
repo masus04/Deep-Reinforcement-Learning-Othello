@@ -1,4 +1,4 @@
-TDPlayer 100k vs self:
+""" TDPlayer 100k vs self """
 
 Episode 5000/5000 |**********|100%|**********| Time: 0:24:36
 TDPlayer_Black won 47.4% of games against TDPlayer_White
@@ -17,3 +17,25 @@ TDPlayer_White won 2.62% of games against HeuristicPlayer_Black
 
 Episode 5000/5000 |**********|100%|**********| Time: 0:12:32
 TDPlayer_White won 50.9% of games against RandomPlayer_Black
+
+
+""" TDPlayer Simplified VF 80k vs self """
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:33
+TDPlayer_Black won 2.7% of games against TDPlayer_White
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:00
+TDPlayer_Black won 3.1% of games against HeuristicPlayer_White
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:01:33
+TDPlayer_Black won 56.3% of games against RandomPlayer_White
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:23
+TDPlayer_White won 97.8% of games against TDPlayer_Black
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:08
+TDPlayer_White won 85.2% of games against HeuristicPlayer_Black
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:01:43
+TDPlayer_White won 64.8% of games against RandomPlayer_Black
+
