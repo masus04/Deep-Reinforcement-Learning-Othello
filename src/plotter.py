@@ -38,6 +38,7 @@ class Plotter:
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
         self.plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
         self.plot_two_lines("losses", self.losses, "results", self.last10Results, "HighRes - %s, %s Episodes" % (self.plot_name, len(self.results)), resolution=False)
+        plt.close("all")
 
     @staticmethod
     def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name, resolution):
@@ -53,7 +54,8 @@ class Plotter:
         plt.xlabel = "Episodes"
         plt.savefig("./plots/%s.png" % plot_name)
 
-    def print_inplace(self, text, percentage, time_taken=None):
+    @staticmethod
+    def print_inplace(text, percentage, time_taken=None):
         length_factor = 5
         progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
         progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]

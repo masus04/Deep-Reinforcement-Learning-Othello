@@ -36,6 +36,10 @@ class Player(object):
     def save(self):
         pass
 
+    def load_params(self):
+        """ DEPRECATED """
+        pass
+
     @classmethod
     def load_player(cls, color):
         return cls(color)
