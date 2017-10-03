@@ -38,9 +38,6 @@ class Player(object):
     def load_params(self):
         pass
 
-    def load_params(self):
-        pass
-
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
         return [(Board(board.get_representation(self.color)).apply_move(valid_move, config.BLACK), valid_move) for valid_move in board.get_valid_moves(self.color)]
@@ -143,9 +140,10 @@ class DeepRLPlayer(Player):
     """ DeepRLPlayers handle the interaction between the game and their value function.
         Inside the player, the Board is represented as a Board object. However only the np.array board is passed to the evaluation function"""
 
-    def __init__(self, color, strategy=ValueFunction, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, strategy=ValueFunction, e=config.EPSILON, alpha=config.ALPHA, time_limit=config.TIMEOUT, gui=NoGui()):
         super(DeepRLPlayer, self).__init__(color=color, time_limit=time_limit, gui=gui)
         self.e = e
+        self.alpha = alpha
         self.plotter = Plotter(self.player_name)
         self.value_function = strategy(self.plotter)
         self.training_samples = []
@@ -158,6 +156,7 @@ class DeepRLPlayer(Player):
         if self.train:
             self.__generate_training_labels__(winner_color)
             self.value_function.update(self.training_samples, self.training_labels)
+            self.alpha *= config.ALPHA_REDUCE
         self.training_samples = []
         self.training_labels = []
 
@@ -207,7 +206,7 @@ class TDPlayer(MCPlayer):
             self.training_labels.append(self.__td_error__(self.training_samples[i], self.training_samples[i+1]))
         self.training_labels.append(self.__label_from_winner_color__(winner_color))
 
-    def __td_error__(self, state, next_state, alpha=config.ALPHA):
+    def __td_error__(self, state, next_state):
         v_state = self.value_function.evaluate(state)
         v_next_state = self.value_function.evaluate(next_state)
-        return v_state + alpha * (v_next_state - v_state)
+        return v_state + self.alpha * (v_next_state - v_state)

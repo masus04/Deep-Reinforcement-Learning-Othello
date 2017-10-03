@@ -9,9 +9,6 @@ player2 = MCPlayer(color=config.WHITE)
 
 simulation = Othello(player1, player2)
 
-""" Continue training """
-# player1.load_params()
-
 """ | Training script | """
 
 TOTAL_GAMES = 200

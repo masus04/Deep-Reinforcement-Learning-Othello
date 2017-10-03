@@ -20,9 +20,10 @@ LEARNING_RATE = float(round(0.1**3, 7))
 MINIBATCH_SIZE = 1
 
 EPSILON = 0.01
-EPSILON_REDUCE = .99995
+EPSILON_REDUCE = 0.99997
 
 ALPHA = 1
+ALPHA_REDUCE = 0.99997
 
 
 def get_color_from_player_number(number):

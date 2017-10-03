@@ -12,7 +12,7 @@ class ValueFunction:
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         self.plotter = plotter
         self.model = Model()
-        self.learning_rate = config.LEARNING_RATE
+        self.learning_rate = learning_rate
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
 
