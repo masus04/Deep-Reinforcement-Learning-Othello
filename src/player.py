@@ -13,9 +13,9 @@ from src.plotter import Plotter, NoPlotter
 
 class Player(object):
 
-    def __init__(self, color, strategy=NoGui, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
         self.color = color
-        self.player_name = "%s_%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color), strategy.__name__)
+        self.player_name = "%s_%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color), strategy.__name__ if strategy else "")
         self.time_limit = time_limit
         self.gui = gui
         self.plotter = NoPlotter()

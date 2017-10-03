@@ -49,6 +49,9 @@ class Othello:
 
         start_time = datetime.now()
         for i in range(episodes):
+            if i % 2 == 0:  # switch colors
+                self.player1.color, self.player2.color =self.player2.color, self.player1.color
+
             result = config.LABEL_WIN if self.__run__(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
             results.append(result)
             players[0].plotter.add_result(result)
