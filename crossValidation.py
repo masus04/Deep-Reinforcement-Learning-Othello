@@ -35,7 +35,7 @@ def evaluation(lr, a):
     player1.plotter.plot_results(comment=" lr:%s, a:%s" % (lr, a))
 
     """ Evaluation """
-    ref_players = [[player2, HeuristicPlayer(config.WHITE), RandomPlayer(config.WHITE)],
+    ref_players = [[HeuristicPlayer(config.WHITE), RandomPlayer(config.WHITE)],
                    [HeuristicPlayer(config.BLACK), RandomPlayer(config.BLACK)]]
 
     for player in (players + ref_players[0] + ref_players[1]):
@@ -46,7 +46,7 @@ def evaluation(lr, a):
         for ref in ref_players[i]:
             simulation = Othello(player, ref)
             results = simulation.run_simulations(EVALUATION_GAMES)
-            score = int(sum(results) / EVALUATION_GAMES) * 100
+            score = round((sum(results) / EVALUATION_GAMES) * 100)
             player.score += score
             ref.score += 100-score
             log_message("%s won %s of games against %s" % (player.player_name, str(score) + "%", ref.player_name))
