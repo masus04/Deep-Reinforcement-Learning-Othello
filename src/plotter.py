@@ -1,4 +1,5 @@
 import sys
+import os
 import torch
 if torch.cuda.is_available():
     import matplotlib
@@ -40,11 +41,11 @@ class Plotter:
         self.plot_two_lines("losses", self.losses, "results", self.last10Results, "HighRes - %s, %s Episodes%s" % (self.plot_name, len(self.results), comment), resolution=False)
         plt.close("all")
 
-    @staticmethod
-    def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name, resolution):
+    def plot_two_lines(self, line1_name, line1_values, line2_name, line2_values, plot_name, resolution):
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
+        self.clear_plots()
         line1 = pd.Series(chunk_list(line1_values, resolution) if resolution and resolution <= len(line1_values) else line1_values, name=line1_name)
         line2 = pd.Series(chunk_list(line2_values, resolution) if resolution and resolution <= len(line2_values) else line2_values, name=line2_name)
         df = pd.DataFrame([line1, line2])
@@ -55,12 +56,15 @@ class Plotter:
         plt.savefig("./plots/%s.png" % plot_name)
 
     @staticmethod
-    def print_inplace(text, percentage, time_taken=None):
-        length_factor = 5
-        progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
-        progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
-        sys.stdout.write("\r%s |%s|" % (text, progress_bar) + (" Time: %s" % str(time_taken).split(".")[0] if time_taken else ""))
-        sys.stdout.flush()
+    def clear_plots():
+        try:
+            folder = "./plots"
+            for file in os.listdir(folder):
+                file = os.path.join(folder, file)
+                if os.path.isfile(file) and ".png" in file:
+                    os.unlink(file)
+        except Exception as e:
+            print(e)
 
 
 def chunk_list(lst, lst_size):
