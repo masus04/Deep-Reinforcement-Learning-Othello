@@ -2,17 +2,30 @@ import src.config as config
 from src.othello import Othello
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 from src.valueFunction import SimpleValueFunction, FCValueFunction
+from datetime import datetime
 
-learning_rates = [float(round(0.1**i, 7)) for i in range(1, 7)]
+start_time = datetime.now()
+
+learning_rates = [float("1e-%d" %i) for i in range(1, 7)]
 alphas = [float(round(0.1**i, 8)) for i in range(1, 9)]
 
-TRAINING_GAMES = 10
-EVALUATION_GAMES = 10
+TRAINING_GAMES = 2000
+EVALUATION_GAMES = 100
+
+Player = TDPlayer
+evaluation_file = open("./plots/crossEvaluation_%s.txt" % Player.__name__, "w")
+
+
+def log_message(message):
+    print(message)
+    evaluation_file.write(message + "\n")
 
 
 def evaluation(lr, a):
-    player1 = TDPlayer(color=config.BLACK, strategy=SimpleValueFunction, lr=lr, alpha=a)
-    player2 = TDPlayer(color=config.WHITE, strategy=SimpleValueFunction, lr=lr, alpha=a)
+    log_message("\nEvaluating LR:%s a:%s" % (lr, a))
+
+    player1 = Player(color=config.BLACK, strategy=SimpleValueFunction, lr=lr, alpha=a)
+    player2 = Player(color=config.WHITE, strategy=SimpleValueFunction, lr=lr, alpha=a)
 
     players = [player1, player2]
     """ Training """
@@ -25,17 +38,27 @@ def evaluation(lr, a):
     ref_players = [[player2, HeuristicPlayer(config.WHITE), RandomPlayer(config.WHITE)],
                    [HeuristicPlayer(config.BLACK), RandomPlayer(config.BLACK)]]
 
-    for i, player in enumerate(players):
+    for player in (players + ref_players[0] + ref_players[1]):
         player.train = False
+        player.score = 0
 
+    for i, player in enumerate(players):
         for ref in ref_players[i]:
-            ref.train = False
             simulation = Othello(player, ref)
             results = simulation.run_simulations(EVALUATION_GAMES)
+            score = int(sum(results) / EVALUATION_GAMES) * 100
+            player.score += score
+            ref.score += 100-score
+            log_message("%s won %s of games against %s" % (player.player_name, str(score) + "%", ref.player_name))
 
-            print("%s won %s of games against %s\n" % (player.player_name, "{0:.3g}".format((sum(results) / EVALUATION_GAMES) * 100) + "%", ref.player_name))
+        log_message("%s achieved a score of %s" % (player.player_name, player.score))
+
+    return player1.score + player2.score
 
 
-for lr in learning_rates:
-    for a in alphas:
-        evaluation(lr, a)
+results = [(evaluation(lr, a), lr, a) for lr in learning_rates for a in alphas]
+log_message("\n")
+for r in sorted(results):
+    log_message("score:%s lr:%s a:%s" % r)
+
+print(str(datetime.now() - start_time).split(".")[0])
