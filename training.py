@@ -1,4 +1,3 @@
-import sys
 import src.config as config
 from src.othello import Othello
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer

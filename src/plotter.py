@@ -32,12 +32,12 @@ class Plotter:
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
         return self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
 
-    def plot_results(self, resolution=False):
+    def plot_results(self, resolution=False, comment=""):
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        self.plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
-        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "HighRes - %s, %s Episodes" % (self.plot_name, len(self.results)), resolution=False)
+        self.plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes%s" % (self.plot_name, len(self.results), comment), resolution)
+        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "HighRes - %s, %s Episodes%s" % (self.plot_name, len(self.results), comment), resolution=False)
         plt.close("all")
 
     @staticmethod
