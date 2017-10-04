@@ -18,14 +18,14 @@ LABEL_LOSS = 0
 LABEL_WIN = 1
 
 # Hyperparameters
-LEARNING_RATE = float(round(0.1**3, 7))
+LEARNING_RATE = float(round(0.1**1, 7))
 MINIBATCH_SIZE = 1
 
 EPSILON = 0.01
 EPSILON_REDUCE = 0.99995
 
-ALPHA = 0.01
-ALPHA_REDUCE = 0.99996
+ALPHA = float(round(0.1**5, 9))
+ALPHA_REDUCE = 0.99995
 
 
 def get_color_from_player_number(number):
