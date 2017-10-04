@@ -52,6 +52,7 @@ def evaluation(lr, a):
             log_message("%s won %s of games against %s" % (player.player_name, str(score) + "%", ref.player_name))
 
         log_message("%s achieved a score of %s" % (player.player_name, player.score))
+        print("Simulation time: %s" % str(datetime.now() - start_time).split(".")[0])
 
     return player1.score + player2.score
 
