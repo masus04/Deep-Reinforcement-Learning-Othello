@@ -49,7 +49,7 @@ class Plotter:
         line2 = pd.Series(chunk_list(line2_values, resolution) if resolution and resolution <= len(line2_values) else line2_values, name=line2_name)
         df = pd.DataFrame([line1, line2])
         df = df.transpose()
-        df.plot(secondary_y=[line2_name], title=plot_name, legend=True)
+        df.plot(secondary_y=[line2_name], title=plot_name, legend=True, figsize=(16, 9))
         plt.title = plot_name
         plt.xlabel = "Episodes"
         plt.savefig("./plots/%s.png" % plot_name)
