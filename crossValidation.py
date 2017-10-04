@@ -62,3 +62,4 @@ for r in sorted(results):
     log_message("score:%s lr:%s a:%s" % r)
 
 print(str(datetime.now() - start_time).split(".")[0])
+evaluation_file.close()

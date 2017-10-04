@@ -1,0 +1,20 @@
+""" TDPlayer 100k vs self """
+
+Episode 5000/5000 |**********|100%|**********| Time: 0:24:36
+TDPlayer_Black won 47.4% of games against TDPlayer_White
+
+Episode 5000/5000 |**********|100%|**********| Time: 0:15:15
+TDPlayer_Black won 84.5% of games against HeuristicPlayer_White
+
+Episode 5000/5000 |**********|100%|**********| Time: 0:12:33
+TDPlayer_Black won 52.1% of games against RandomPlayer_White
+
+Episode 5000/5000 |**********|100%|**********| Time: 0:23:45
+TDPlayer_White won 50.3% of games against TDPlayer_Black
+
+Episode 5000/5000 |**********|100%|**********| Time: 0:14:37
+TDPlayer_White won 2.62% of games against HeuristicPlayer_Black
+
+Episode 5000/5000 |**********|100%|**********| Time: 0:12:32
+TDPlayer_White won 50.9% of games against RandomPlayer_Black
+

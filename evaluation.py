@@ -16,7 +16,7 @@ random_white = RandomPlayer(color=config.WHITE)
 players = [td_black, td_white]
 reference_players = [[td_white, heuristic_white, random_white], [td_black, heuristic_black, random_black]]
 
-EVALUATION_GAMES = 10
+EVALUATION_GAMES = 1000
 
 print("Evaluation:")
 for i, player in enumerate(players):

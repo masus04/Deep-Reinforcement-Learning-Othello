@@ -1,0 +1,18 @@
+Evaluation for lr:1e-5, a:1
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:36
+TDPlayer_Black_SimpleValueFunction won 29.4% of games against TDPlayer_White_SimpleValueFunction
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:01:54
+TDPlayer_Black_SimpleValueFunction won 3.5% of games against HeuristicPlayer_White_
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:01:38
+TDPlayer_Black_SimpleValueFunction won 61% of games against RandomPlayer_White_
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:34
+TDPlayer_White_SimpleValueFunction won 71.3% of games against TDPlayer_Black_SimpleValueFunction
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:02:35
+TDPlayer_White_SimpleValueFunction won 24.6% of games against HeuristicPlayer_Black_
+
+Episode 1000/1000 |**********|100%|**********| Time: 0:01:39
+TDPlayer_White_SimpleValueFunction won 60.7% of games against RandomPlayer_Black_
