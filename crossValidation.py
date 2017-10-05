@@ -9,8 +9,8 @@ start_time = datetime.now()
 learning_rates = [float("1e-%d" %i) for i in range(1, 7)]
 alphas = [float(round(0.1**i, 8)) for i in range(1, 9)]
 
-TRAINING_GAMES = 2000
-EVALUATION_GAMES = 100
+TRAINING_GAMES = 1000
+EVALUATION_GAMES = 50
 
 Player = TDPlayer
 evaluation_file = open("./plots/crossEvaluation_%s.txt" % Player.__name__, "w")
@@ -32,7 +32,8 @@ def evaluation(lr, a):
     simulation = Othello(player1, player2)
     simulation.run_simulations(TRAINING_GAMES)
 
-    player1.plotter.plot_results(comment=" lr:%s, a:%s" % (lr, a))
+    player1.plotter.plot_results(resolution=200, comment=" lr:%s, a:%s" % (lr, a))
+    player2.plotter.plot_results(resolution=200, comment=" lr:%s, a:%s" % (lr, a))
 
     """ Evaluation """
     ref_players = [[HeuristicPlayer(config.WHITE), RandomPlayer(config.WHITE)],
