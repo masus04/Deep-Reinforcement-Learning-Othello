@@ -4,12 +4,12 @@ from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer, TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction
 
-td_black = TDPlayer.load_player(color=config.BLACK, strategy=SimpleValueFunction)
+td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 heuristic_black = HeuristicPlayer(color=config.BLACK)
 random_black = RandomPlayer(color=config.BLACK)
 
-td_white = TDPlayer.load_player(color=config.WHITE, strategy=SimpleValueFunction)
+td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
 heuristic_white = HeuristicPlayer(color=config.WHITE)
 random_white = RandomPlayer(color=config.WHITE)
 

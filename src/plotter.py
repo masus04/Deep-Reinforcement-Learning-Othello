@@ -45,7 +45,6 @@ class Plotter:
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        self.clear_plots()
         line1 = pd.Series(chunk_list(line1_values, resolution) if resolution and resolution <= len(line1_values) else line1_values, name=line1_name)
         line2 = pd.Series(chunk_list(line2_values, resolution) if resolution and resolution <= len(line2_values) else line2_values, name=line2_name)
         df = pd.DataFrame([line1, line2])
@@ -56,12 +55,12 @@ class Plotter:
         plt.savefig("./plots/%s.png" % plot_name)
 
     @staticmethod
-    def clear_plots():
+    def clear_plots(match):
         try:
             folder = "./plots"
             for file in os.listdir(folder):
                 file = os.path.join(folder, file)
-                if os.path.isfile(file) and ".png" in file:
+                if os.path.isfile(file) and ".png" in file and match in file:
                     os.unlink(file)
         except Exception as e:
             print(e)

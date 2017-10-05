@@ -9,7 +9,7 @@ start_time = datetime.now()
 learning_rates = [float("1e-%d" %i) for i in range(1, 6)]
 alphas =         [float("1e-%d" %i) for i in range(1, 6)]
 
-TRAINING_GAMES = 1000
+TRAINING_GAMES = 1500
 EVALUATION_GAMES = 50
 
 Player = TDPlayer
@@ -53,7 +53,7 @@ def evaluation(lr, a):
             log_message("%s won %s of games against %s" % (player.player_name, str(score) + "%", ref.player_name))
 
         log_message("%s achieved a score of %s" % (player.player_name, player.score))
-        print("Simulation time: %s" % str(datetime.now() - start_time).split(".")[0])
+    print("Simulation time: %s" % str(datetime.now() - start_time).split(".")[0])
 
     return player1.score + player2.score
 
