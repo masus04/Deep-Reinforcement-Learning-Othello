@@ -92,7 +92,7 @@ class ComputerPlayer(Player):
 
 
 class HeuristicPlayer(Player):
-
+    """ This is a standardized Benchmark player. Good implementations reach up to 95% win rate against it """
     heuristic_table =[[100, -25, 10, 5, 5, 10, -25, 100],
                       [-25, -25,  2, 2, 2, 2,  -25, -25],
                       [ 10,   2,  5, 1, 1, 5,    2,  10],

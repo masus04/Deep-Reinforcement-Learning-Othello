@@ -16,15 +16,14 @@ random_white = RandomPlayer(color=config.WHITE)
 players = [td_black, td_white]
 reference_players = [[td_white, heuristic_white, random_white], [td_black, heuristic_black, random_black]]
 
-EVALUATION_GAMES = 1000
+EVALUATION_GAMES = 200
 
-print("Evaluation:")
 for i, player in enumerate(players):
     player.train = False
 
+    print("Evaluating %s:" % player.player_name)
     for reference_player in reference_players[i]:
         reference_player.train = False
         simulation = Othello(player, reference_player)
         results = simulation.run_simulations(EVALUATION_GAMES)
-
         print("%s won %s of games against %s\n" % (player.player_name, "{0:.3g}".format((sum(results)/EVALUATION_GAMES) * 100) + "%", reference_player.player_name))

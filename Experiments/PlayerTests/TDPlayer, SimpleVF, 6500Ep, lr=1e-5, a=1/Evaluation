@@ -16,3 +16,7 @@ TDPlayer_White_SimpleValueFunction won 24.6% of games against HeuristicPlayer_Bl
 
 Episode 1000/1000 |**********|100%|**********| Time: 0:01:39
 TDPlayer_White_SimpleValueFunction won 60.7% of games against RandomPlayer_Black_
+
+For Reference:
+Episode 1000/1000 |**********|100%|**********| Time: 0:00:35
+HeuristicPlayer_Black_ won 81.8% of games against RandomPlayer_White_
