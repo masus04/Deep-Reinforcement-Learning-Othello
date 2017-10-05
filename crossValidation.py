@@ -1,13 +1,13 @@
 import src.config as config
 from src.othello import Othello
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import SimpleValueFunction, FCValueFunction
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 from datetime import datetime
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(1, 7)]
-alphas = [float(round(0.1**i, 8)) for i in range(1, 9)]
+learning_rates = [float("1e-%d" %i) for i in range(1, 6)]
+alphas =         [float("1e-%d" %i) for i in range(1, 6)]
 
 TRAINING_GAMES = 1000
 EVALUATION_GAMES = 50
@@ -24,8 +24,8 @@ def log_message(message):
 def evaluation(lr, a):
     log_message("\nEvaluating LR:%s a:%s" % (lr, a))
 
-    player1 = Player(color=config.BLACK, strategy=SimpleValueFunction, lr=lr, alpha=a)
-    player2 = Player(color=config.WHITE, strategy=SimpleValueFunction, lr=lr, alpha=a)
+    player1 = Player(color=config.BLACK, strategy=ValueFunction, lr=lr, alpha=a)
+    player2 = Player(color=config.WHITE, strategy=ValueFunction, lr=lr, alpha=a)
 
     players = [player1, player2]
     """ Training """
