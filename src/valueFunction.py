@@ -12,6 +12,8 @@ class ValueFunction:
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         self.plotter = plotter
         self.model = Model()
+        if torch.cuda.is_available():
+            self.model.cuda(0)
         self.learning_rate = learning_rate
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
