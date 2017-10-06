@@ -6,8 +6,8 @@ from datetime import datetime
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(1, 6)]
-alphas =         [float("1e-%d" %i) for i in range(1, 6)]
+learning_rates = [float("1e-%d" %i) for i in range(1, 5)]
+alphas =         [float("1e-%d" %i) for i in range(1, 5)]
 
 TRAINING_GAMES = 1500
 EVALUATION_GAMES = 50
