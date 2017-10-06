@@ -21,7 +21,7 @@ def train(player1, player2, games, evaluation_period):
 
     """ Actual training """
     start_time = datetime.now()
-    print("\nTraining %s&%s" % (player1.player_name, player2.player_name))
+    print("Training %s & %s" % (player1.player_name, player2.player_name))
     evaluation.evaluate(player=player1, games=4, silent=True)
     evaluation.evaluate(player=player2, games=4, silent=True)
     for i in range(games//evaluation_period):

@@ -24,7 +24,7 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
     player.score = 0
 
     if not silent:
-        log_method("\nEvaluating %s:" % player.player_name)
+        log_method("Evaluating %s:" % player.player_name)
     for reference_player in reference_players:
         reference_player.train = False
         simulation = Othello(player, reference_player)
@@ -37,7 +37,7 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
     player.train = True
     player.plotter.add_evaluation_score(player.score)
     if not silent:
-        log_method("%s achieved an evaluation score of: %s\n" % (player.player_name, player.score))
+        log_method("|-- %s achieved an evaluation score of: %s --|" % (player.player_name, player.score))
     return player.score
 
 
