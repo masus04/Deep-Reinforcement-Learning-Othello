@@ -1,4 +1,8 @@
+import os
 import torch
+
+if not os.path.exists("./plots"):
+    os.makedirs("./plots")
 
 # Constants and configuration options.
 
