@@ -9,8 +9,10 @@ player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction)
 simulation = Othello(player1, player2)
 
 """ Continue training """
-# player1.load_params()
-# player2.load_params()
+# player1.load_player(color=config.BLACK, strategy=ValueFunction)
+# player2.load_player(color=config.WHITE, strategy=ValueFunction)
+
+# player1.value_function = player2.value_function.copy(player1.plotter)
 
 """ | Training script | """
 

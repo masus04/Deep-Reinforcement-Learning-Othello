@@ -10,8 +10,8 @@ from src.plotter import Printer
 
 class Othello:
 
-    def __init__(self, player1, player2):
-        self.gui = NoGui() if HEADLESS else Gui()
+    def __init__(self, player1, player2, headless=HEADLESS):
+        self.gui = NoGui() if headless else Gui()
 
         self.player1 = player1.set_gui(self.gui)
         self.player2 = player2.set_gui(self.gui)
@@ -42,6 +42,8 @@ class Othello:
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
     def run_simulations(self, episodes, clear_plots=False):
+        colors = (self.player1.color, self.player2.color)
+
         self.player1.add_opponent(self.player2)
         self.player2.add_opponent(self.player1)
         players = [self.player1, self.player2]
@@ -66,5 +68,7 @@ class Othello:
                         player.plotter.clear_plots(player.player_name)
                     player.plotter.plot_results(resolution=200)
                     player.save()
+
+        self.player1.color, self.player2.color = colors
 
         return results
