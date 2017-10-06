@@ -5,25 +5,45 @@ from src.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer, 
 from src.valueFunction import ValueFunction, SimpleValueFunction
 
 td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
-mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
-heuristic_black = HeuristicPlayer(color=config.BLACK)
-random_black = RandomPlayer(color=config.BLACK)
-
 td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
-heuristic_white = HeuristicPlayer(color=config.WHITE)
-random_white = RandomPlayer(color=config.WHITE)
 
-players = [td_black, td_white]
-reference_players = [[td_white, heuristic_white, random_white], [td_black, heuristic_black, random_black]]
+mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
-EVALUATION_GAMES = 300
+EVALUATION_GAMES = 100
 
-for i, player in enumerate(players):
+
+def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
+    other_color = config.WHITE if player.color == config.BLACK else config.BLACK
+
+    heuristic_player = HeuristicPlayer(color=other_color)
+    random_player = RandomPlayer(color=other_color)
+
+    reference_players = [heuristic_player, random_player]
+
     player.train = False
+    player.score = 0
 
-    print("Evaluating %s:" % player.player_name)
-    for reference_player in reference_players[i]:
+    if not silent:
+        log_method("\nEvaluating %s:" % player.player_name)
+    for reference_player in reference_players:
         reference_player.train = False
         simulation = Othello(player, reference_player)
-        results = simulation.run_simulations(EVALUATION_GAMES)
-        print("%s won %s of games against %s\n" % (player.player_name, "{0:.3g}".format((sum(results)/EVALUATION_GAMES) * 100) + "%", reference_player.player_name))
+        results = simulation.run_simulations(games, silent=silent)
+        player.score += round((sum(results) / games) * 100)
+        if not silent:
+            log_method("%s won %s of games against %s" % (player.player_name, "{0:.3g}".format((sum(results)/games) * 100) + "%", reference_player.player_name))
+
+    player.score /= len(reference_players)  # Normalize to 100pts max
+    player.train = True
+    player.plotter.add_evaluation_score(player.score)
+    if not silent:
+        log_method("%s achieved an evaluation score of: %s\n" % (player.player_name, player.score))
+    return player.score
+
+
+if __name__ == "__main__":
+
+    for player in [td_black, td_white]:
+        evaluate(player)
+        player.plotter.plot_results()
+        player.plotter.plot_scores()

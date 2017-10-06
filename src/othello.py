@@ -41,7 +41,7 @@ class Othello:
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
-    def run_simulations(self, episodes, clear_plots=False):
+    def run_simulations(self, episodes, clear_plots=False, silent=False):
         colors = (self.player1.color, self.player2.color)
 
         self.player1.add_opponent(self.player2)
@@ -56,10 +56,12 @@ class Othello:
 
             result = config.LABEL_WIN if self.__run__(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
             results.append(result)
-            players[0].plotter.add_result(result)
-            players[1].plotter.add_result((result+1) % 2)
+            if self.player1.train:
+                players[0].plotter.add_result(result)
+                players[1].plotter.add_result((result+1) % 2)
 
-            self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
+            if not silent:
+                self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
 
             # Plot and save every 5000 episodes
             if i>0 and (i+1)%5000 == 0:

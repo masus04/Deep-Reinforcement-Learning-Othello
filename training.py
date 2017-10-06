@@ -1,32 +1,52 @@
+from datetime import datetime
+
 import src.config as config
 from src.othello import Othello
+from src.plotter import Printer
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 
-player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.1, alpha=0.01)
-player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction)
+import evaluation
 
-simulation = Othello(player1, player2)
 
-""" Continue training """
-# player1.load_player(color=config.BLACK, strategy=ValueFunction)
-# player2.load_player(color=config.WHITE, strategy=ValueFunction)
+def train(player1, player2, games, evaluation_period):
+    simulation = Othello(player1, player2)
+    printer = Printer()
 
-# player1.value_function = player2.value_function.copy(player1.plotter)
+    """ Continue training """
+    # player1.load_player(color=config.BLACK, strategy=ValueFunction)
+    # player2.load_player(color=config.WHITE, strategy=ValueFunction)
 
-""" | Training script | """
+    # player1.value_function = player2.value_function.copy(player1.plotter)
 
-TOTAL_GAMES = 100000
+    """ Actual training """
+    start_time = datetime.now()
+    print("\nTraining %s&%s" % (player1.player_name, player2.player_name))
+    evaluation.evaluate(player=player1, games=4, silent=True)
+    evaluation.evaluate(player=player2, games=4, silent=True)
+    for i in range(games//evaluation_period):
+        evaluation.evaluate(player=player1, games=8, silent=True)
+        evaluation.evaluate(player=player2, games=8, silent=True)
+        # Training
+        simulation.run_simulations(episodes=evaluation_period, clear_plots=True, silent=True)
+        # Evaluation
+        printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
-# training
-print("\nStarted training")
-simulation.run_simulations(TOTAL_GAMES, clear_plots=True)
 
-# save artifacts
-for player in (player1, player2):
-    player.plotter.plot_results(resolution=100)
-    player.save()
+if __name__ == "__main__":
 
-""" | Training script | """
+    player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.1, alpha=0.01)
+    player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction)
 
-print("Training completed")
+    TOTAL_GAMES = 50000
+    EVALUATION_PERIOD = 100
+
+    train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
+
+    # save artifacts
+    for player in (player1, player2):
+        player.plotter.plot_results()
+        player.plotter.plot_scores()
+        player.save()
+
+    print("Training completed")

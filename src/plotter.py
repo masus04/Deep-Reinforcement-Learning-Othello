@@ -15,6 +15,7 @@ class Plotter:
         self.losses = []
         self.accuracies = []
         self.results = []
+        self.evaluation_scores = []
         self.last10Results = []
 
     def add_loss(self, loss):
@@ -27,26 +28,36 @@ class Plotter:
         self.results.append(result)
         self.last10Results.append(sum(self.results[-20:])/(20 if len(self.results)>20 else len(self.results)))
 
-    def plot_accuracy(self, plot_name, resolution=False):
-        """
-        @plot_name: The name under which to save the plot
-        @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        return self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
+    def add_evaluation_score(self, score):
+        self.evaluation_scores.append(score)
 
-    def plot_results(self, resolution=False, comment=""):
-        """
-        @plot_name: The name under which to save the plot
-        @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        self.plot_two_lines("losses", self.losses, "results", self.results, "%s, %s Episodes%s" % (self.plot_name, len(self.results), comment), resolution)
-        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "HighRes - %s, %s Episodes%s" % (self.plot_name, len(self.results), comment), resolution=False)
+    def plot_accuracy(self, resolution=False):
+        self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
         plt.close("all")
 
-    def plot_two_lines(self, line1_name, line1_values, line2_name, line2_values, plot_name, resolution):
+    def plot_results(self, comment=""):
+        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "%s, %s Episodes%s" % (self.plot_name, len(self.results), comment))
+        plt.close("all")
+
+    def plot_scores(self, comment=""):
+        stretch_factor = len(self.losses)//(len(self.evaluation_scores)-1)
+        eval_scores = []
+        for i in range(len(self.evaluation_scores)):
+            eval_scores += [self.evaluation_scores[i]]
+            if len(self.evaluation_scores) > i+1:
+                delta = self.evaluation_scores[i+1]-self.evaluation_scores[i]
+                eval_scores += [self.evaluation_scores[i] + delta*j/stretch_factor for j in range(stretch_factor)]
+
+        self.plot_two_lines("losses", self.losses, "evaluation score", eval_scores, "Evaluation scores %s, %s Episodes%s"% (self.plot_name, len(self.results), comment))
+        plt.close("all")
+
+    @staticmethod
+    def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name="."):
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        line1 = pd.Series(chunk_list(line1_values, resolution) if resolution and resolution <= len(line1_values) else line1_values, name=line1_name)
-        line2 = pd.Series(chunk_list(line2_values, resolution) if resolution and resolution <= len(line2_values) else line2_values, name=line2_name)
+        line1 = pd.Series(line1_values, name=line1_name)
+        line2 = pd.Series(line2_values, name=line2_name)
         df = pd.DataFrame([line1, line2])
         df = df.transpose()
         df.plot(secondary_y=[line2_name], title=plot_name, legend=True, figsize=(16, 9))
