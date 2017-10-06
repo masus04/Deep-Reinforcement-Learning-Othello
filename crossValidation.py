@@ -17,7 +17,7 @@ EVALUATION_PERIOD = 1  # How often the performance is evaluated
 EVALUATION_GAMES = 1   # Number of final evaluation games
 PLAYER = TDPlayer
 
-evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w")
+evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
 
 
 def log_message(message):
