@@ -50,6 +50,12 @@ class ValueFunction:
     def __generate_minibatches__(lst):
         return [Variable(torch.FloatTensor([lst[i:i+config.MINIBATCH_SIZE]])) for i in range(0, len(lst), config.MINIBATCH_SIZE)]
 
+    def copy(self, plotter):
+        value_function = self.__class__(plotter=plotter, learning_rate=self.learning_rate)
+        value_function.model = self.model
+        value_function.optimizer = self.optimizer
+        return value_function
+
 
 class Model(torch.nn.Module):
 
