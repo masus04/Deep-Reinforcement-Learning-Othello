@@ -110,4 +110,4 @@ functions.o
 .log.*
 
 log\.txt
-/plots/
+/plots/*
