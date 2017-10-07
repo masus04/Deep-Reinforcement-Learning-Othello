@@ -3,7 +3,7 @@ from datetime import datetime
 import src.config as config
 from src.othello import Othello
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, ThreeByThreeVF
 import training
 from evaluation import evaluate
 
@@ -28,8 +28,8 @@ def log_message(message):
 def evaluation(lr, a):
     log_message("\nEvaluating LR:%s a:%s" % (lr, a))
 
-    player1 = PLAYER(color=config.BLACK, strategy=ValueFunction, lr=lr, alpha=a)
-    player2 = PLAYER(color=config.WHITE, strategy=ValueFunction, lr=lr, alpha=a)
+    player1 = PLAYER(color=config.BLACK, strategy=ThreeByThreeVF, lr=lr, alpha=a)
+    player2 = PLAYER(color=config.WHITE, strategy=ThreeByThreeVF, lr=lr, alpha=a)
     players = [player1, player2]
 
     """ Training """
