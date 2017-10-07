@@ -1,11 +1,11 @@
 from datetime import datetime
+from math import sqrt
 
 import src.config as config
 from src.othello import Othello
 from src.plotter import Printer
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
-
 import evaluation
 
 
@@ -28,8 +28,8 @@ def train(player1, player2, games, evaluation_period):
         # Training
         simulation.run_simulations(episodes=evaluation_period, clear_plots=True, silent=True)
         # Evaluation
-        evaluation.evaluate(player=player1, games=8, silent=True)
-        evaluation.evaluate(player=player2, games=8, silent=True)
+        evaluation.evaluate(player=player1, games=sqrt(games/10), silent=True)
+        evaluation.evaluate(player=player2, games=sqrt(games/10), silent=True)
         printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
 
