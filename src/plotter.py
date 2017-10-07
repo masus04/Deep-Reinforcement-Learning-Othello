@@ -96,6 +96,9 @@ class NoPlotter:
     def add_result(self, result):
         pass
 
+    def add_evaluation_score(self, score):
+        pass
+
     def plot_accuracy(self, resolution=False):
         pass
 

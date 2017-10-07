@@ -104,6 +104,9 @@ class HeuristicPlayer(Player):
 
     if config.BOARD_SIZE != 8:
         heuristic_table = [[1]*config.BOARD_SIZE]*config.BOARD_SIZE
+        for i in (0, config.BOARD_SIZE-1):
+            for j in (0, config.BOARD_SIZE-1):
+                heuristic_table[i][j] = 5
 
     def get_move(self, board):
         afterstates = [[self.evaluate(afterstate[0]), afterstate[1]] for afterstate in self.__generate_afterstates__(board)]
