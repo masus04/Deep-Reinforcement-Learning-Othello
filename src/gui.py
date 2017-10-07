@@ -1,7 +1,7 @@
 import sys
 from pygame.locals import *
 import time
-from src.config import BLACK, WHITE
+from src.config import BLACK, WHITE, BOARD_SIZE
 import os
 from src.menu import *
 from tkinter import Tk
@@ -233,8 +233,8 @@ class Gui:
         self.background.fill(self.BACKGROUND)
         self.screen.blit(self.background, (0, 0), self.background.get_rect())
         self.screen.blit(self.board_img, self.BOARD_POS, self.board_img.get_rect())
-        for i in range(8):
-            for j in range(8):
+        for i in range(BOARD_SIZE):
+            for j in range(BOARD_SIZE):
                 if board.board[i][j] != 0:
                     self.put_stone(( i, j), board.board[i][j])
 
