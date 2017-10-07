@@ -1,29 +1,30 @@
-from src.config import EMPTY, BLACK, WHITE
 import numpy as np
 from ctypes import *
 import random
 
+from src.config import EMPTY, BLACK, WHITE, BOARD_SIZE
 
 class Board:
 
     LIBFUNCTIONS = cdll.LoadLibrary("./src/libfunctions.so")
 
     def __init__(self, board = None):
+        self.board_size = BOARD_SIZE
         if board is not None:
             self.board = board
             self.count_pieces()
         else:
-            self.board = np.full((8, 8), EMPTY, dtype=np.float64)  # 8 by 8 empty board
-            self.board[3][4] = BLACK
-            self.board[4][3] = BLACK
-            self.board[3][3] = WHITE
-            self.board[4][4] = WHITE
+            self.board = np.full((self.board_size, self.board_size), EMPTY, dtype=np.float64)  # self.board_size by self.board_size empty board
+            self.board[self.board_size//2-1][self.board_size//2] = BLACK
+            self.board[self.board_size//2][self.board_size//2-1] = BLACK
+            self.board[self.board_size//2-1][self.board_size//2-1] = WHITE
+            self.board[self.board_size//2][self.board_size//2] = WHITE
             self.white_pieces = 2
             self.black_pieces = 2
-            self.empty_spaces = 60
+            self.empty_spaces = self.board_size**2-4
         self.valid_moves = []
         self.now_playing = BLACK
-
+        self.board_size = self.board_size
 
     def get_possible_moves(self, row, column, color):
         if color == BLACK:
@@ -33,7 +34,7 @@ class Board:
 
         moves = []
 
-        if row < 0 or row > 7 or column < 0 or column > 7:
+        if row < 0 or row >= self.board_size or column < 0 or column >= self.board_size:
             return moves
 
         # north
@@ -42,61 +43,61 @@ class Board:
             i = i - 1
             while i >= 0 and self.board[i][column] == other:
                 i = i - 1
-            if i >= 0 and self.board[i][column] == 0:
+            if i >= 0 and self.board[i][column] == EMPTY:
                 moves = moves + [( i, column)]
 
         # northeast
         i = row - 1
         j = column + 1
-        if i >= 0 and j < 8 and self.board[i][j] == other:
+        if i >= 0 and j < self.board_size and self.board[i][j] == other:
             i = i - 1
             j = j + 1
-            while i >= 0 and j < 8 and self.board[i][j] == other:
+            while i >= 0 and j < self.board_size and self.board[i][j] == other:
                 i = i - 1
                 j = j + 1
-            if i >= 0 and j < 8 and self.board[i][j] == 0:
+            if i >= 0 and j < self.board_size and self.board[i][j] == EMPTY:
                 moves = moves + [(i, j)]
 
         # east
         j = column + 1
-        if j < 8 and self.board[row][j] == other:
+        if j < self.board_size and self.board[row][j] == other:
             j = j + 1
-            while j < 8 and self.board[row][j] == other:
+            while j < self.board_size and self.board[row][j] == other:
                 j = j + 1
-            if j < 8 and self.board[row][j] == 0:
+            if j < self.board_size and self.board[row][j] == EMPTY:
                 moves = moves + [(row, j)]
 
         # southeast
         i = row + 1
         j = column + 1
-        if i < 8 and j < 8 and self.board[i][j] == other:
+        if i < self.board_size and j < self.board_size and self.board[i][j] == other:
             i = i + 1
             j = j + 1
-            while i < 8 and j < 8 and self.board[i][j] == other:
+            while i < self.board_size and j < self.board_size and self.board[i][j] == other:
                 i = i + 1
                 j = j + 1
-            if i < 8 and j < 8 and self.board[i][j] == 0:
+            if i < self.board_size and j < self.board_size and self.board[i][j] == EMPTY:
                 moves = moves + [(i, j)]
 
         # south
         i = row + 1
-        if i < 8 and self.board[i][column] == other:
+        if i < self.board_size and self.board[i][column] == other:
             i = i + 1
-            while i < 8 and self.board[i][column] == other:
+            while i < self.board_size and self.board[i][column] == other:
                 i = i + 1
-            if i < 8 and self.board[i][column] == 0:
+            if i < self.board_size and self.board[i][column] == EMPTY:
                 moves = moves + [(i, column)]
 
         # southwest
         i = row + 1
         j = column - 1
-        if i < 8 and j >= 0 and self.board[i][j] == other:
+        if i < self.board_size and j >= 0 and self.board[i][j] == other:
             i = i + 1
             j = j - 1
-            while i < 8 and j >= 0 and self.board[i][j] == other:
+            while i < self.board_size and j >= 0 and self.board[i][j] == other:
                 i = i + 1
                 j = j - 1
-            if i < 8 and j >= 0 and self.board[i][j] == 0:
+            if i < self.board_size and j >= 0 and self.board[i][j] == EMPTY:
                 moves = moves + [(i, j)]
 
         # west
@@ -105,7 +106,7 @@ class Board:
             j = j - 1
             while j >= 0 and self.board[row][j] == other:
                 j = j - 1
-            if j >= 0 and self.board[row][j] == 0:
+            if j >= 0 and self.board[row][j] == EMPTY:
                 moves = moves + [(row, j)]
 
         # northwest
@@ -117,12 +118,15 @@ class Board:
             while i >= 0 and j >= 0 and self.board[i][j] == other:
                 i = i - 1
                 j = j - 1
-            if i >= 0 and j >= 0 and self.board[i][j] == 0:
+            if i >= 0 and j >= 0 and self.board[i][j] == EMPTY:
                 moves = moves + [(i, j)]
 
         return moves
 
     def get_valid_moves(self, color):
+        if self.board_size != 8:
+            return self.get_valid_moves_python(color)
+
         v = Board.LIBFUNCTIONS.get_valid_moves(c_void_p(self.board.ctypes.data), color)
         c_int_p_p = POINTER(POINTER(c_int))
         moves = cast(v, c_int_p_p)
@@ -130,7 +134,7 @@ class Board:
         for i in range(moves[0][0]):
             valid_moves[i] = (moves[i+1][0], moves[i+1][1])
         self.valid_moves = valid_moves
-        Board.LIBFUNCTIONS.free_moves(v, moves[0][0])
+        Board.LIBFUNCTIONS.free_moves(v, moves[0][0]) if self.board_size == 8 else None
         return valid_moves
 
     def get_valid_moves_python(self, color):
@@ -147,8 +151,8 @@ class Board:
 
         valid_moves = []
 
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.board_size):
+            for j in range(self.board_size):
                 if self.board[i][j] == color:
                     valid_moves = valid_moves + self.get_possible_moves(i, j, color)
         valid_moves = list(set(valid_moves)) # Make each move in valid_moves unique
@@ -161,8 +165,8 @@ class Board:
 
         # For each empty space on the board, check if there are
         # any of the opponents pieces available to flip
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.board_size):
+            for j in range(self.board_size):
                 if self.board[i][j] == EMPTY:
                     for direction in range(1,9):
                         (num, valid) = self.pieces_to_flip_in_row((i, j), color, direction)
@@ -183,7 +187,7 @@ class Board:
         return self
 
     def flip_pieces(self, position, color):
-        for direction in range(1,9): # Flip row for each of the 8 possible directions
+        for direction in range(1,9): # Flip row for each of the self.board_size possible directions
             (num_pieces, pieces_to_flip) = self.pieces_to_flip_in_row(position, color, direction)
             for i in range(num_pieces):
                 self.board[pieces_to_flip[i][0]][pieces_to_flip[i][1]] = color
@@ -208,7 +212,7 @@ class Board:
         elif direction == 3 or direction == 6 or direction == 9:
             col_inc = 1
 
-        pieces = [None] * 8
+        pieces = [None] * self.board_size
         pieces_flipped = 0
         i = position[0] + row_inc
         j = position[1] + col_inc
@@ -218,19 +222,19 @@ class Board:
         else:
             other = WHITE
 
-        if i in range(8) and j in range(8) and self.board[i][j] == other:
+        if i in range(self.board_size) and j in range(self.board_size) and self.board[i][j] == other:
             # assures there is at least one piece to flip
             pieces[pieces_flipped] = (i,j)
             pieces_flipped += 1
             i = i + row_inc
             j = j + col_inc
-            while i in range(8) and j in range(8) and self.board[i][j] == other:
+            while i in range(self.board_size) and j in range(self.board_size) and self.board[i][j] == other:
                 # search for more pieces to flip
                 pieces[pieces_flipped] = (i,j)
                 pieces_flipped += 1
                 i = i + row_inc
                 j = j + col_inc
-            if i in range(8) and j in range(8) and self.board[i][j] == color:
+            if i in range(self.board_size) and j in range(self.board_size) and self.board[i][j] == color:
                 # found a piece of the right color to flip the pieces between
                 return (pieces_flipped, pieces)
         return 0, []
@@ -239,8 +243,8 @@ class Board:
         self.white_pieces = 0
         self.black_pieces = 0
         self.empty_spaces = 64
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.board_size):
+            for j in range(self.board_size):
                 if self.board[i][j] == WHITE:
                     self.white_pieces += 1
                     self.empty_spaces -= 1
@@ -282,12 +286,12 @@ class Board:
     # Function to print board for text based game
     def print_board(self):
         print('  ', end=' ')
-        for i in range(8):
+        for i in range(self.board_size):
             print(' ', i, end=' ')
         print()
-        for i in range(8):
+        for i in range(self.board_size):
             print(i, ' |', end=' ')
-            for j in range(8):
+            for j in range(self.board_size):
                 if self.board[i][j] == BLACK:
                     print('B', end=' ')
                 elif self.board[i][j] == WHITE:

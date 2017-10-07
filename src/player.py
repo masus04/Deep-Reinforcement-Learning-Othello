@@ -93,14 +93,17 @@ class ComputerPlayer(Player):
 
 class HeuristicPlayer(Player):
     """ This is a standardized Benchmark player. Good implementations reach up to 95% win rate against it """
-    heuristic_table =[[100, -25, 10, 5, 5, 10, -25, 100],
-                      [-25, -25,  2, 2, 2, 2,  -25, -25],
-                      [ 10,   2,  5, 1, 1, 5,    2,  10],
-                      [  5,   2,  1, 2, 2, 1,    2,   5],
-                      [  5,   2,  1, 2, 2, 1,    2,   5],
-                      [ 10,   2,  5, 1, 1, 5,    2,  10],
-                      [-25, -25,  2, 2, 2, 2,  -25, -25],
-                      [100, -25, 10, 5, 5, 10, -25, 100]]
+    heuristic_table = [[100, -25, 10, 5, 5, 10, -25, 100],
+                       [-25, -25,  2, 2, 2, 2,  -25, -25],
+                       [ 10,   2,  5, 1, 1, 5,    2,  10],
+                       [  5,   2,  1, 2, 2, 1,    2,   5],
+                       [  5,   2,  1, 2, 2, 1,    2,   5],
+                       [ 10,   2,  5, 1, 1, 5,    2,  10],
+                       [-25, -25,  2, 2, 2, 2,  -25, -25],
+                       [100, -25, 10, 5, 5, 10, -25, 100]]
+
+    if config.BOARD_SIZE != 8:
+        heuristic_table = [[1]*config.BOARD_SIZE]*config.BOARD_SIZE
 
     def get_move(self, board):
         afterstates = [[self.evaluate(afterstate[0]), afterstate[1]] for afterstate in self.__generate_afterstates__(board)]

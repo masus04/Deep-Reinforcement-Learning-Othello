@@ -137,19 +137,10 @@ class FCValueFunction(ValueFunction):
 
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         super(FCValueFunction, self).__init__(plotter)
-        self.plotter = plotter
         self.model = FCModel()
         if torch.cuda.is_available():
             self.model.cuda(0)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
-
-    def evaluate(self, board_sample):
-        tensor = torch.FloatTensor([[board_sample]])
-
-        if torch.cuda.is_available():
-            tensor = tensor.cuda(0)
-
-        return self.model(Variable(tensor)).data[0][0]
 
 
 class FCModel(torch.nn.Module):
@@ -164,6 +155,36 @@ class FCModel(torch.nn.Module):
     def forward(self, x):
 
         x = x.view(-1, 64)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+
+        return F.sigmoid(x) + config.LABEL_LOSS
+
+
+class ThreeByThreeVF(ValueFunction):
+
+    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
+        super(ThreeByThreeVF, self).__init__(plotter)
+        self.model = ThreeByThreeModel()
+        if torch.cuda.is_available():
+            self.model.cuda(0)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
+
+
+class ThreeByThreeModel(torch.nn.Module):
+    def __init__(self):
+        super(ThreeByThreeModel, self).__init__()
+
+        self.tiles = config.BOARD_SIZE**2
+
+        self.fc1 = torch.nn.Linear(in_features=self.tiles, out_features=self.tiles*100)
+        self.fc2 = torch.nn.Linear(in_features=self.tiles*100, out_features=self.tiles*500)
+        self.fc3 = torch.nn.Linear(in_features=self.tiles*500, out_features=1)
+
+    def forward(self, x):
+
+        x = x.view(-1, self.tiles)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
