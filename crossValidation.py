@@ -12,7 +12,7 @@ start_time = datetime.now()
 learning_rates = [float("1e-%d" %i) for i in range(1, 5)]
 alphas =         [float("1e-%d" %i) for i in range(1, 5)]
 
-TRAINING_GAMES = 100000
+TRAINING_GAMES = 50000
 EVALUATION_PERIOD = 500  # How often the performance is evaluated
 EVALUATION_GAMES = 200  # Number of final evaluation games
 PLAYER = TDPlayer
