@@ -1,0 +1,194 @@
+
+Evaluating LR:0.1 a:0.1
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 43% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 49% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 46.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 44% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 43% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 43.5 --|
+|--- LR:0.1 Alpha: 0.1 Score: 44.75 Simulation time: 1:48:41 ---|
+
+Evaluating LR:0.1 a:0.01
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 47.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 41.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 45.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 47.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 41.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 45.0 --|
+|--- LR:0.1 Alpha: 0.01 Score: 45.0 Simulation time: 3:35:18 ---|
+
+Evaluating LR:0.1 a:0.001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 42.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 48% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 45.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 43.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 47.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 46.0 --|
+|--- LR:0.1 Alpha: 0.001 Score: 45.5 Simulation time: 5:22:14 ---|
+
+Evaluating LR:0.1 a:0.0001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 47% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 51.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 49.5 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 43.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 47.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 46.0 --|
+|--- LR:0.1 Alpha: 0.0001 Score: 47.75 Simulation time: 7:12:26 ---|
+
+Evaluating LR:0.01 a:0.1
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 46% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 50% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 48.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 41% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 42% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 41.5 --|
+|--- LR:0.01 Alpha: 0.1 Score: 44.75 Simulation time: 9:01:21 ---|
+
+Evaluating LR:0.01 a:0.01
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 39.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 50% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 45.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 44.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 49% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 46.5 --|
+|--- LR:0.01 Alpha: 0.01 Score: 45.75 Simulation time: 10:48:40 ---|
+
+Evaluating LR:0.01 a:0.001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 43% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 54% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 48.5 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 44.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 55.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 50.0 --|
+|--- LR:0.01 Alpha: 0.001 Score: 49.25 Simulation time: 12:35:20 ---|
+
+Evaluating LR:0.01 a:0.0001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 46.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 48% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 47.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 44.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 45.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 45.0 --|
+|--- LR:0.01 Alpha: 0.0001 Score: 46.0 Simulation time: 14:22:10 ---|
+
+Evaluating LR:0.001 a:0.1
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 43.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 44.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 44.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 40.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 52% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 46.0 --|
+|--- LR:0.001 Alpha: 0.1 Score: 45.0 Simulation time: 16:09:28 ---|
+
+Evaluating LR:0.001 a:0.01
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 42.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 45% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 43.5 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 45% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 49% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 47.0 --|
+|--- LR:0.001 Alpha: 0.01 Score: 45.25 Simulation time: 17:55:59 ---|
+
+Evaluating LR:0.001 a:0.001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 38.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 47% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 42.5 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 42.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 46% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 44.0 --|
+|--- LR:0.001 Alpha: 0.001 Score: 43.25 Simulation time: 19:43:33 ---|
+
+Evaluating LR:0.001 a:0.0001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 44.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 55% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 49.5 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 44% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 50% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 47.0 --|
+|--- LR:0.001 Alpha: 0.0001 Score: 48.25 Simulation time: 21:31:36 ---|
+
+Evaluating LR:0.0001 a:0.1
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 43.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 50.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 47.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 47.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 44.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 46.0 --|
+|--- LR:0.0001 Alpha: 0.1 Score: 46.5 Simulation time: 23:18:23 ---|
+
+Evaluating LR:0.0001 a:0.01
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 42% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 40.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 41.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 42% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 46.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 44.0 --|
+|--- LR:0.0001 Alpha: 0.01 Score: 42.5 Simulation time: 1 day, 1:03:33 ---|
+
+Evaluating LR:0.0001 a:0.001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 46.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 49.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 48.0 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 45% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 41% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 43.0 --|
+|--- LR:0.0001 Alpha: 0.001 Score: 45.5 Simulation time: 1 day, 2:51:21 ---|
+
+Evaluating LR:0.0001 a:0.0001
+Evaluating TDPlayer_Black_ThreeByThreeVF:
+TDPlayer_Black_ThreeByThreeVF won 7% of games against HeuristicPlayer_White_
+TDPlayer_Black_ThreeByThreeVF won 54% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ThreeByThreeVF achieved an evaluation score of: 30.5 --|
+Evaluating TDPlayer_White_ThreeByThreeVF:
+TDPlayer_White_ThreeByThreeVF won 42.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ThreeByThreeVF won 44.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ThreeByThreeVF achieved an evaluation score of: 43.0 --|
+|--- LR:0.0001 Alpha: 0.0001 Score: 36.75 Simulation time: 1 day, 4:37:34 ---|
+
+
+score:36.75 lr:0.0001 a:0.0001
+score:42.5 lr:0.0001 a:0.01
+score:43.25 lr:0.001 a:0.001
+score:44.75 lr:0.01 a:0.1
+score:44.75 lr:0.1 a:0.1
+score:45.0 lr:0.001 a:0.1
+score:45.0 lr:0.1 a:0.01
+score:45.25 lr:0.001 a:0.01
+score:45.5 lr:0.0001 a:0.001
+score:45.5 lr:0.1 a:0.001
+score:45.75 lr:0.01 a:0.01
+score:46.0 lr:0.01 a:0.0001
+score:46.5 lr:0.0001 a:0.1
+score:47.75 lr:0.1 a:0.0001
+score:48.25 lr:0.001 a:0.0001
+score:49.25 lr:0.01 a:0.001

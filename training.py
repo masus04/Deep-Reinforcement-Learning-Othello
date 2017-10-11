@@ -28,8 +28,8 @@ def train(player1, player2, games, evaluation_period):
         # Training
         simulation.run_simulations(episodes=evaluation_period, clear_plots=True, silent=True)
         # Evaluation
-        evaluation.evaluate(player=player1, games=int(sqrt(games/10)), silent=True)
-        evaluation.evaluate(player=player2, games=int(sqrt(games/10)), silent=True)
+        evaluation.evaluate(player=player1, games=20, silent=True)
+        evaluation.evaluate(player=player2, games=20, silent=True)
         printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
 
