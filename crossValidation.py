@@ -9,8 +9,8 @@ from evaluation import evaluate
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(1, 5)]
-alphas =         [float("1e-%d" %i) for i in range(1, 5)]
+learning_rates = [float("1e-%d" %i) for i in range(3, 6)]
+alphas =         [float("1e-%d" %i) for i in range(3, 7)]
 
 TRAINING_GAMES = 2000
 EVALUATION_PERIOD = 50  # How often the performance is evaluated

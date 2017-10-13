@@ -2,7 +2,7 @@
 from datetime import datetime
 
 import src.config as config
-import src.board as board
+from src.board import Board
 from src.gui import Gui, NoGui
 from src.config import HEADLESS, get_color_from_player_number
 from src.plotter import Printer
@@ -17,8 +17,8 @@ class Othello:
         self.player2 = player2.set_gui(self.gui)
         self.printer = Printer()
 
-    def __run__(self, player1, player2):
-        self.board = board.Board()
+    def run(self, player1, player2, board=Board()):
+        self.board = board
 
         self.now_playing = player1
         self.other_player = player2
@@ -54,7 +54,7 @@ class Othello:
             if i % 2 == 0:  # switch colors
                 self.player1.color, self.player2.color =self.player2.color, self.player1.color
 
-            result = config.LABEL_WIN if self.__run__(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
+            result = config.LABEL_WIN if self.run(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
             results.append(result)
             if self.player1.train:
                 players[0].plotter.add_result(result)

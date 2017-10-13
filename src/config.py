@@ -22,14 +22,21 @@ LABEL_LOSS = 0
 LABEL_WIN = 1
 
 # Hyperparameters
-LEARNING_RATE = 1e-1
+LEARNING_RATE = 1e-4
 MINIBATCH_SIZE = 1
 
 EPSILON = 0.01
 EPSILON_REDUCE = 0.99995
 
-ALPHA = 1e-5
-ALPHA_REDUCE = 0.99995
+ALPHA = 1e-6
+ALPHA_REDUCE = 0.9995
+
+
+def other_color(color):
+    if color == EMPTY:
+        return EMPTY
+    else:
+        return WHITE if color == BLACK else BLACK
 
 
 def get_color_from_player_number(number):

@@ -1,6 +1,7 @@
 import os
 import random
 import torch
+from datetime import datetime
 
 import src.config as config
 from src.game_ai import GameArtificialIntelligence
@@ -9,6 +10,9 @@ from src.gui import NoGui
 from src.valueFunction import ValueFunction, NoValueFunction
 from src.board import Board
 from src.plotter import Plotter, NoPlotter
+
+from src.othello import Othello
+from src.monteCarloTreeSearch import MCTS
 
 
 class Player(object):
@@ -234,3 +238,28 @@ class TDPlayer(MCPlayer):
         v_state = self.value_function.evaluate(state)
         v_next_state = self.value_function.evaluate(next_state)
         return v_state + self.alpha * (v_next_state - v_state)
+
+
+class MCTSPlayer(Player):
+
+    def __init__(self, color, deepRLPlayer):
+
+        self.player = deepRLPlayer.load_player(color=color)
+        self.other_player = deepRLPlayer(color=config.other_color(color))
+        self.other_player.value_function = self.player.value_function
+        self.simulation = Othello(self.player, self.other_player, headless=True)
+        self.mcTree = None
+
+    def get_move(self, board):
+        if not self.mcTree:  # init
+            self.mcTree = MCTS(self.color, board)
+
+        self.extend_tree()
+        return self.mcTree.get_leaf(e=-1).move
+
+    def extend_tree(self):
+        start_time = datetime.now()
+
+        while (datetime.now()-start_time).seconds < self.time_limit:
+            leaf = self.mcTree.get_leaf()
+            result = self.simulation.run(leaf.board)  # add result to leaf results

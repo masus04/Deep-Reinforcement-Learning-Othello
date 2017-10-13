@@ -21,6 +21,8 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
     reference_players = [heuristic_player, random_player]
 
     player.train = False
+    temp_e = player.e
+    player.e = -1
     player.score = 0
 
     if not silent:
@@ -35,6 +37,8 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
 
     player.score /= len(reference_players)  # Normalize to 100pts max
     player.train = True
+    player.e = temp_e
+
     player.plotter.add_evaluation_score(player.score)
     if not silent:
         log_method("|-- %s achieved an evaluation score of: %s --|" % (player.player_name, player.score))
