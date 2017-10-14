@@ -4,11 +4,6 @@ from src.othello import Othello
 from src.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer, TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction
 
-td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
-td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
-
-mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
-
 EVALUATION_GAMES = 100
 
 
@@ -46,6 +41,11 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
 
 
 if __name__ == "__main__":
+
+    td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
+    td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
+
+    # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
     for player in [td_black, td_white]:
         evaluate(player)

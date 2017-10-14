@@ -137,19 +137,10 @@ class FCValueFunction(ValueFunction):
 
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         super(FCValueFunction, self).__init__(plotter)
-        self.plotter = plotter
         self.model = FCModel()
         if torch.cuda.is_available():
             self.model.cuda(0)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
-
-    def evaluate(self, board_sample):
-        tensor = torch.FloatTensor([[board_sample]])
-
-        if torch.cuda.is_available():
-            tensor = tensor.cuda(0)
-
-        return self.model(Variable(tensor)).data[0][0]
 
 
 class FCModel(torch.nn.Module):
