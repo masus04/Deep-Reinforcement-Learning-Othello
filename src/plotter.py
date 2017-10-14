@@ -46,7 +46,7 @@ class Plotter:
             eval_scores += [self.evaluation_scores[i]]
             if len(self.evaluation_scores) > i+1:
                 delta = self.evaluation_scores[i+1]-self.evaluation_scores[i]
-                eval_scores += [self.evaluation_scores[i] + delta*j/stretch_factor for j in range(stretch_factor)]
+                eval_scores += [self.evaluation_scores[i] + delta*j/stretch_factor for j in range(1, stretch_factor)]
 
         self.plot_two_lines("losses", self.losses, "evaluation score", eval_scores, "Evaluation scores %s, %s Episodes%s"% (self.plot_name, len(self.results), comment))
         plt.close("all")
@@ -94,6 +94,9 @@ class NoPlotter:
         pass
 
     def add_result(self, result):
+        pass
+
+    def add_evaluation_score(self, score):
         pass
 
     def plot_accuracy(self, resolution=False):
