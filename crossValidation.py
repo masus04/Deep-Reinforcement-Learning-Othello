@@ -45,6 +45,7 @@ def evaluation(lr, a):
         evaluate(player=player, games=EVALUATION_GAMES, log_method=log_message, silent=False)
         player.plotter.plot_results(comment=" lr:%s, a:%s" % (lr, a))
         player.plotter.plot_scores(comment=" lr:%s, a:%s" % (lr, a))
+        player.train = True
 
     log_message("|--- LR:%s Alpha: %s Score: %s Simulation time: %s ---|" % (lr, a, (player1.score+player2.score)/2, str(datetime.now() - start_time).split(".")[0]))
 

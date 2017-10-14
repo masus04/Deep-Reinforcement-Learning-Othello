@@ -26,6 +26,7 @@ class Player(object):
         self.value_function = NoValueFunction()
         self.train = True
         self.opponents = []
+        self.deterministic = True
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
@@ -75,6 +76,10 @@ class HumanPlayer(Player):
 
 
 class RandomPlayer(Player):
+
+    def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
+        super(RandomPlayer, self).__init__(self, color, strategy, time_limit, gui)
+        self.deterministic = False
 
     def get_move(self, board):
         return random.sample(board.get_valid_moves(self.color), 1)[0]
@@ -130,6 +135,7 @@ class ReportingPlayer:
         self.player = player
         self.color = player.color
         self.reportedBoards = []
+        self.deterministic = player.deterministic
 
     def get_move(self, board):
         move = self.player.get_move(board)
@@ -179,7 +185,7 @@ class DeepRLPlayer(Player):
         raise NotImplementedError("function behaviour_policy must be implemented by subclass")
 
     def __e_greedy__(self, lst):
-        if random.random() > self.e:
+        if random.random() > self.e or (not self.train):
             result = max(lst)
         else:
             result = random.choice(lst)
