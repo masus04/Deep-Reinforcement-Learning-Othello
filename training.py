@@ -15,7 +15,9 @@ def train(player1, player2, games, evaluation_period):
 
     """ Continue training """
     # player1.load_player(color=config.BLACK, strategy=ValueFunction)
+    # player1.train = player1.explore = True
     # player2.load_player(color=config.WHITE, strategy=ValueFunction)
+    # player2.train = player1.explore = True
 
     # player1.value_function = player2.value_function.copy(player1.plotter)
 

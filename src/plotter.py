@@ -29,7 +29,10 @@ class Plotter:
         self.last10Results.append(sum(self.results[-20:])/(20 if len(self.results)>20 else len(self.results)))
 
     def add_evaluation_score(self, score):
-        self.evaluation_scores.append(score)
+        try:
+            self.evaluation_scores.append(score)
+        except AttributeError:
+            self.evaluation_scores = [score]
 
     def plot_accuracy(self, resolution=False):
         self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
@@ -40,7 +43,7 @@ class Plotter:
         plt.close("all")
 
     def plot_scores(self, comment=""):
-        stretch_factor = len(self.losses)//(len(self.evaluation_scores)-1)
+        stretch_factor = 1 if len(self.evaluation_scores) <= 1 else len(self.losses)//(len(self.evaluation_scores)-1)
         eval_scores = []
         for i in range(len(self.evaluation_scores)):
             eval_scores += [self.evaluation_scores[i]]

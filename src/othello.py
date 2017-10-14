@@ -66,10 +66,11 @@ class Othello:
             # Plot and save every 5000 episodes
             if i>0 and (i+1)%5000 == 0:
                 for player in players:
-                    if clear_plots:
-                        player.plotter.clear_plots(player.player_name)
-                    player.plotter.plot_results(resolution=200)
-                    player.save()
+                    if player.train:
+                        if clear_plots:
+                            player.plotter.clear_plots(player.player_name)
+                        player.plotter.plot_results()
+                        player.save()
 
         self.player1.color, self.player2.color = colors
 
