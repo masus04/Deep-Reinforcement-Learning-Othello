@@ -25,6 +25,7 @@ class Player(object):
         self.plotter = NoPlotter()
         self.value_function = NoValueFunction()
         self.train = True
+        self.explore = True
         self.opponents = []
         self.deterministic = True
 
@@ -78,7 +79,7 @@ class HumanPlayer(Player):
 class RandomPlayer(Player):
 
     def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
-        super(RandomPlayer, self).__init__(self, color, strategy, time_limit, gui)
+        super(RandomPlayer, self).__init__(color, strategy, time_limit, gui)
         self.deterministic = False
 
     def get_move(self, board):
@@ -185,7 +186,7 @@ class DeepRLPlayer(Player):
         raise NotImplementedError("function behaviour_policy must be implemented by subclass")
 
     def __e_greedy__(self, lst):
-        if random.random() > self.e or (not self.train):
+        if (not self.explore) or (not self.train) or (random.random() > self.e):
             result = max(lst)
         else:
             result = random.choice(lst)
@@ -251,8 +252,11 @@ class MCTSPlayer(Player):
     def __init__(self, color, deepRLPlayer):
 
         self.player = deepRLPlayer.load_player(color=color)
+        self.player.train = False
         self.other_player = deepRLPlayer(color=config.other_color(color))
+        self.other_player.train = False
         self.other_player.value_function = self.player.value_function
+
         self.simulation = Othello(self.player, self.other_player, headless=True)
         self.mcTree = None
 
@@ -268,4 +272,8 @@ class MCTSPlayer(Player):
 
         while (datetime.now()-start_time).seconds < self.time_limit:
             leaf = self.mcTree.get_leaf()
-            result = self.simulation.run(leaf.board)  # add result to leaf results
+            self.rollout(leaf)
+
+    def rollout(self, leaf, e=config.EPSILON):
+        result = self.simulation.run(leaf.board)  # add result to leaf results
+

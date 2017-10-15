@@ -5,29 +5,30 @@ from src.board import Board
 
 class MCTS:
 
-    EPSILON = 0.01
+    EPSILON = 0.1
 
     def __init__(self, color, board):
         self.color = color
-        self.root = MCTSLeaf(move=None, board=board)
+        self.root = MCTSLeaf(move=None, board=None)
+
+        # Generate all possible afterstates and add them as leafs
+        self.root.children.append([MCTSLeaf(move, self.root.board.copy().apply_move(move, color)) for move in self.root.board.get_valid_moves(color)])
 
     def get_leaf(self, e=EPSILON):
         node = self.root
 
         while not node.is_leaf:
             if random() >= e:
-                node = self.max(node.children)
+                node = self.max(node.children)  # Apply tree policy
             else:
-                move = sample(node.board.get_valid_moves())
+                move = sample(node.board.get_valid_moves())  # Apply random move and create Node if it does not yet exist
                 child = node.get_child_by_move(move)
                 if child:
                     node = child
                 else:
                     node.children.append(MCTSLeaf(move, node.board.copy().apply_move(self.color)))
-        return node
 
-    def rollout(self, e):
-        pass
+        return node
 
     @staticmethod
     def max(children):  # Adjust for ties
