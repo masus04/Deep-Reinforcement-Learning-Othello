@@ -40,7 +40,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**4, 7)))
+#test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**5, 7)))
 
-#for i in [3, 3.5, 4, 4.5, 5, 6]:
-#    test_with_parameters(games=100, training_episodes=200, learning_rate=float(round(0.1**i, 7)))
+for i in [5, 5, 5]:
+    test_with_parameters(games=100, training_episodes=200, learning_rate=float(round(0.1**i, 7)))

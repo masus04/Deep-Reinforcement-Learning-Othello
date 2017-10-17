@@ -9,12 +9,12 @@ from evaluation import evaluate
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(1, 7)]
+learning_rates = [float("1e-%d" %i) for i in range(5, 7)]
 alphas =         [float("1e-%d" %i) for i in range(1, 7)]
 
-TRAINING_GAMES = 30000
-EVALUATION_PERIOD = 100  # How often the performance is evaluated
-EVALUATION_GAMES = 80   # Number of final evaluation games
+TRAINING_GAMES = 50000
+EVALUATION_PERIOD = 250  # How often the performance is evaluated
+EVALUATION_GAMES = 100   # Number of final evaluation games
 PLAYER = TDPlayer
 
 evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
