@@ -7,13 +7,13 @@ from src.plotter import Plotter
 from datetime import datetime
 
 
-def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE, plot_name="unnamed"):
-    plotter = Plotter()
+def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE):
+    plotter = Plotter("ReLU 7Layers g:%s ep:%s lr:%s" % (games, training_episodes, learning_rate))
     printer = Printer()
     test_samples, test_labels = generate_greedy_data_set(10)
     start_time = datetime.now()
 
-    value_function = FCValueFunction(plotter=plotter, learning_rate=learning_rate)
+    value_function = ValueFunction(plotter=plotter, learning_rate=learning_rate)
     for i in range(training_episodes):
         samples, labels = generate_greedy_data_set(games)
         printer.print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
@@ -24,7 +24,7 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     evaluate_accuracy(test_samples, test_labels, value_function, silent=True)
     print("Training %s episodes for %s games took %s" % (training_episodes, games, datetime.now()-start_time))
     print("Final accuracy: %s\n" % plotter.accuracies[-1])
-    plotter.plot_accuracy("%s, %sGames, %sEpisodes, LRate:%s, Accuracy: %s" % (plot_name, games, training_episodes, learning_rate, "{0:.3g}".format(plotter.accuracies[-1])))
+    plotter.plot_accuracy(" final score:" + "{0:.3g}".format(plotter.accuracies[-1]))
 
 
 def evaluate_accuracy(samples, labels, value_function, silent=True):
@@ -40,7 +40,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-test_with_parameters(games=3, training_episodes=3, learning_rate=float(round(0.1**3, 7)), plot_name="ReLU 2Layers")
+test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**4, 7)))
 
-#for i in [3.5]:
-#    test_with_parameters(games=300, training_episodes=150, learning_rate=float(round(0.1**i, 7)), plot_name="ReLU 3FCLayers")
+#for i in [3, 3.5, 4, 4.5, 5, 6]:
+#    test_with_parameters(games=100, training_episodes=200, learning_rate=float(round(0.1**i, 7)))

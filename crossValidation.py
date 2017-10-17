@@ -9,11 +9,11 @@ from evaluation import evaluate
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(3, 6)]
-alphas =         [float("1e-%d" %i) for i in range(3, 7)]
+learning_rates = [float("1e-%d" %i) for i in range(4, 5)]
+alphas =         [float("1e-%d" %i) for i in range(2, 7)]
 
-TRAINING_GAMES = 2000
-EVALUATION_PERIOD = 50  # How often the performance is evaluated
+TRAINING_GAMES = 30000
+EVALUATION_PERIOD = 100  # How often the performance is evaluated
 EVALUATION_GAMES = 80   # Number of final evaluation games
 PLAYER = TDPlayer
 
@@ -52,7 +52,8 @@ def evaluation(lr, a):
     return (player1.score + player2.score)/2
 
 
-results = [(evaluation(lr, a), lr, a) for lr in learning_rates for a in alphas]
+# results = [(evaluation(lr, a), lr, a) for lr in learning_rates for a in alphas]
+results = [(evaluation(lr, lr), lr, lr) for lr in learning_rates]
 log_message("\n")
 for r in sorted(results):
     log_message("score:%s lr:%s a:%s" % r)

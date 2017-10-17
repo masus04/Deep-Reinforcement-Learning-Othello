@@ -1,9 +1,9 @@
 import src.config as config
 from src.othello import Othello
-from src.player import ReportingPlayer, RandomPlayer
+from src.player import ReportingPlayer, RandomPlayer, HeuristicPlayer
 
-player1 = ReportingPlayer(RandomPlayer(color=config.BLACK, time_limit=config.TIMEOUT))
-player2 = ReportingPlayer(RandomPlayer(color=config.WHITE, time_limit=config.TIMEOUT))
+player1 = ReportingPlayer(HeuristicPlayer(color=config.BLACK))
+player2 = ReportingPlayer(RandomPlayer(color=config.WHITE))
 
 simulation = Othello(player1, player2)
 
@@ -14,10 +14,10 @@ def generate_greedy_data_set(games, silent=True):
     boards = []
     samples = []
     labels = []
-    for i in range(games):
+    for i in range(games//4):
         if not silent:
             print("Running simulation no. %s" % i)
-        simulation.run_simulations(1)
+        simulation.run_simulations(4, silent=True)
         boards += player1.pop_report() + player2.pop_report()
 
     for board in boards:

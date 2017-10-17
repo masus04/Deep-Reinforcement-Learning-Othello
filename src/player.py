@@ -137,8 +137,10 @@ class ReportingPlayer:
         self.color = player.color
         self.reportedBoards = []
         self.deterministic = player.deterministic
+        self.train = False
 
     def get_move(self, board):
+        self.player.color = self.color
         move = self.player.get_move(board)
         self.reportedBoards.append(board.copy().apply_move(move, self.color))
         return move
@@ -148,7 +150,10 @@ class ReportingPlayer:
         return self
 
     def register_winner(self, winner_color):
-        self.player.register_winner(winner_color)
+        return self.player.register_winner(winner_color)
+
+    def add_opponent(self, opponent):
+        return self.player.add_opponent(opponent)
 
     def pop_report(self):
         report = self.reportedBoards
