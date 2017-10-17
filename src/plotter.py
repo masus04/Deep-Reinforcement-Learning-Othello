@@ -31,12 +31,12 @@ class Plotter:
     def add_evaluation_score(self, score):
         self.evaluation_scores.append(score)
 
-    def plot_accuracy(self, resolution=False):
-        self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
+    def plot_accuracy(self, comment):
+        self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes %s" % (self.plot_name, len(self.results), comment))
         plt.close("all")
 
     def plot_results(self, comment=""):
-        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "%s, %s Episodes%s" % (self.plot_name, len(self.results), comment))
+        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "%s, %s Episodes %s" % (self.plot_name, len(self.results), comment))
         plt.close("all")
 
     def plot_scores(self, comment=""):
@@ -48,7 +48,7 @@ class Plotter:
                 delta = self.evaluation_scores[i+1]-self.evaluation_scores[i]
                 eval_scores += [self.evaluation_scores[i] + delta*j/stretch_factor for j in range(1, stretch_factor)]
 
-        self.plot_two_lines("losses", self.losses, "evaluation score", eval_scores, "Evaluation scores %s, %s Episodes%s"% (self.plot_name, len(self.results), comment))
+        self.plot_two_lines("losses", self.losses, "evaluation score", eval_scores, "Evaluation scores %s, %s Episodes %s"% (self.plot_name, len(self.results), comment))
         plt.close("all")
 
     @staticmethod
