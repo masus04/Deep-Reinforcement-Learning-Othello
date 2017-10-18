@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
+import torch
+from datetime import datetime
+
 import src.config as config
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 from generateDataSet import generate_greedy_data_set
 from src.plotter import Printer
 from src.plotter import Plotter
-from datetime import datetime
 
 
-def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE):
-    plotter = Plotter("ReLU 7Layers g:%s ep:%s lr:%s" % (games, training_episodes, learning_rate))
+def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE, comment=""):
+    plot_name = "ReLU 7Layers g:%s ep:%s lr:%s - %s %s" % (games, training_episodes, learning_rate, ValueFunction.__name__, comment)
+    plotter = Plotter(plot_name)
     printer = Printer()
     test_samples, test_labels = generate_greedy_data_set(10)
     start_time = datetime.now()
@@ -25,6 +28,7 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     print("Training %s episodes for %s games took %s" % (training_episodes, games, datetime.now()-start_time))
     print("Final accuracy: %s\n" % plotter.accuracies[-1])
     plotter.plot_accuracy(" final score:" + "{0:.3g}".format(plotter.accuracies[-1]))
+    torch.save(value_function, "./weights/%s.pth" % plot_name)
 
 
 def evaluate_accuracy(samples, labels, value_function, silent=True):
@@ -43,4 +47,4 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 #test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**5, 7)))
 
 for i in [5, 5, 5]:
-    test_with_parameters(games=100, training_episodes=200, learning_rate=float(round(0.1**i, 7)))
+    test_with_parameters(games=100, training_episodes=200, learning_rate=float(round(0.1**i, 7)), comment="(%s)" % i)
