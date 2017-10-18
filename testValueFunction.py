@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
+import os
 import torch
 from datetime import datetime
 
 import src.config as config
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
-from generateDataSet import generate_greedy_data_set
+from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set
 from src.plotter import Printer
 from src.plotter import Plotter
 
 
 def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE, comment=""):
-    plot_name = "ReLU 7Layers g:%s ep:%s lr:%s - %s %s" % (games, training_episodes, learning_rate, ValueFunction.__name__, comment)
+    plot_name = "Heuristic ReLU 7Layers g:%s ep:%s lr:%s - %s %s" % (games, training_episodes, learning_rate, ValueFunction.__name__, comment)
     plotter = Plotter(plot_name)
     printer = Printer()
-    test_samples, test_labels = generate_greedy_data_set(10)
+    test_samples, test_labels = generate_heuristic_data_set(100)
     start_time = datetime.now()
 
     value_function = ValueFunction(plotter=plotter, learning_rate=learning_rate)
     for i in range(training_episodes):
-        samples, labels = generate_greedy_data_set(games)
+        samples, labels = generate_heuristic_data_set(games)
         printer.print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
         plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, value_function))
         value_function.update(samples, labels)
@@ -28,6 +29,8 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     print("Training %s episodes for %s games took %s" % (training_episodes, games, datetime.now()-start_time))
     print("Final accuracy: %s\n" % plotter.accuracies[-1])
     plotter.plot_accuracy(" final score:" + "{0:.3g}".format(plotter.accuracies[-1]))
+    if not os.path.exists("./weights"):
+        os.makedirs("./weights")
     torch.save(value_function, "./weights/%s.pth" % plot_name)
 
 
@@ -46,5 +49,5 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 #test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**5, 7)))
 
-for i in [5, 5, 5]:
-    test_with_parameters(games=100, training_episodes=200, learning_rate=float(round(0.1**i, 7)), comment="(%s)" % i)
+for i, lr in enumerate[4, 4, 4.5, 4.5, 5, 5]:
+    test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
