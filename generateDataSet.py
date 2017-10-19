@@ -49,7 +49,7 @@ def generate_heuristic_data_set(games, silent=True):
     for board in boards:
         samples.append(board.board)
         x = heur1.evaluate(board)
-        labels.append(x/1360 + config.LABEL_LOSS)
+        labels.append(x/1360 /2+0.5 + config.LABEL_LOSS)  # [-1,1] /2+0.5 => [0,1]
 
     return samples, labels
 

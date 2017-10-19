@@ -39,7 +39,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
     evaluation_samples = round(len(samples)/10)
     for i in range(evaluation_samples):
         prediction = value_function.evaluate(samples[i])
-        accuracy_sum += prediction > (config.LABEL_WIN - config.LABEL_LOSS)/2 == labels[i] > (config.LABEL_WIN - config.LABEL_LOSS)/2
+        accuracy_sum += (prediction > (config.LABEL_WIN - config.LABEL_LOSS)/2) == (labels[i] > (config.LABEL_WIN - config.LABEL_LOSS)/2)
         if not silent:
             print("Sample: %s, Label: %s, Prediction: %s" % (i, labels[i], "{0:.3g}".format(prediction)))
     return accuracy_sum/evaluation_samples
@@ -49,5 +49,5 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 #test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**5, 7)))
 
-for i, lr in enumerate([4, 4, 4.5, 4.5, 5, 5]):
+for i, lr in enumerate([1, 2, 3, 4, 5]):
     test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
