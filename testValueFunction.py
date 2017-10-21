@@ -17,7 +17,12 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
     test_samples, test_labels = generate_heuristic_data_set(100)
     start_time = datetime.now()
 
-    value_function = ValueFunction(plotter=plotter, learning_rate=learning_rate)
+    # value_function = ValueFunction(plotter=plotter, learning_rate=learning_rate)
+
+    """ Load ValueFunction """
+    value_function = torch.load("./weights/Heuristic ReLU 7Layers.pth")
+    plotter = value_function.plotter
+
     for i in range(training_episodes):
         samples, labels = generate_heuristic_data_set(games)
         printer.print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
@@ -47,7 +52,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-#test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**5, 7)))
+test_with_parameters(games=100, training_episodes=1500, learning_rate=float(round(0.1**3.5, 7)))
 
-for i, lr in enumerate([1, 2, 3, 4, 5]):
-    test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
+#for i, lr in enumerate([3, 3, 3.5, 3.5, 4, 4]):
+#    test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
