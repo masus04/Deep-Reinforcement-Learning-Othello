@@ -1,0 +1,74 @@
+
+Evaluating LR:0.0001 a:0.1
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 55% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 30.0 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 15% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 65% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 40.0 --|
+|--- LR:0.0001 Alpha: 0.1 Score: 35.0 Simulation time: 10:09:54 ---|
+
+Evaluating LR:0.0001 a:0.01
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 0% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 60% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 30.0 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 40% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 22.5 --|
+|--- LR:0.0001 Alpha: 0.01 Score: 26.25 Simulation time: 20:36:02 ---|
+
+Evaluating LR:0.0001 a:0.001
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 0% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 65% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 32.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 80% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 42.5 --|
+|--- LR:0.0001 Alpha: 0.001 Score: 37.5 Simulation time: 1 day, 6:58:26 ---|
+
+Evaluating LR:0.0001 a:0.0001
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 45% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 50% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 47.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 30% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 40% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 35.0 --|
+|--- LR:0.0001 Alpha: 0.0001 Score: 41.25 Simulation time: 1 day, 17:25:56 ---|
+
+Evaluating LR:0.0001 a:1e-05
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 20% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 70% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 45.0 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 25% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 35% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 30.0 --|
+|--- LR:0.0001 Alpha: 1e-05 Score: 37.5 Simulation time: 2 days, 4:19:13 ---|
+
+Evaluating LR:0.0001 a:1e-06
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 25% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 30% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 27.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 0% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 70% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 35.0 --|
+|--- LR:0.0001 Alpha: 1e-06 Score: 31.25 Simulation time: 2 days, 14:11:05 ---|
+
+
+score:26.25 lr:0.0001 a:0.01
+score:31.25 lr:0.0001 a:1e-06
+score:35.0 lr:0.0001 a:0.1
+score:37.5 lr:0.0001 a:1e-05
+score:37.5 lr:0.0001 a:0.001
+score:41.25 lr:0.0001 a:0.0001
