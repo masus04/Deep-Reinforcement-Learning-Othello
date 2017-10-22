@@ -9,7 +9,7 @@ from evaluation import evaluate
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(4, 5)]
+learning_rates = [float("1e-%d" %i) for i in range(3, 4)]
 alphas =         [float("1e-%d" %i) for i in range(1, 7)]
 
 TRAINING_GAMES = 30000
