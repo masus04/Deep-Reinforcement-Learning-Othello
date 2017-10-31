@@ -38,8 +38,8 @@ if __name__ == "__main__":
     player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.01, alpha=0.0001)
     player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction)
 
-    TOTAL_GAMES = 250000
-    EVALUATION_PERIOD = 1000
+    TOTAL_GAMES = 50000
+    EVALUATION_PERIOD = 500
 
     train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
 
