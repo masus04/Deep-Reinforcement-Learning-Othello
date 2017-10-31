@@ -21,7 +21,7 @@ def train(player1, player2, games, evaluation_period):
 
     """ Actual training """
     start_time = datetime.now()
-    print("Training %s & %s" % (player1.player_name, player2.player_name))
+    print("Training %s VS %s" % (player1.player_name, player2.player_name))
     evaluation.evaluate(player=player1, games=4, silent=True)
     evaluation.evaluate(player=player2, games=4, silent=True)
     for i in range(games//evaluation_period):
@@ -35,11 +35,11 @@ def train(player1, player2, games, evaluation_period):
 
 if __name__ == "__main__":
 
-    player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.1, alpha=0.01)
+    player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.01, alpha=0.0001)
     player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction)
 
-    TOTAL_GAMES = 50000
-    EVALUATION_PERIOD = 100
+    TOTAL_GAMES = 250000
+    EVALUATION_PERIOD = 1000
 
     train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
 
