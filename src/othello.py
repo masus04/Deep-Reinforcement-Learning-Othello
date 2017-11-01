@@ -68,7 +68,7 @@ class Othello:
                 for player in players:
                     if clear_plots:
                         player.plotter.clear_plots(player.player_name)
-                    player.plotter.plot_results(resolution=200)
+                    player.plotter.plot_results()
                     player.save()
 
         self.player1.color, self.player2.color = colors

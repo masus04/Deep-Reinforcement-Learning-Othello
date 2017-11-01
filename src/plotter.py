@@ -31,8 +31,8 @@ class Plotter:
     def add_evaluation_score(self, score):
         self.evaluation_scores.append(score)
 
-    def plot_accuracy(self, resolution=False):
-        self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)), resolution)
+    def plot_accuracy(self):
+        self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes" % (self.plot_name, len(self.results)))
         plt.close("all")
 
     def plot_results(self, comment=""):
@@ -99,10 +99,10 @@ class NoPlotter:
     def add_evaluation_score(self, score):
         pass
 
-    def plot_accuracy(self, resolution=False):
+    def plot_accuracy(self):
         pass
 
-    def plot_results(self, resolution=False):
+    def plot_results(self):
         pass
 
 
