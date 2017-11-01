@@ -1,0 +1,74 @@
+
+Evaluating LR:0.1 a:0.1
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 21.2% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 47.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 34.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 22.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 67.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 45.0 --|
+|--- LR:0.1 Alpha: 0.1 Score: 39.75 Simulation time: 10:50:45 ---|
+
+Evaluating LR:0.01 a:0.01
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 46.2% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 55% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 50.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 32.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 56.2% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 44.0 --|
+|--- LR:0.01 Alpha: 0.01 Score: 47.25 Simulation time: 21:38:37 ---|
+
+Evaluating LR:0.001 a:0.001
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 2.5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 45% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 23.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 42.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 66.2% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 54.0 --|
+|--- LR:0.001 Alpha: 0.001 Score: 38.75 Simulation time: 1 day, 9:46:50 ---|
+
+Evaluating LR:0.0001 a:0.0001
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 28.7% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 67.5% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 48.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 50% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 58.8% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 54.5 --|
+|--- LR:0.0001 Alpha: 0.0001 Score: 51.5 Simulation time: 1 day, 22:15:39 ---|
+
+Evaluating LR:1e-05 a:1e-05
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 23.8% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 51.2% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 37.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 41.2% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 23.0 --|
+|--- LR:1e-05 Alpha: 1e-05 Score: 30.25 Simulation time: 2 days, 11:17:51 ---|
+
+Evaluating LR:1e-06 a:1e-06
+Evaluating TDPlayer_Black_ValueFunction:
+TDPlayer_Black_ValueFunction won 5% of games against HeuristicPlayer_White_
+TDPlayer_Black_ValueFunction won 60% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 32.5 --|
+Evaluating TDPlayer_White_ValueFunction:
+TDPlayer_White_ValueFunction won 2.5% of games against HeuristicPlayer_Black_
+TDPlayer_White_ValueFunction won 77.5% of games against RandomPlayer_Black_
+|-- TDPlayer_White_ValueFunction achieved an evaluation score of: 40.0 --|
+|--- LR:1e-06 Alpha: 1e-06 Score: 36.25 Simulation time: 2 days, 23:32:39 ---|
+
+
+score:30.25 lr:1e-05 a:1e-05
+score:36.25 lr:1e-06 a:1e-06
+score:38.75 lr:0.001 a:0.001
+score:39.75 lr:0.1 a:0.1
+score:47.25 lr:0.01 a:0.01
+score:51.5 lr:0.0001 a:0.0001

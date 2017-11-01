@@ -7,7 +7,6 @@ if not os.path.exists("./plots"):
 # Constants and configuration options.
 
 TIMEOUT = 0.2
-BOARD_SIZE = 4
 
 # Caution: Adjust those in functions.c as well
 EMPTY = 1.5
@@ -23,14 +22,14 @@ LABEL_LOSS = 0
 LABEL_WIN = 1
 
 # Hyperparameters
-LEARNING_RATE = 1e-1
+LEARNING_RATE = 1e-3
 MINIBATCH_SIZE = 1
 
 EPSILON = 0.01
-EPSILON_REDUCE = 0.9995
+EPSILON_REDUCE = 0.99995
 
-ALPHA = 1e-1
-ALPHA_REDUCE = 0.9995
+ALPHA = 1e-3
+ALPHA_REDUCE = 0.99995
 
 
 def get_color_from_player_number(number):

@@ -3,18 +3,18 @@ from datetime import datetime
 import src.config as config
 from src.othello import Othello
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, ThreeByThreeVF
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 import training
 from evaluation import evaluate
 
 start_time = datetime.now()
 
-learning_rates = [float("1e-%d" %i) for i in range(3, 8)]
-alphas =         [float("1e-%d" %i) for i in range(1, 8)]
+learning_rates = [float("1e-%d" %i) for i in range(3, 4)]
+alphas =         [float("1e-%d" %i) for i in range(1, 7)]
 
-TRAINING_GAMES = 10000
-EVALUATION_PERIOD = 200  # How often the performance is evaluated
-EVALUATION_GAMES = 200  # Number of final evaluation games
+TRAINING_GAMES = 30000
+EVALUATION_PERIOD = 300  # How often the performance is evaluated
+EVALUATION_GAMES = 20   # Number of final evaluation games
 PLAYER = TDPlayer
 
 evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
@@ -28,8 +28,8 @@ def log_message(message):
 def evaluation(lr, a):
     log_message("\nEvaluating LR:%s a:%s" % (lr, a))
 
-    player1 = PLAYER(color=config.BLACK, strategy=ThreeByThreeVF, lr=lr, alpha=a)
-    player2 = PLAYER(color=config.WHITE, strategy=ThreeByThreeVF, lr=lr, alpha=a)
+    player1 = PLAYER(color=config.BLACK, strategy=ValueFunction, lr=lr, alpha=a)
+    player2 = PLAYER(color=config.WHITE, strategy=ValueFunction, lr=lr, alpha=a)
     players = [player1, player2]
 
     """ Training """

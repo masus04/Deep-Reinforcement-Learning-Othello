@@ -1,11 +1,11 @@
 from datetime import datetime
-from math import sqrt
 
 import src.config as config
 from src.othello import Othello
 from src.plotter import Printer
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, ThreeByThreeVF
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
+
 import evaluation
 
 
@@ -21,7 +21,7 @@ def train(player1, player2, games, evaluation_period):
 
     """ Actual training """
     start_time = datetime.now()
-    print("Training %s & %s" % (player1.player_name, player2.player_name))
+    print("Training %s VS %s" % (player1.player_name, player2.player_name))
     evaluation.evaluate(player=player1, games=4, silent=True)
     evaluation.evaluate(player=player2, games=4, silent=True)
     for i in range(games//evaluation_period):

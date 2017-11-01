@@ -132,8 +132,10 @@ class ReportingPlayer:
         self.player = player
         self.color = player.color
         self.reportedBoards = []
+        self.train = False
 
     def get_move(self, board):
+        self.player.color = self.color
         move = self.player.get_move(board)
         self.reportedBoards.append(board.copy().apply_move(move, self.color))
         return move
@@ -143,7 +145,10 @@ class ReportingPlayer:
         return self
 
     def register_winner(self, winner_color):
-        self.player.register_winner(winner_color)
+        return self.player.register_winner(winner_color)
+
+    def add_opponent(self, opponent):
+        return self.player.add_opponent(opponent)
 
     def pop_report(self):
         report = self.reportedBoards
@@ -195,7 +200,7 @@ class DeepRLPlayer(Player):
     def save(self, comment=""):
         if not os.path.exists("./Players"):
             os.makedirs("./Players")
-        torch.save(self, "./Players/%s%s.pth" % (self.player_name), comment)
+        torch.save(self, "./Players/%s%s.pth" % (self.player_name, comment))
 
     @classmethod
     def load_player(cls, color, strategy):
