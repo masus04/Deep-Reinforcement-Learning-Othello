@@ -31,6 +31,8 @@ EPSILON_REDUCE = 0.99995
 ALPHA = 1e-3
 ALPHA_REDUCE = 0.99995
 
+BOARD_SIZE = 4
+
 
 def get_color_from_player_number(number):
     if number == BLACK:

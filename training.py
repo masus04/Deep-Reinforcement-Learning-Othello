@@ -4,7 +4,7 @@ import src.config as config
 from src.othello import Othello
 from src.plotter import Printer
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, ThreeByThreeVF
 
 import evaluation
 
