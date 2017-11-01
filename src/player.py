@@ -192,10 +192,10 @@ class DeepRLPlayer(Player):
     def __label_from_winner_color__(self, winner_color):
         return config.LABEL_WIN if winner_color == self.color else config.LABEL_LOSS
 
-    def save(self):
+    def save(self, comment=""):
         if not os.path.exists("./Players"):
             os.makedirs("./Players")
-        torch.save(self, "./Players/%s.pth" % self.player_name)
+        torch.save(self, "./Players/%s%s.pth" % (self.player_name), comment)
 
     @classmethod
     def load_player(cls, color, strategy):

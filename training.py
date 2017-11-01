@@ -35,11 +35,11 @@ def train(player1, player2, games, evaluation_period):
 
 if __name__ == "__main__":
 
-    player1 = TDPlayer(color=config.BLACK, strategy=ThreeByThreeVF, lr=0.0001, alpha=0.000001)
+    player1 = TDPlayer(color=config.BLACK, strategy=ThreeByThreeVF, lr=0.001, alpha=0.001)
     player2 = TDPlayer(color=config.WHITE, strategy=ThreeByThreeVF)
 
-    TOTAL_GAMES = 200000
-    EVALUATION_PERIOD = 200
+    TOTAL_GAMES = 1000000
+    EVALUATION_PERIOD = 5000
 
     train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
 
@@ -47,6 +47,6 @@ if __name__ == "__main__":
     for player in (player1, player2):
         player.plotter.plot_results()
         player.plotter.plot_scores()
-        player.save()
+        player.save(" 1M Episodes, lr=a=0.001")
 
     print("Training completed")
