@@ -31,6 +31,7 @@ EPSILON_REDUCE = 0.99995
 ALPHA = 1e-3
 ALPHA_REDUCE = 0.99995
 
+TREE_EXPLORATION = 1/5
 
 def other_color(color):
     if color == EMPTY:

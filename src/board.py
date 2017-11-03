@@ -6,7 +6,10 @@ import random
 
 class Board:
 
-    LIBFUNCTIONS = cdll.LoadLibrary("./src/libfunctions.so")
+    try:
+        LIBFUNCTIONS = cdll.LoadLibrary("./src/libfunctions.so")
+    except OSError:
+        LIBFUNCTIONS = cdll.LoadLibrary("/home/masus/Deep-Reinforcement-Learning-Othello/src/libfunctions.so")
 
     def __init__(self, board = None):
         if board is not None:
@@ -23,7 +26,6 @@ class Board:
             self.empty_spaces = 60
         self.valid_moves = []
         self.now_playing = BLACK
-
 
     def get_possible_moves(self, row, column, color):
         if color == BLACK:

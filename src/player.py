@@ -1,7 +1,6 @@
 import os
 import random
 import torch
-from datetime import datetime
 
 import src.config as config
 from src.game_ai import GameArtificialIntelligence
@@ -258,27 +257,15 @@ class MCTSPlayer(Player):
 
         self.player = deepRLPlayer.load_player(color=color)
         self.player.train = False
-        self.other_player = deepRLPlayer(color=config.other_color(color))
-        self.other_player.train = False
-        self.other_player.value_function = self.player.value_function
+        # self.other_player = deepRLPlayer(color=config.other_color(color))
+        # self.other_player.train = False
+        # self.other_player.value_function = self.player.value_function
 
-        self.simulation = Othello(self.player, self.other_player, headless=True)
         self.mcTree = None
 
     def get_move(self, board):
         if not self.mcTree:  # init
-            self.mcTree = MCTS(self.color, board)
+            self.mcTree = MCTS(self.color, board, self.player.value_function)
 
-        self.extend_tree()
+        self.mcTree.extend_tree(self.time_limit)
         return self.mcTree.get_leaf(e=-1).move
-
-    def extend_tree(self):
-        start_time = datetime.now()
-
-        while (datetime.now()-start_time).seconds < self.time_limit:
-            leaf = self.mcTree.get_leaf()
-            self.rollout(leaf)
-
-    def rollout(self, leaf, e=config.EPSILON):
-        result = self.simulation.run(leaf.board)  # add result to leaf results
-

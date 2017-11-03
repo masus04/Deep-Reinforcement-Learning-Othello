@@ -1,59 +1,66 @@
-from random import random, sample
+import math
+from datetime import datetime
 
-from src.board import Board
+import src.config as config
 
 
 class MCTS:
 
-    EPSILON = 0.1
-
-    def __init__(self, color, board):
+    def __init__(self, color, board, value_function):
         self.color = color
-        self.root = MCTSLeaf(move=None, board=None)
+        self.root = MCTSNode(move=None, board=None, parent=None)
+        self.value_function = value_function
 
         # Generate all possible afterstates and add them as leafs
-        self.root.children.append([MCTSLeaf(move, self.root.board.copy().apply_move(move, color)) for move in self.root.board.get_valid_moves(color)])
+        self.root.children.append([MCTSNode(move=move, board=board.copy().apply_move(move, color), parent=self.root) for move in board.get_valid_moves(color)])
 
-    def get_leaf(self, e=EPSILON):
+    def get_leaf(self, exploration=True):
         node = self.root
 
         while not node.is_leaf:
-            if random() >= e:
-                node = self.max(node.children)  # Apply tree policy
+            if not exploration:
+                node = max(((child.score/child.visits, child) for child in node.children))[1]
             else:
-                move = sample(node.board.get_valid_moves())  # Apply random move and create Node if it does not yet exist
-                child = node.get_child_by_move(move)
-                if child:
-                    node = child
-                else:
-                    node.children.append(MCTSLeaf(move, node.board.copy().apply_move(self.color)))
+                node = max(((child.get_in_tree_score(), child) for child in node.children))[1]
 
         return node
 
-    @staticmethod
-    def max(children):  # Adjust for ties
-        candidate = MCTSLeaf(None, None)
-        for child in children:
-            if child.get_score() > candidate.get_score():
-                candidate = child
-        return candidate
+    def extend_tree(self, time_limit):
+        start_time = datetime.now()
+
+        while (datetime.now()-start_time).seconds < time_limit:
+            leaf = self.get_leaf()
+            leaf.backup(self.evaluate(leaf))
+            leaf.generate_children(self.color)
+
+    def evaluate(self, leaf):
+        return self.value_function.evaluate(leaf.board.get_representation(self.color))
 
 
-class MCTSLeaf:
+class MCTSNode:
 
-    def __init__(self, move, board):
+    def __init__(self, move, board, parent):
+        self.parent = parent
         self.move = move
         self.board = board
         self.children = []
+        self.visits = 0
+        self.score = 0
 
     def is_leaf(self):
         return len(self.children) == 0
 
-    def get_score(self):
-        pass
+    def get_in_tree_score(self):  # Factor prior probability =^= actionValue? Cross validate TREE_EXPLORATION constant
+        return self.score/(1+self.visits) + math.sqrt(self.parent.visits-self.visits)/(1+self.visits) * config.TREE_EXPLORATION
 
-    def get_child_by_move(self, move):
-        for child in self.children:
-            if child.move == move:
-                return child
-        return None
+    def generate_children(self, color):
+        states = (self.board.copy().apply_move(move, config.other_color(color)) for move in self.board.get_valid_moves(config.other_color(color)))  # Opponents afterstates
+        afterstates = (((move, state.copy().apply_move(move, color)) for move in state.get_valid_moves(color)) for state in states)  # Players afterstates
+        self.children = [MCTSNode(move=afterstate[0], board=afterstate[1], parent=self) for afterstate in afterstates]
+
+    def backup(self, score):
+        if self.parent:  # This is not the root node -> stop criterion
+            self.visits += 1
+            self.score += score
+
+            self.parent.backup(score)  # recursion
