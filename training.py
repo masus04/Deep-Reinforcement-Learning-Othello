@@ -36,7 +36,7 @@ def train(player1, player2, games, evaluation_period):
 if __name__ == "__main__":
 
     player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.01, alpha=0.0001)
-    player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction)
+    player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction, lr=0.01, alpha=0.0001)
 
     TOTAL_GAMES = 50000
     EVALUATION_PERIOD = 500
