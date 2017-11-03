@@ -8,6 +8,8 @@ from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunctio
 
 import evaluation
 
+EXPERIMENT_NAME = "|CONTINUOUS|"
+
 
 def train(player1, player2, games, evaluation_period):
     simulation = Othello(player1, player2)
@@ -26,11 +28,18 @@ def train(player1, player2, games, evaluation_period):
     evaluation.evaluate(player=player2, games=4, silent=True)
     for i in range(games//evaluation_period):
         # Training
-        simulation.run_simulations(episodes=evaluation_period, clear_plots=True, silent=True)
+        simulation.run_simulations(episodes=evaluation_period, silent=True)
         # Evaluation
         evaluation.evaluate(player=player1, games=20, silent=True)
         evaluation.evaluate(player=player2, games=20, silent=True)
         printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
+
+        # save artifacts
+        for player in (player1, player2):
+            player.plotter.clear_plots(EXPERIMENT_NAME)
+            player.plotter.plot_results(EXPERIMENT_NAME)
+            player.plotter.plot_scores(EXPERIMENT_NAME)
+            player.save(EXPERIMENT_NAME)
 
 
 if __name__ == "__main__":
@@ -42,11 +51,5 @@ if __name__ == "__main__":
     EVALUATION_PERIOD = 500
 
     train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
-
-    # save artifacts
-    for player in (player1, player2):
-        player.plotter.plot_results()
-        player.plotter.plot_scores()
-        player.save()
 
     print("Training completed")
