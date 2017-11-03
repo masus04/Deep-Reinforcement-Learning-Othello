@@ -2,6 +2,7 @@
 import os
 import torch
 from datetime import datetime
+from statistics import median, stdev, variance
 
 import src.config as config
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
@@ -50,9 +51,26 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
     return accuracy_sum/evaluation_samples
 
 
+def compare_afterstate_values(value_function):
+
+    test_samples, test_labels = generate_heuristic_data_set(250)
+    afterstate_values = [value_function.evaluate(sample) for sample in test_samples]
+
+    print("Max:%s Min:%s Median:%s StandardDeviation:%s" % (max(afterstate_values), min(afterstate_values), median(afterstate_values), stdev(afterstate_values)), variance(afterstate_values))
+    print("Exact values:")
+    for value in afterstate_values:
+        print(value)
+
+
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
-test_with_parameters(games=100, training_episodes=1500, learning_rate=float(round(0.1**3.5, 7)))
+# value_function = torch.load("./weights/Heuristic ReLU 7Layers.pth")
+value_function = config.load_player("SamplePlayer 5kGames, Black").value_function
+
+compare_afterstate_values(value_function)
+
+# test_with_parameters(games=100, training_episodes=1500, learning_rate=float(round(0.1**3.5, 7)))
 
 #for i, lr in enumerate([3, 3, 3.5, 3.5, 4, 4]):
 #    test_with_parameters(games=100, training_episodes=500, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
+
