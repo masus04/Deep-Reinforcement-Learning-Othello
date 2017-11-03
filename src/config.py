@@ -6,7 +6,7 @@ if not os.path.exists("./plots"):
 
 # Constants and configuration options.
 
-TIMEOUT = 0.2
+TIMEOUT = 2
 
 # Caution: Adjust those in functions.c as well
 EMPTY = 1.5

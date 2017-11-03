@@ -173,6 +173,7 @@ class DeepRLPlayer(Player):
         self.value_function = strategy(plotter=self.plotter, learning_rate=lr)
         self.training_samples = []
         self.training_labels = []
+        self.deterministic = False
 
     def get_move(self, board):
         return self.__behaviour_policy__(board)
@@ -253,19 +254,18 @@ class TDPlayer(MCPlayer):
 
 class MCTSPlayer(Player):
 
-    def __init__(self, color, deepRLPlayer):
+    def __init__(self, color, deepRLPlayer, strategy, time_limit=config.TIMEOUT, gui=NoGui()):
+        super(MCTSPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
 
-        self.player = deepRLPlayer.load_player(color=color)
+        self.player = deepRLPlayer.load_player(color=color, strategy=strategy)
         self.player.train = False
-        # self.other_player = deepRLPlayer(color=config.other_color(color))
-        # self.other_player.train = False
-        # self.other_player.value_function = self.player.value_function
 
         self.mcTree = None
+        self.deterministic = False
 
     def get_move(self, board):
         if not self.mcTree:  # init
             self.mcTree = MCTS(self.color, board, self.player.value_function)
 
         self.mcTree.extend_tree(self.time_limit)
-        return self.mcTree.get_leaf(e=-1).move
+        return self.mcTree.get_leaf(exploration=False).move

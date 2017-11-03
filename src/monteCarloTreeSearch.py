@@ -11,18 +11,19 @@ class MCTS:
         self.root = MCTSNode(move=None, board=None, parent=None)
         self.value_function = value_function
 
-        # Generate all possible afterstates and add them as leafs
-        self.root.children.append([MCTSNode(move=move, board=board.copy().apply_move(move, color), parent=self.root) for move in board.get_valid_moves(color)])
+        # Generate all possible afterstates, add them as leafs and evaluate & backup
+        self.root.children = [MCTSNode(move=move, board=board.copy().apply_move(move, color), parent=self.root) for move in board.get_valid_moves(color)]
+        for child in self.root.children:
+            child.backup(self.evaluate(child))
 
     def get_leaf(self, exploration=True):
         node = self.root
 
-        while not node.is_leaf:
-            if not exploration:
-                node = max(((child.score/child.visits, child) for child in node.children))[1]
+        while not node.is_leaf():
+            if exploration:
+                node = max((child for child in node.children), key=lambda x: x.get_in_tree_score())
             else:
-                node = max(((child.get_in_tree_score(), child) for child in node.children))[1]
-
+                node = max((child for child in node.children), key=lambda x: x.score / x.visits)
         return node
 
     def extend_tree(self, time_limit):
@@ -30,8 +31,9 @@ class MCTS:
 
         while (datetime.now()-start_time).seconds < time_limit:
             leaf = self.get_leaf()
-            leaf.backup(self.evaluate(leaf))
             leaf.generate_children(self.color)
+            for child in leaf.children:
+                child.backup(self.evaluate(child))
 
     def evaluate(self, leaf):
         return self.value_function.evaluate(leaf.board.get_representation(self.color))
@@ -51,16 +53,16 @@ class MCTSNode:
         return len(self.children) == 0
 
     def get_in_tree_score(self):  # Factor prior probability =^= actionValue? Cross validate TREE_EXPLORATION constant
-        return self.score/(1+self.visits) + math.sqrt(self.parent.visits-self.visits)/(1+self.visits) * config.TREE_EXPLORATION
+        return self.score/self.visits + math.sqrt(self.parent.visits-self.visits)/self.visits * config.TREE_EXPLORATION
 
     def generate_children(self, color):
         states = (self.board.copy().apply_move(move, config.other_color(color)) for move in self.board.get_valid_moves(config.other_color(color)))  # Opponents afterstates
-        afterstates = (((move, state.copy().apply_move(move, color)) for move in state.get_valid_moves(color)) for state in states)  # Players afterstates
+        afterstates = ((move, state.copy().apply_move(move, color)) for state in states for move in state.get_valid_moves(color))  # Players afterstates
         self.children = [MCTSNode(move=afterstate[0], board=afterstate[1], parent=self) for afterstate in afterstates]
 
     def backup(self, score):
-        if self.parent:  # This is not the root node -> stop criterion
-            self.visits += 1
-            self.score += score
+        self.visits += 1
+        self.score += score
 
+        if self.parent:  # This is not the root node -> stop criterion
             self.parent.backup(score)  # recursion
