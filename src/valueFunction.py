@@ -1,4 +1,4 @@
-from distutils.command.config import config
+from copy import deepcopy
 
 import torch
 import torch.nn.functional as F
@@ -50,10 +50,10 @@ class ValueFunction:
     def __generate_minibatches__(lst):
         return [Variable(torch.FloatTensor([lst[i:i+config.MINIBATCH_SIZE]])) for i in range(0, len(lst), config.MINIBATCH_SIZE)]
 
-    def copy(self, plotter):
-        value_function = self.__class__(plotter=plotter, learning_rate=self.learning_rate)
-        value_function.model = self.model
-        value_function.optimizer = self.optimizer
+    def copy(self):
+        value_function = self.__class__(plotter=deepcopy(self.plotter), learning_rate=self.learning_rate)
+        value_function.model = deepcopy(self.model)
+        value_function.optimizer = deepcopy(self.optimizer)
         return value_function
 
 
