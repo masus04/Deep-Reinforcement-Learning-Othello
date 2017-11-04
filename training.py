@@ -35,8 +35,8 @@ def train(player1, player2, games, evaluation_period):
         printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
         # save artifacts
+        player1.plotter.clear_plots(EXPERIMENT_NAME)
         for player in (player1, player2):
-            player.plotter.clear_plots(EXPERIMENT_NAME)
             player.plotter.plot_results(EXPERIMENT_NAME)
             player.plotter.plot_scores(EXPERIMENT_NAME)
             player.save(EXPERIMENT_NAME)
