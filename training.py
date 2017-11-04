@@ -43,6 +43,7 @@ def train(player1, player2, games, evaluation_period):
 
 
 if __name__ == "__main__":
+    print("Experiment name: %s" % EXPERIMENT_NAME)
 
     player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.001, alpha=0.001)
     player2 = MCPlayer(color=config.WHITE, strategy=ValueFunction, lr=0.001, alpha=0.001)
