@@ -41,7 +41,7 @@ class Othello:
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
 
-    def run_simulations(self, episodes, clear_plots=False, silent=False):
+    def run_simulations(self, episodes, silent=False):
         colors = (self.player1.color, self.player2.color)
 
         self.player1.add_opponent(self.player2)
@@ -62,14 +62,6 @@ class Othello:
 
             if not silent:
                 self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
-
-            # Plot and save every 5000 episodes
-            if i>0 and (i+1)%5000 == 0:
-                for player in players:
-                    if clear_plots:
-                        player.plotter.clear_plots(player.player_name)
-                    player.plotter.plot_results()
-                    player.save()
 
         self.player1.color, self.player2.color = colors
 

@@ -66,12 +66,13 @@ class Plotter:
         plt.savefig("./plots/%s.png" % plot_name)
 
     @staticmethod
-    def clear_plots(match):
+    def clear_plots(pattern):
+        """Clears all .png files that match a certain @pattern"""
         try:
             folder = "./plots"
             for file in os.listdir(folder):
                 file = os.path.join(folder, file)
-                if os.path.isfile(file) and ".png" in file and match in file:
+                if os.path.isfile(file) and ".png" in file and pattern in file:
                     os.unlink(file)
         except Exception as e:
             print(e)
@@ -99,31 +100,23 @@ class NoPlotter:
     def add_evaluation_score(self, score):
         pass
 
-    def plot_accuracy(self):
+    def plot_accuracy(self, comment=""):
         pass
 
-    def plot_results(self):
+    def plot_results(self, comment=""):
         pass
 
 
 class Printer:
 
-    def __init__(self):
-        self.percentage = -1
-
-    def print_inplace(self, text, percentage, time_taken=None):
+    @staticmethod
+    def print_inplace(text, percentage, time_taken=None):
         percentage = int(percentage)
-        if percentage > self.percentage:
-            self.percentage = percentage
-            length_factor = 5
-            progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
-            progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
-            sys.stdout.write("\r%s |%s|" % (text, progress_bar) + (" Time: %s" % str(time_taken).split(".")[0] if time_taken else ""))
-            sys.stdout.flush()
+        length_factor = 5
+        progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
+        progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
+        sys.stdout.write("\r%s |%s|" % (text, progress_bar) + (" Time: %s" % str(time_taken).split(".")[0] if time_taken else ""))
+        sys.stdout.flush()
 
-            if percentage == 100:
-                self.reset()
-
-    def reset(self):
-        self.percentage = 0
-        print()
+        if percentage == 100:
+            print()
