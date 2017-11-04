@@ -53,7 +53,7 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
 
 def compare_afterstate_values(value_function):
 
-    test_samples, test_labels = generate_heuristic_data_set(250)
+    test_samples, test_labels = generate_greedy_data_set(250)
     afterstate_values = [value_function.evaluate(sample) for sample in test_samples]
 
     print("Max:%s Min:%s Median:%s StandardDeviation:%s" % (max(afterstate_values), min(afterstate_values), median(afterstate_values), stdev(afterstate_values)), variance(afterstate_values))
@@ -65,7 +65,7 @@ def compare_afterstate_values(value_function):
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
 # value_function = torch.load("./weights/Heuristic ReLU 7Layers.pth")
-value_function = config.load_player("SamplePlayer 5kGames, Black").value_function
+value_function = config.load_player("TDPlayer_Black_ValueFunction").value_function
 
 compare_afterstate_values(value_function)
 
