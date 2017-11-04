@@ -45,12 +45,28 @@ def evaluate_vs_player(player, reference_player, games, log_method, silent):
         log_method("%s won %s of games against %s" % (player.player_name, "{0:.3g}".format((sum(results) / games) * 100) + "%", reference_player.player_name))
 
 
+def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
+    for player in player1, player2:
+        player.train = False
+
+    simulation = Othello(player1, player2)
+    results = simulation.run_simulations(games, silent=silent)
+    player1.score = round((sum(results) / games) * 100)
+    player2.score = games*config.LABEL_WIN - player1.score
+
+    if not silent:
+        print("%s won %s of games against %s" % (player1.player_name, str(player1.score/games*config.LABEL_WIN*100) + "%", player2.player_name))
+    return player1.score - player2.score
+
+
 if __name__ == "__main__":
 
     td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
     td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
+
+    print(compare_players(player1=td_black, player2=td_white))
 
     for player in [td_black, td_white]:
         evaluate(player)
