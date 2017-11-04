@@ -8,7 +8,7 @@ from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunctio
 
 import evaluation
 
-EXPERIMENT_NAME = "|CONTINUOUS|"
+EXPERIMENT_NAME = "|TD vs MC|"
 
 
 def train(player1, player2, games, evaluation_period):
@@ -44,11 +44,11 @@ def train(player1, player2, games, evaluation_period):
 
 if __name__ == "__main__":
 
-    player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.01, alpha=0.0001)
-    player2 = TDPlayer(color=config.WHITE, strategy=ValueFunction, lr=0.01, alpha=0.0001)
+    player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction, lr=0.001, alpha=0.001)
+    player2 = MCPlayer(color=config.WHITE, strategy=ValueFunction, lr=0.001, alpha=0.001)
 
-    TOTAL_GAMES = 50000
-    EVALUATION_PERIOD = 500
+    TOTAL_GAMES = 250000
+    EVALUATION_PERIOD = 1000
 
     train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
 
