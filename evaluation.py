@@ -52,8 +52,8 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
 
 if __name__ == "__main__":
 
-    td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
-    td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
+    td_black = config.load_player("TDPlayer_Black_ValueFunction|TD vs MC|")
+    td_white = config.load_player("MCPlayer_White_ValueFunction|TD vs MC|")
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 

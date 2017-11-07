@@ -8,7 +8,7 @@ from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunctio
 
 import evaluation
 
-EXPERIMENT_NAME = "|TD vs MC|"
+EXPERIMENT_NAME = "|TDvsHeuristic|"
 
 
 def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME):
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     """ Parameters """
     player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction)
-    player2 = MCPlayer(color=config.WHITE, strategy=ValueFunction)
+    player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
 
     TOTAL_GAMES = 250000
     EVALUATION_PERIOD = 1000
