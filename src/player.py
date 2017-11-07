@@ -33,7 +33,7 @@ class Player(object):
     def register_winner(self, winner_color):
         pass
 
-    def save(self):
+    def save(self, comment=""):
         pass
 
     def load_params(self):
