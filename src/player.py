@@ -40,6 +40,10 @@ class Player(object):
         """ DEPRECATED """
         pass
 
+    def set_name(self, name):
+        self.player_name = name
+        self.plotter.plot_name = self.player_name
+
     @classmethod
     def load_player(cls, color):
         return cls(color)

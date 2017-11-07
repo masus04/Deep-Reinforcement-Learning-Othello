@@ -46,7 +46,7 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
 
     simulation = Othello(player1, player2)
     results = simulation.run_simulations(games, silent=silent)
-    player1.score = round((sum(results) / games) * 100)
+    player1.score = sum(results)
     player2.score = games*config.LABEL_WIN - player1.score
 
     player1.train, player2.train = training_flags
