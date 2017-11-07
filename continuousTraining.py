@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     """ Parameters """
     PLAYER = TDPlayer
-    ITERATIONS = 10
+    ITERATIONS = 5
     GAMES_PER_ITERATION = 50000
     EVALUATION_PERIOD = 5000
 

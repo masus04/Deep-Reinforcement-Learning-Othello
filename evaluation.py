@@ -15,6 +15,7 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
 
     reference_players = [heuristic_player, random_player]
 
+    training_flag = player.train
     player.train = False
     player.score = 0
 
@@ -28,8 +29,9 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
         if not silent:
             log_method("%s won %s of games against %s" % (player.player_name, "{0:.3g}".format((sum(results)/games) * 100) + "%", reference_player.player_name))
 
+    player.train = training_flag
+
     player.score /= len(reference_players)  # Normalize to 100pts max
-    player.train = True
     player.plotter.add_evaluation_score(player.score)
     if not silent:
         log_method("|-- %s achieved an evaluation score of: %s --|" % (player.player_name, player.score))
@@ -37,6 +39,8 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
 
 
 def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
+    training_flags = player1.train, player2.train
+
     for player in player1, player2:
         player.train = False
 
@@ -45,8 +49,11 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     player1.score = round((sum(results) / games) * 100)
     player2.score = games*config.LABEL_WIN - player1.score
 
+    player1.train, player2.train = training_flags
+
     if not silent:
         print("%s won %s of games against %s" % (player1.player_name, str(player1.score/games*config.LABEL_WIN*100) + "%", player2.player_name))
+
     return player1.score - player2.score
 
 
