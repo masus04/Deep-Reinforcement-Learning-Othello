@@ -109,6 +109,9 @@ class NoPlotter:
     def plot_results(self, comment=""):
         pass
 
+    def plot_scores(self, comment=""):
+        pass
+
 
 class Printer:
 

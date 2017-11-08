@@ -15,6 +15,7 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
 
     reference_players = [heuristic_player, random_player]
 
+    training_flag = player.train, player.explore
     player.train = False
     player.explore = False
     player.score = 0
@@ -24,10 +25,9 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
     for reference_player in reference_players:
         evaluate_vs_player(player, reference_player, games, log_method, silent)
 
-    player.score /= len(reference_players)  # Normalize to 100pts max
-    player.train = True
-    player.explore = True
+    player.train, player.explore = training_flag
 
+    player.score /= len(reference_players)  # Normalize to 100pts max
     player.plotter.add_evaluation_score(player.score)
     if not silent:
         log_method("|-- %s achieved an evaluation score of: %s --|" % (player.player_name, player.score))
@@ -46,23 +46,28 @@ def evaluate_vs_player(player, reference_player, games, log_method, silent):
 
 
 def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
+    training_flags = player1.train, player2.train
+
     for player in player1, player2:
         player.train = False
 
     simulation = Othello(player1, player2)
     results = simulation.run_simulations(games, silent=silent)
-    player1.score = round((sum(results) / games) * 100)
+    player1.score = sum(results)
     player2.score = games*config.LABEL_WIN - player1.score
 
+    player1.train, player2.train = training_flags
+
     if not silent:
-        print("%s won %s of games against %s" % (player1.player_name, str(player1.score/games*config.LABEL_WIN*100) + "%", player2.player_name))
+        print("%s won %s of games against %s" % (player1.player_name, str(player1.score//(games*config.LABEL_WIN*100)) + "%", player2.player_name))
+
     return player1.score - player2.score
 
 
 if __name__ == "__main__":
 
-    td_black = TDPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
-    td_white = TDPlayer.load_player(color=config.WHITE, strategy=ValueFunction)
+    td_black = config.load_player("TDPlayer_Black_ValueFunction|TD vs MC|")
+    td_white = config.load_player("MCPlayer_White_ValueFunction|TD vs MC|")
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
