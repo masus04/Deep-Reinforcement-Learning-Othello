@@ -6,7 +6,7 @@ from evaluation import compare_players
 from src.player import MCPlayer, TDPlayer
 from src.valueFunction import ValueFunction
 
-EXPERIMENT_NAME = "|Continuous Training|"
+EXPERIMENT_NAME = "|Async|"
 
 
 def train_continuous(player1, player2, games, evaluation_period, experiment_name, iterations):
@@ -30,10 +30,10 @@ def train_continuous_asymmetrical(player1, player2, games, evaluation_period, ex
     for i in range(iterations):
         best.train = False
         train(player1, best, games, evaluation_period, experiment_name)
-        if compare_players(player1, best) >= 0:
+        if compare_players(player1, best, silent=(i != iterations-1)) >= 0:
             best.value_function = player1.value_function.copy()
 
-    print("Simulation time: %s\n" % str(datetime.now() - start).split(".")[0])
+        print("Simulation time: %s\n" % str(datetime.now() - start).split(".")[0])
 
     return player1, best
 

@@ -52,7 +52,7 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     player1.train, player2.train = training_flags
 
     if not silent:
-        print("%s won %s of games against %s" % (player1.player_name, str(player1.score/games*config.LABEL_WIN*100) + "%", player2.player_name))
+        print("%s won %s of games against %s" % (player1.player_name, str(player1.score//(games*config.LABEL_WIN*100)) + "%", player2.player_name))
 
     return player1.score - player2.score
 
