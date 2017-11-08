@@ -14,7 +14,7 @@ from src.othello import Othello
 from src.monteCarloTreeSearch import MCTS
 
 
-class Player(object):
+class Player:
 
     def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
         self.color = color
@@ -26,7 +26,6 @@ class Player(object):
         self.train = True
         self.explore = True
         self.opponents = []
-        self.deterministic = True
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
@@ -81,10 +80,6 @@ class HumanPlayer(Player):
 
 class RandomPlayer(Player):
 
-    def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
-        super(RandomPlayer, self).__init__(color, strategy, time_limit, gui)
-        self.deterministic = False
-
     def get_move(self, board):
         return random.sample(board.get_valid_moves(self.color), 1)[0]
 
@@ -106,14 +101,18 @@ class ComputerPlayer(Player):
 
 class HeuristicPlayer(Player):
     """ This is a standardized Benchmark player. Good implementations reach up to 95% win rate against it """
-    heuristic_table =[[100, -25, 10, 5, 5, 10, -25, 100],
-                      [-25, -25,  2, 2, 2, 2,  -25, -25],
-                      [ 10,   2,  5, 1, 1, 5,    2,  10],
-                      [  5,   2,  1, 2, 2, 1,    2,   5],
-                      [  5,   2,  1, 2, 2, 1,    2,   5],
-                      [ 10,   2,  5, 1, 1, 5,    2,  10],
-                      [-25, -25,  2, 2, 2, 2,  -25, -25],
-                      [100, -25, 10, 5, 5, 10, -25, 100]]
+
+    def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
+        super(HeuristicPlayer, self).__init__(color, strategy, time_limit, gui)
+        self.explore = False
+        self.heuristic_table =[[100, -25, 10, 5, 5, 10, -25, 100],
+                               [-25, -25,  2, 2, 2, 2,  -25, -25],
+                               [ 10,   2,  5, 1, 1, 5,    2,  10],
+                               [  5,   2,  1, 2, 2, 1,    2,   5],
+                               [  5,   2,  1, 2, 2, 1,    2,   5],
+                               [ 10,   2,  5, 1, 1, 5,    2,  10],
+                               [-25, -25,  2, 2, 2, 2,  -25, -25],
+                               [100, -25, 10, 5, 5, 10, -25, 100]]
 
     def get_move(self, board):
         afterstates = [[self.evaluate(afterstate[0]), afterstate[1]] for afterstate in self.__generate_afterstates__(board)]
@@ -137,13 +136,37 @@ class ReportingPlayer:
 
     def __init__(self, player):
         self.player = player
-        self.color = player.color
         self.reportedBoards = []
-        self.deterministic = player.deterministic
-        self.train = False
+
+    @property
+    def color(self):
+        return self.player.color
+
+    @property
+    def color(self, color):
+        self.player.color = color
+
+    @property
+    def train(self):
+        return self.player.train
+
+    @property
+    def train(self, train):
+        self.player.train = train
+
+    @property
+    def explore(self):
+        return self.player.explore
+
+    @property
+    def explore(self, explore):
+        self.player.explore = explore
+
+    @property
+    def explore(self, value):
+        pass
 
     def get_move(self, board):
-        self.player.color = self.color
         move = self.player.get_move(board)
         self.reportedBoards.append(board.copy().apply_move(move, self.color))
         return move
@@ -177,7 +200,6 @@ class DeepRLPlayer(Player):
         self.value_function = strategy(plotter=self.plotter, learning_rate=lr)
         self.training_samples = []
         self.training_labels = []
-        self.deterministic = False
 
     def get_move(self, board):
         return self.__behaviour_policy__(board)
@@ -258,18 +280,25 @@ class TDPlayer(MCPlayer):
 
 class MCTSPlayer(Player):
 
-    def __init__(self, color, deepRLPlayer, strategy, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, player, strategy, time_limit=config.TIMEOUT, gui=NoGui()):
         super(MCTSPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
 
-        self.player = deepRLPlayer.load_player(color=color, strategy=strategy)
-        self.player.train = False
+        try:
+            self.player = player.load_player(color=color, strategy=strategy)
+        except FileNotFoundError:
+            self.player = player(color=color, strategy=strategy)
+            print(config.WARNING + "Could not load %s, initializing new one" % player)
 
+        self.player.train = False
         self.mcTree = None
-        self.deterministic = False
 
     def get_move(self, board):
         if not self.mcTree:  # init
             self.mcTree = MCTS(self.color, board, self.player.value_function)
 
+        self.mcTree.register_opponents_move(board)
         self.mcTree.extend_tree(self.time_limit)
-        return self.mcTree.get_leaf(exploration=False).move
+        return self.mcTree.choose_node().move
+
+    def register_winner(self, winner_color):
+        self.mcTree = None  # Reinitialize on first move

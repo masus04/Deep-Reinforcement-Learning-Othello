@@ -4,6 +4,8 @@ import torch
 if not os.path.exists("./plots"):
     os.makedirs("./plots")
 
+WARNING = "\033[91m"
+
 # Constants and configuration options.
 
 TIMEOUT = 2
@@ -33,6 +35,7 @@ ALPHA_REDUCE = 0.99995
 
 TREE_EXPLORATION = 1/5
 
+
 def other_color(color):
     if color == EMPTY:
         return EMPTY
@@ -45,6 +48,10 @@ def get_color_from_player_number(number):
         return "Black"
     else:
         return "White"
+
+
+def get_result_label(win):
+    return LABEL_WIN if win else LABEL_LOSS
 
 
 def load_player(filename):

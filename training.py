@@ -8,7 +8,7 @@ from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunctio
 
 import evaluation
 
-EXPERIMENT_NAME = "|TDvsHeuristic|"
+EXPERIMENT_NAME = "|TEST|"
 
 
 def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME):

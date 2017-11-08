@@ -18,6 +18,9 @@ class ValueFunction:
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
 
+    def __call__(self, board_sample):
+        return self.evaluate(board_sample)
+
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
 

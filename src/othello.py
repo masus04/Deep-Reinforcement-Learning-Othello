@@ -17,8 +17,8 @@ class Othello:
         self.player2 = player2.set_gui(self.gui)
         self.printer = Printer()
 
-    def run(self, player1, player2, board=Board()):
-        self.board = board
+    def run(self, player1, player2):
+        self.board = Board()
 
         self.now_playing = player1
         self.other_player = player2
@@ -36,7 +36,7 @@ class Othello:
                 move = self.now_playing.get_move(self.board)
                 self.gui.flash_move(move, self.now_playing.color)
                 if not move in valid_moves:
-                    raise Exception("Player %s performed an illegal move: %s" % (get_color_from_player_number(self.now_playing.color), move))
+                    raise Exception("Player %s(%s) performed an illegal move: %s" % (self.now_playing.player_name, get_color_from_player_number(self.now_playing.color), move))
                 self.board.apply_move(move, self.now_playing.color)
             self.gui.update(self.board, self.other_player)
             self.now_playing, self.other_player = self.other_player, self.now_playing
@@ -51,10 +51,8 @@ class Othello:
 
         start_time = datetime.now()
         for i in range(episodes):
-            if i % 2 == 0:  # switch colors
-                self.player1.color, self.player2.color =self.player2.color, self.player1.color
-
-            result = config.LABEL_WIN if self.run(players[i % 2], players[(i + 1) % 2]) == self.player1.color else config.LABEL_LOSS
+            winner = self.run(players[i % 2], players[(i + 1) % 2])
+            result = config.get_result_label(winner == self.player1.color)
             results.append(result)
             if self.player1.train:
                 players[0].plotter.add_result(result)
@@ -62,6 +60,9 @@ class Othello:
 
             if not silent:
                 self.printer.print_inplace("Episode %s/%s" % (i + 1, episodes), (i + 1) / episodes * 100, datetime.now() - start_time)
+
+            if (i+1) % 2 == 0:  # switch colors every 2 rounds
+                self.player1.color, self.player2.color = self.player2.color, self.player1.color
 
         self.player1.color, self.player2.color = colors
 

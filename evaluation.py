@@ -1,7 +1,7 @@
 import sys
 import src.config as config
 from src.othello import Othello
-from src.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer, TDPlayer
+from src.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer, TDPlayer, MCTSPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction
 
 EVALUATION_GAMES = 100
@@ -35,7 +35,7 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
 
 
 def evaluate_vs_player(player, reference_player, games, log_method, silent):
-    if reference_player.deterministic:
+    if reference_player.explore:
         games = 4
     reference_player.train = False
     simulation = Othello(player, reference_player)
@@ -59,7 +59,7 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     player1.train, player2.train = training_flags
 
     if not silent:
-        print("%s won %s of games against %s" % (player1.player_name, str(player1.score//(games*config.LABEL_WIN*100)) + "%", player2.player_name))
+        print("%s won %s of games against %s" % (player1.player_name, "{0:.3g}".format(player1.score/(games*config.LABEL_WIN*100)) + "%", player2.player_name))
 
     return player1.score - player2.score
 
@@ -71,9 +71,21 @@ if __name__ == "__main__":
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
-    print(compare_players(player1=td_black, player2=td_white))
+    """ Play td_black against itself, once with and once without MCTS """
+    td_white = td_black
+    td_white.color = config.WHITE
 
+    td_black = MCTSPlayer(config.BLACK, TDPlayer, ValueFunction)
+
+    for player in td_black, td_white:
+        player.explore = False
+
+    """ Execution """
+    print(compare_players(player1=td_black, player2=td_white, games=10))
+
+    """
     for player in [td_black, td_white]:
         evaluate(player)
         player.plotter.plot_results()
         player.plotter.plot_scores()
+    """
