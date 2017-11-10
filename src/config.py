@@ -39,6 +39,13 @@ def get_color_from_player_number(number):
         return "White"
 
 
+def other_color(color):
+    if color == EMPTY:
+        return EMPTY
+    else:
+        return WHITE if color == BLACK else BLACK
+
+
 def load_player(filename):
     """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
     map_location = None if torch.cuda.is_available() else lambda storage, loc: storage

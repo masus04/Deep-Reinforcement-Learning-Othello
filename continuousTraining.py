@@ -27,9 +27,7 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
     """"Only train player1 while player2 is fixed to the currently best iteration and does not train"""
     print("Experiment name: %s" % experiment_name)
 
-    best = player1
-    best.value_function = player1.value_function.copy()
-    best.plotter = best.value_function.plotter
+    best = player1.copy_with_inversed_color()
     best.set_name(best.player_name + "_BEST")
     best.replaced = []
 

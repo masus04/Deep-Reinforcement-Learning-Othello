@@ -168,6 +168,12 @@ class DeepRLPlayer(Player):
         self.training_samples = []
         self.training_labels = []
 
+    def copy_with_inversed_color(self):
+        player = self.__class__(color=config.other_color(self.color), strategy=self.value_function.__class__)
+        player.value_function = self.value_function.copy()
+        player.plotter = player.value_function.plotter
+        return player
+
     def get_move(self, board):
         return self.__behaviour_policy__(board)
 
