@@ -8,7 +8,7 @@ WARNING = "\033[91m"
 
 # Constants and configuration options.
 
-TIMEOUT = 2
+TIMEOUT = 5
 
 # Caution: Adjust those in functions.c as well
 EMPTY = 1.5
@@ -33,7 +33,7 @@ EPSILON_REDUCE = 0.99995
 ALPHA = 1e-3
 ALPHA_REDUCE = 0.99995
 
-TREE_EXPLORATION = 1/5
+TREE_EXPLORATION_CONSTANT = 1/20
 
 
 def other_color(color):

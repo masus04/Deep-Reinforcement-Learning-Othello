@@ -6,14 +6,31 @@ import src.config as config
 
 
 class MCTS:
-    def __init__(self, color, board, value_function):
+    def __init__(self, color, board, value_function, tree_exploration_constant):
         self.color = color
-        self.root = MCTSNode(move=None, board=None, parent=None, value_function=None)
-        self.root.children = [MCTSEdge(board=board, color=color, parent=self.root, value_function=value_function)]
+        self.root = MCTSNode(move=None, board=None, parent=None, value_function=value_function)
+        self.root.edges = [MCTSEdge(board=board, color=color, parent=self.root, value_function=value_function)]
+        self.depths = []
+        self.tree_exploration_constant = tree_exploration_constant
+
+    def calculate_depth(self):
+        node = self.root
+        depth = 0
+        while not node.is_leaf():
+            node = self.__get_max_child_node__(node, lambda node: node.score / node.visits)
+            depth += 1
+        self.depths.append(depth)
 
     def register_opponents_move(self, board):
         if not self.root.is_leaf():
-            self.root.children = [find_edge_by_board(self.root.children, board)]
+            try:
+                self.root.edges = [find_edge_by_board(self.root.edges, board)]
+            except StopIteration:  # debug this
+                next_layer_edges = [edge2 for edge in self.root.edges for node in edge.nodes for edge2 in node.edges ]
+                self.root.edges = find_edge_by_board(next_layer_edges, board)
+
+                # self.root = MCTSNode(move=None, board=None, parent=None, value_function=None)
+                # self.root.edges = [MCTSEdge(board=board, color=self.color, parent=self.root, value_function=self.root.value_function)]
 
     def get_leaf(self):
         node = self.root
@@ -24,6 +41,7 @@ class MCTS:
         return node
 
     def choose_node(self):
+        self.calculate_depth()
         self.root = self.__get_max_child_node__(self.root, lambda node: node.score / node.visits)
         self.root.generate_edges(self.color)
         return self.root
@@ -37,11 +55,10 @@ class MCTS:
 
     @staticmethod
     def __get_max_child_node__(node, criterion):
-        return max((node for edge in node.children for node in edge.children), key=criterion)
+        return max((node for edge in node.edges for node in edge.nodes), key=criterion)
 
-    @staticmethod
-    def __get_in_tree_score__(node):  # Factor prior probability =^= actionValue? Cross validate TREE_EXPLORATION constant
-        return node.score / node.visits + math.sqrt(node.parent.parent.visits - node.visits) / node.visits * config.TREE_EXPLORATION
+    def __get_in_tree_score__(self, node):  # Factor prior probability =^= actionValue? Cross validate TREE_EXPLORATION constant
+        return node.score / node.visits + math.sqrt(node.parent.parent.visits - node.visits) / node.visits * self.tree_exploration_constant
 
 
 class MCTSNode:
@@ -49,13 +66,13 @@ class MCTSNode:
         self.parent = parent
         self.move = move
         self.board = board
-        self.children = []
+        self.edges = []
         self.visits = 0
         self.score = 0
         self.value_function = value_function
 
     def is_leaf(self):
-        return len(self.children) == 0
+        return len(self.edges) == 0
 
     def generate_edges(self, color):
         valid_moves = self.board.get_valid_moves(config.other_color(color))
@@ -65,21 +82,21 @@ class MCTSNode:
             if winner:
                 self.value_function = lambda x: config.get_result_label(winner == color)
             else:
-                self.children = [MCTSEdge(board=self.board.copy(), color=color, parent=self, value_function=self.value_function)]
+                self.edges = [MCTSEdge(board=self.board.copy(), color=color, parent=self, value_function=self.value_function)]
             return
 
         # Continue regular simulation
-        if len(self.children) == 0:  # Most likely case, this is an optimization
-            self.children = [MCTSEdge(board=self.board.copy().apply_move(move, config.other_color(color)), color=color, parent=self, value_function=self.value_function) for move in
-                             valid_moves]  # Opponents afterstates
+        if len(self.edges) == 0:  # Most likely case, this is an optimization
+            self.edges = [MCTSEdge(board=self.board.copy().apply_move(move, config.other_color(color)), color=color, parent=self, value_function=self.value_function)
+                          for move in valid_moves]  # Opponents afterstates
 
-        elif not (len(self.children) == len(valid_moves)):  # if lengths equal, do nothing, else insert missing nodes
+        elif not (len(self.edges) == len(valid_moves)):  # if lengths equal, do nothing, else insert missing nodes
             for move in valid_moves:
                 board = self.board.copy().apply_move(move, config.other_color(color))
                 try:
-                    find_edge_by_board(self.children, board)
+                    find_edge_by_board(self.edges, board)
                 except StopIteration:
-                    self.children.append(MCTSEdge(board, color, self, self.value_function))
+                    self.edges.append(MCTSEdge(board, color, self, self.value_function))
 
     def evaluate_and_backup(self, color):
         self.visits += 1
@@ -92,7 +109,7 @@ class MCTSEdge:
     def __init__(self, board, color, parent, value_function):
         self.board = board
         self.parent = parent
-        self.children = []
+        self.nodes = []
         self.__generate_nodes__(color, value_function)
 
     def __generate_nodes__(self, color, value_function):
@@ -100,8 +117,8 @@ class MCTSEdge:
         # Condition for passing and end of simulation
         if len(valid_moves) == 0:
             winner = self.board.game_won()
-            child = MCTSNode(move=None, board=self.board, parent=self, value_function=(lambda x: config.get_result_label(winner == color)) if winner else value_function)
-            self.children = [child]
+            child = MCTSNode(move=None, board=self.board.copy(), parent=self, value_function=(lambda x: config.get_result_label(winner == color)) if winner else value_function)
+            self.nodes = [child]
             child.evaluate_and_backup(color)
 
         # Continue regular simulation
@@ -109,7 +126,7 @@ class MCTSEdge:
             afterstates = ((move, self.board.copy().apply_move(move, color)) for move in valid_moves)  # Players afterstates
             for afterstate in afterstates:
                 child = MCTSNode(move=afterstate[0], board=afterstate[1], parent=self, value_function=value_function)
-                self.children.append(child)
+                self.nodes.append(child)
                 child.evaluate_and_backup(color)
 
     def backup(self, score):

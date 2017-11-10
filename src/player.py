@@ -202,6 +202,8 @@ class DeepRLPlayer(Player):
         self.training_labels = []
 
     def get_move(self, board):
+        if len(board.get_valid_moves(self.color)) == 0:
+            return None
         return self.__behaviour_policy__(board)
 
     def register_winner(self, winner_color):
@@ -280,7 +282,7 @@ class TDPlayer(MCPlayer):
 
 class MCTSPlayer(Player):
 
-    def __init__(self, color, player, strategy, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, player, strategy, time_limit=config.TIMEOUT, gui=NoGui(), tree_exploration_constant=config.TREE_EXPLORATION_CONSTANT):
         super(MCTSPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
 
         try:
@@ -291,14 +293,17 @@ class MCTSPlayer(Player):
 
         self.player.train = False
         self.mcTree = None
+        self.tree_exploration_constant = tree_exploration_constant
 
     def get_move(self, board):
         if not self.mcTree:  # init
-            self.mcTree = MCTS(self.color, board, self.player.value_function)
+            self.mcTree = MCTS(self.color, board, self.player.value_function, tree_exploration_constant=self.tree_exploration_constant)
 
         self.mcTree.register_opponents_move(board)
         self.mcTree.extend_tree(self.time_limit)
         return self.mcTree.choose_node().move
 
     def register_winner(self, winner_color):
+        print("Average depth: %s" % (sum(self.mcTree.depths)/len(self.mcTree.depths)))
+        print(self.mcTree.depths)
         self.mcTree = None  # Reinitialize on first move

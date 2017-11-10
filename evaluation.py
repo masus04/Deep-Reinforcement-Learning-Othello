@@ -59,33 +59,22 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     player1.train, player2.train = training_flags
 
     if not silent:
-        print("%s won %s of games against %s" % (player1.player_name, "{0:.3g}".format(player1.score/(games*config.LABEL_WIN*100)) + "%", player2.player_name))
+        print("%s won %s of games against %s" % (player1.player_name, "{0:.3g}".format(player1.score*100/(games*config.LABEL_WIN)) + "%", player2.player_name))
 
     return player1.score - player2.score
 
 
 if __name__ == "__main__":
 
-    td_black = config.load_player("TDPlayer_Black_ValueFunction|TD vs MC|")
+    td_black = config.load_player("TDPlayer_Black_ValueFunction|TDvsHeuristic|")
     td_white = config.load_player("MCPlayer_White_ValueFunction|TD vs MC|")
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
-    """ Play td_black against itself, once with and once without MCTS """
-    td_white = td_black
-    td_white.color = config.WHITE
-
-    td_black = MCTSPlayer(config.BLACK, TDPlayer, ValueFunction)
-
-    for player in td_black, td_white:
-        player.explore = False
-
     """ Execution """
-    print(compare_players(player1=td_black, player2=td_white, games=10))
+    # compare_players(player1=td_black, player2=td_white, games=2)
 
-    """
     for player in [td_black, td_white]:
         evaluate(player)
         player.plotter.plot_results()
         player.plotter.plot_scores()
-    """
