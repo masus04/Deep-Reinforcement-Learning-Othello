@@ -11,6 +11,7 @@ EXPERIMENT_NAME = "|Async|"
 
 def train_continuous(player1, player2, games, evaluation_period, experiment_name, iterations):
     """Trains a pair of players for @games games, evaluating them every @evaluation_period games and repeats the process with the stronger of the two players for @iterations iterations"""
+    print("Experiment name: %s" % experiment_name)
 
     for i in range(iterations):
         train(player1, player2, games, evaluation_period, experiment_name)
@@ -24,10 +25,12 @@ def train_continuous(player1, player2, games, evaluation_period, experiment_name
 
 def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_name, iterations):
     """"Only train player1 while player2 is fixed to the currently best iteration and does not train"""
+    print("Experiment name: %s" % experiment_name)
+
     best = player1
     best.value_function = player1.value_function.copy()
     best.plotter = best.value_function.plotter
-    best.set_name(best.player_name + "|best|")
+    best.set_name(best.player_name + "_BEST")
     best.replaced = []
 
     # continuously improve
@@ -54,9 +57,7 @@ if __name__ == "__main__":
 
     """ Execution """
     start = datetime.now()
-    print("Experiment name: %s" % EXPERIMENT_NAME)
-
-    # train_continuous(player1=PLAYER(config.BLACK, ValueFunction), player2=PLAYER(config.WHITE, ValueFunction), games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name=EXPERIMENT_NAME, iterations=ITERATIONS)
-    train_continuous_asymmetrical(player1=PLAYER, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name=EXPERIMENT_NAME, iterations=ITERATIONS)
+    # train_continuous(player1=PLAYER(config.BLACK, ValueFunction), player2=PLAYER(config.WHITE, ValueFunction), games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
+    train_continuous_asymmetrical(player1=PLAYER, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
 
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])

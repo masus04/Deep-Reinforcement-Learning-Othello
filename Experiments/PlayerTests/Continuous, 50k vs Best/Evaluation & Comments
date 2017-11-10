@@ -4,7 +4,3 @@ TDPlayer_White_ValueFunction|best| won 15% of games against HeuristicPlayer_Blac
 Episode 100/100 |**********|100%|**********| Time: 0:00:12
 TDPlayer_White_ValueFunction|best| won 57% of games against RandomPlayer_Black_
 |-- TDPlayer_White_ValueFunction|best| achieved an evaluation score of: 36.0 --|
-
-
-After 250k games of training, player1 never beat the randomly initialized best player.
--> retry with exact copy from the start, but very disappointing result.
