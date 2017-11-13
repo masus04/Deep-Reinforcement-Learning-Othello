@@ -172,6 +172,7 @@ class DeepRLPlayer(Player):
         player = self.__class__(color=config.other_color(self.color), strategy=self.value_function.__class__)
         player.value_function = self.value_function.copy()
         player.plotter = player.value_function.plotter
+        player.opponents = self.opponents.copy()
         return player
 
     def get_move(self, board):
