@@ -12,7 +12,7 @@ class ValueFunction:
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         self.plotter = plotter
         self.model = Model()
-        if torch.cuda.is_available():
+        if config.CUDA:
             self.model.cuda(0)
         self.learning_rate = learning_rate
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
@@ -21,7 +21,7 @@ class ValueFunction:
     def evaluate(self, board_sample):
         tensor = torch.FloatTensor([[board_sample]])
 
-        if torch.cuda.is_available():
+        if config.CUDA:
             tensor = tensor.cuda(0)
 
         return self.model(Variable(tensor)).data[0][0]
@@ -32,7 +32,7 @@ class ValueFunction:
 
         accumulated_loss = 0
         for minibatch_samples, minibatch_labels in zip(minibatches_s, minibatches_l):
-            if torch.cuda.is_available():
+            if config.CUDA:
                 minibatch_samples, minibatch_labels = minibatch_samples.cuda(0), minibatch_labels.cuda(0)
 
             self.optimizer.zero_grad()
@@ -92,7 +92,7 @@ class SimpleValueFunction(ValueFunction):
         super(SimpleValueFunction, self).__init__(plotter)
         self.plotter = plotter
         self.model = SimpleModel()
-        if torch.cuda.is_available():
+        if config.CUDA:
             self.model.cuda(0)
 
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
@@ -138,7 +138,7 @@ class FCValueFunction(ValueFunction):
     def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
         super(FCValueFunction, self).__init__(plotter)
         self.model = FCModel()
-        if torch.cuda.is_available():
+        if config.CUDA:
             self.model.cuda(0)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
 

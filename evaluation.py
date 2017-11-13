@@ -59,8 +59,10 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
 
 if __name__ == "__main__":
 
-    td_black = config.load_player("TDPlayer_Black_ValueFunction|TDvsHeuristic|")
-    td_white = config.load_player("TDPlayer_White_ValueFunction|best||AsyncContinuousTraining|")
+    td_black = config.load_player("TDPlayer_Black_ValueFunction|Continuous|")
+    td_black.color = config.BLACK
+    td_white = config.load_player("TDPlayer_White_ValueFunction|Continuous|")
+    td_white.color = config.WHITE
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 

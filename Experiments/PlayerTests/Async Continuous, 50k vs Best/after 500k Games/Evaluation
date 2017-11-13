@@ -1,0 +1,16 @@
+Episode 100/100 |**********|100%|**********| Time: 0:00:27
+TDPlayer_Black_ValueFunction won 46% of games against TDPlayer_Black_ValueFunction_BEST
+-8
+Evaluating TDPlayer_Black_ValueFunction:
+Episode 100/100 |**********|100%|**********| Time: 0:00:17
+TDPlayer_Black_ValueFunction won 25% of games against HeuristicPlayer_White_
+Episode 100/100 |**********|100%|**********| Time: 0:00:13
+TDPlayer_Black_ValueFunction won 46% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 35.5 --|
+Evaluating TDPlayer_Black_ValueFunction_BEST:
+Episode 100/100 |**********|100%|**********| Time: 0:00:17
+TDPlayer_Black_ValueFunction_BEST won 11% of games against HeuristicPlayer_Black_
+Episode 100/100 |**********|100%|**********| Time: 0:00:14
+TDPlayer_Black_ValueFunction_BEST won 47% of games against RandomPlayer_Black_
+|-- TDPlayer_Black_ValueFunction_BEST achieved an evaluation score of: 29.0 --|
+

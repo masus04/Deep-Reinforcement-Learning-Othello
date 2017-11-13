@@ -210,7 +210,7 @@ class DeepRLPlayer(Player):
     def load_player(cls, color, strategy):
         """ Loads model to the device it was saved to, except if cuda is not available -> load to cpu """
         player_name = "%s_%s_%s" % (cls.__name__, config.get_color_from_player_number(color), strategy.__name__)
-        map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+        map_location = None if config.CUDA else lambda storage, loc: storage
         return torch.load("./Players/%s.pth" % player_name, map_location=map_location)
 
     def save_params(self):
@@ -221,7 +221,7 @@ class DeepRLPlayer(Player):
 
     def load_params(self):
         """  DEPRECATED: Loads model to the device it was saved to, except if cuda is not available -> load to cpu """
-        map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+        map_location = None if config.CUDA else lambda storage, loc: storage
         self.value_function = torch.load("./Weights/%s.pth" % self.player_name, map_location=map_location)
         self.plotter = self.value_function.plotter
 

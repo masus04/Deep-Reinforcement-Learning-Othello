@@ -6,6 +6,8 @@ if not os.path.exists("./plots"):
 
 # Constants and configuration options.
 
+CUDA = torch.cuda.is_available()
+
 TIMEOUT = 0.2
 
 # Caution: Adjust those in functions.c as well
@@ -48,5 +50,5 @@ def other_color(color):
 
 def load_player(filename):
     """ loads model to the device it was saved to, except if cuda is not available -> load to cpu """
-    map_location = None if torch.cuda.is_available() else lambda storage, loc: storage
+    map_location = None if CUDA else lambda storage, loc: storage
     return torch.load("./Players/%s.pth" % filename, map_location=map_location)

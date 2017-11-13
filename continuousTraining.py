@@ -39,6 +39,7 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
             best.value_function = player1.value_function.copy()
             best.plotter = best.value_function.plotter
             best.replaced.append(i)
+            print("Player %s beat player %s in iteration %s, setting new reference player" % (player1.player_name, best.player_name, i))
 
         print("Simulation time: %s\n" % str(datetime.now() - start).split(".")[0])
 
