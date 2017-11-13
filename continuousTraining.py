@@ -23,13 +23,14 @@ def train_continuous(player1, player2, games, evaluation_period, experiment_name
     return player1, player2
 
 
-def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_name, iterations):
+def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_name, iterations, best=None):
     """"Only train player1 while player2 is fixed to the currently best iteration and does not train"""
     print("Experiment name: %s" % experiment_name)
 
-    best = player1.copy_with_inversed_color()
-    best.set_name(best.player_name + "_BEST")
-    best.replaced = []
+    if not best:
+        best = player1.copy_with_inversed_color()
+        best.set_name(best.player_name + "_BEST")
+        best.replaced = []
 
     # continuously improve
     for i in range(iterations):
@@ -49,7 +50,8 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = config.load_player("TDPlayer_Black_ValueFunction|AsyncContinuousTraining|")  #  TDPlayer(config.BLACK, ValueFunction)
+    PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")  #  TDPlayer(config.BLACK, ValueFunction)
+    BEST = config.load_player("TDPlayer_Black_ValueFunction_BEST|Async|")
     ITERATIONS = 25
     GAMES_PER_ITERATION = 10000
     EVALUATION_PERIOD = 2500
@@ -57,6 +59,6 @@ if __name__ == "__main__":
     """ Execution """
     start = datetime.now()
     # train_continuous(player1=PLAYER(config.BLACK, ValueFunction), player2=PLAYER(config.WHITE, ValueFunction), games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
-    train_continuous_asymmetrical(player1=PLAYER, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
+    train_continuous_asymmetrical(player1=PLAYER, best=BEST, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
 
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])
