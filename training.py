@@ -11,15 +11,8 @@ import evaluation
 EXPERIMENT_NAME = "|TDvsHeuristic|"
 
 
-def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME):
+def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME, silent=False):
     simulation = Othello(player1, player2)
-    printer = Printer()
-
-    """ Continue training """
-    # player1.load_player(color=config.BLACK, strategy=ValueFunction)
-    # player2.load_player(color=config.WHITE, strategy=ValueFunction)
-
-    # player1.value_function = player2.value_function.copy(player1.plotter)
 
     """ Actual training """
     start_time = datetime.now()
@@ -31,7 +24,8 @@ def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT
         # Evaluation
         evaluation.evaluate(player=player1, games=20, silent=True)
         evaluation.evaluate(player=player2, games=20, silent=True)
-        printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
+        if not silent:
+            Printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
         # save artifacts
         player1.plotter.clear_plots(experiment_name)
@@ -46,6 +40,10 @@ if __name__ == "__main__":
     """ Parameters """
     player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction)
     player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
+
+    """ Continue training """
+    # player1.load_player(color=config.BLACK, strategy=ValueFunction)
+    # player2.load_player(color=config.WHITE, strategy=ValueFunction)
 
     TOTAL_GAMES = 250000
     EVALUATION_PERIOD = 1000

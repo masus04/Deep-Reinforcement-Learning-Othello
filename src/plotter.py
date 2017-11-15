@@ -112,12 +112,12 @@ class NoPlotter:
 class Printer:
 
     @staticmethod
-    def print_inplace(text, percentage, time_taken=None):
+    def print_inplace(text, percentage, time_taken=None, comment=""):
         percentage = int(percentage)
         length_factor = 5
         progress_bar = int(round(percentage/length_factor)) * "*" + (round((100-percentage)/length_factor)) * "."
         progress_bar = progress_bar[:round(len(progress_bar)/2)] + "|" + str(int(percentage)) + "%|" + progress_bar[round(len(progress_bar)/2):]
-        sys.stdout.write("\r%s |%s|" % (text, progress_bar) + (" Time: %s" % str(time_taken).split(".")[0] if time_taken else ""))
+        sys.stdout.write("\r%s |%s|" % (text, progress_bar) + (" Time: %s" % str(time_taken).split(".")[0] if time_taken else "") + comment)
         sys.stdout.flush()
 
         if percentage == 100:

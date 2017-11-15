@@ -5,6 +5,7 @@ from training import train
 from evaluation import compare_players
 from src.player import MCPlayer, TDPlayer
 from src.valueFunction import ValueFunction
+from src.plotter import Printer
 
 EXPERIMENT_NAME = "|FAST|"
 
@@ -35,14 +36,14 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
     # continuously improve
     for i in range(iterations):
         best.train = False
-        train(player1, best, games, evaluation_period, experiment_name)
+        train(player1, best, games, evaluation_period, experiment_name, silent=True)
         if compare_players(player1, best, silent=(i != iterations-1)) >= 0:
             best.value_function = player1.value_function.copy()
             best.plotter = best.value_function.plotter
             best.replaced.append(i)
-            print("Player %s beat player %s in iteration %s, setting new reference player" % (player1.player_name, best.player_name, i))
 
-        print("Simulation time: %s\n" % str(datetime.now() - start).split(".")[0])
+        Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations+1), percentage=100 * (i+1) / (iterations+1), time_taken=str(datetime.now() - start).split(".")[0],
+                              comment=" | Best player replaced at: %s" % best.replaced)
 
     return player1, best
 
