@@ -52,6 +52,7 @@ if __name__ == "__main__":
 
     """ Parameters """
     PLAYER = TDPlayer(config.BLACK, ValueFunction)  # config.load_player("TDPlayer_Black_ValueFunction|Async|")  #  TDPlayer(config.BLACK, ValueFunction)
+    PLAYER2 = TDPlayer(config.WHITE, ValueFunction)
 
     ITERATIONS = 50
     GAMES_PER_ITERATION = 5000
@@ -59,7 +60,7 @@ if __name__ == "__main__":
 
     """ Execution """
     start = datetime.now()
-    # train_continuous(player1=PLAYER(config.BLACK, ValueFunction), player2=PLAYER(config.WHITE, ValueFunction), games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
+    # train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
     train_continuous_asymmetrical(player1=PLAYER, best=None, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
 
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])
