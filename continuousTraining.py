@@ -51,8 +51,14 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = TDPlayer(config.BLACK, ValueFunction)  # config.load_player("TDPlayer_Black_ValueFunction|Async|")  #  TDPlayer(config.BLACK, ValueFunction)
-    PLAYER2 = TDPlayer(config.WHITE, ValueFunction)
+    # PLAYER = TDPlayer(config.BLACK, ValueFunction)
+    # PLAYER2 = TDPlayer(config.WHITE, ValueFunction)
+
+    PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
+    PLAYER2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
+
+    assert PLAYER.color == config.BLACK
+    assert PLAYER2.color == config.WHITE
 
     ITERATIONS = 50
     GAMES_PER_ITERATION = 5000
