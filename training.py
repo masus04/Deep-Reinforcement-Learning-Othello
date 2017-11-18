@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
 
     player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
-    player2 = config.load_player("TDPlayer_White_ValueFunction|TDvsMC|")
+    player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
     """ Continue training """
     # player1.load_player(color=config.BLACK, strategy=ValueFunction)
