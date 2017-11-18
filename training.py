@@ -8,7 +8,7 @@ from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunctio
 
 import evaluation
 
-EXPERIMENT_NAME = "|TDvsHeuristic|"
+EXPERIMENT_NAME = "|TDvsMC|"
 
 
 def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME, silent=False):
@@ -38,8 +38,11 @@ def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT
 if __name__ == "__main__":
 
     """ Parameters """
-    player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction)
-    player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
+    # player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction)
+    # player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
+
+    player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
+    player2 = config.load_player("TDPlayer_White_ValueFunction|TDvsMC|")
 
     """ Continue training """
     # player1.load_player(color=config.BLACK, strategy=ValueFunction)
