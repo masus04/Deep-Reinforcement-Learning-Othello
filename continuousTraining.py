@@ -54,8 +54,11 @@ if __name__ == "__main__":
     # PLAYER = TDPlayer(config.BLACK, ValueFunction)
     # PLAYER2 = TDPlayer(config.WHITE, ValueFunction)
 
-    PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
-    PLAYER2 = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
+    # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
+    # PLAYER2 = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
+
+    PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Continuous|")
+    PLAYER2 = config.load_player("TDPlayer_White_ValueFunction|Continuous|")
 
     assert PLAYER.color == config.BLACK
     assert PLAYER2.color == config.WHITE
@@ -66,7 +69,7 @@ if __name__ == "__main__":
 
     """ Execution """
     start = datetime.now()
-    # train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
-    train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
+    train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
+    # train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
 
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])

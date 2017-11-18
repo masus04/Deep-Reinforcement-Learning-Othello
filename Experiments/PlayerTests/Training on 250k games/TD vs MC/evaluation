@@ -1,0 +1,15 @@
+Episode 1000/1000 |**********|100%|**********| Time: 0:03:36
+TDPlayer_Black_ValueFunction won 33.5% of games against MCPlayer_White_ValueFunction
+-165.0
+Evaluating TDPlayer_Black_ValueFunction:
+Episode 1000/1000 |**********|100%|**********| Time: 0:03:38
+TDPlayer_Black_ValueFunction won 11.2% of games against HeuristicPlayer_White_
+Episode 1000/1000 |**********|100%|**********| Time: 0:03:49
+TDPlayer_Black_ValueFunction won 62.7% of games against RandomPlayer_White_
+|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 37.0 --|
+Evaluating MCPlayer_White_ValueFunction:
+Episode 1000/1000 |**********|100%|**********| Time: 0:04:09
+MCPlayer_White_ValueFunction won 18.3% of games against HeuristicPlayer_Black_
+Episode 1000/1000 |**********|100%|**********| Time: 0:03:45
+MCPlayer_White_ValueFunction won 54.3% of games against RandomPlayer_Black_
+|-- MCPlayer_White_ValueFunction achieved an evaluation score of: 36.0 --|

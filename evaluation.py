@@ -54,21 +54,21 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     if not silent:
         print("%s won %s of games against %s" % (player1.player_name, "{0:.3g}".format(player1.score*100/(games*config.LABEL_WIN)) + "%", player2.player_name))
 
-    return player1.score - player2.score
+    return (player1.score - player2.score)/2
 
 
 if __name__ == "__main__":
 
     td_black = config.load_player("TDPlayer_Black_ValueFunction|Async|")
     assert td_black.color == config.BLACK
-    td_white = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
+    td_white = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
     assert td_white.color == config.WHITE
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
-    print(compare_players(player1=td_black, player2=td_white))
+    print(compare_players(player1=td_black, player2=td_white, games=1000))
 
     for player in [td_black, td_white]:
-        evaluate(player)
+        evaluate(player, games=1000)
         player.plotter.plot_results()
         player.plotter.plot_scores()
