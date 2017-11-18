@@ -41,12 +41,9 @@ if __name__ == "__main__":
     # player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction)
     # player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
 
+    """ Continue training """
     player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
     player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
-
-    """ Continue training """
-    # player1.load_player(color=config.BLACK, strategy=ValueFunction)
-    # player2.load_player(color=config.WHITE, strategy=ValueFunction)
 
     TOTAL_GAMES = 250000
     EVALUATION_PERIOD = 1000
