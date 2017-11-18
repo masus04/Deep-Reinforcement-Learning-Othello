@@ -6,7 +6,7 @@ if not os.path.exists("./plots"):
 
 # Constants and configuration options.
 
-CUDA = torch.cuda.is_available()
+CUDA = False #  torch.cuda.is_available()
 
 TIMEOUT = 0.2
 
