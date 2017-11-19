@@ -42,7 +42,7 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
             best.plotter = best.value_function.plotter
             best.replaced.append(i)
 
-        Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations+1), percentage=100 * (i+1) / (iterations+1), time_taken=str(datetime.now() - start).split(".")[0],
+        Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],
                               comment=" | Best player replaced at: %s" % best.replaced)
 
     return player1, best
