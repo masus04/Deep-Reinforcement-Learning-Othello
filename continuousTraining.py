@@ -39,7 +39,7 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
         train(player1, best, games, evaluation_period, experiment_name, silent=True)
         if compare_players(player1, best, silent=(i != iterations-1)) >= 0:
             best.value_function = player1.value_function.copy()
-            best.plotter = best.value_function.plotter
+            best.plotter = player1.plotter.copy()
             best.replaced.append(i)
 
         Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],

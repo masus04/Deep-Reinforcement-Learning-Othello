@@ -22,7 +22,6 @@ def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING
 
     """ Load ValueFunction """
     value_function = torch.load("./weights/Heuristic ReLU 7Layers.pth")
-    plotter = value_function.plotter
 
     for i in range(training_episodes):
         samples, labels = generate_heuristic_data_set(games)

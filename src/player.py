@@ -164,14 +164,14 @@ class DeepRLPlayer(Player):
         self.e = e
         self.alpha = alpha
         self.plotter = Plotter(self.player_name)
-        self.value_function = strategy(plotter=self.plotter, learning_rate=lr)
+        self.value_function = strategy(learning_rate=lr)
         self.training_samples = []
         self.training_labels = []
 
     def copy_with_inversed_color(self):
         player = self.__class__(color=config.other_color(self.color), strategy=self.value_function.__class__)
         player.value_function = self.value_function.copy()
-        player.plotter = player.value_function.plotter
+        player.plotter = self.plotter.copy()
         player.opponents = self.opponents.copy()
         return player
 
@@ -181,7 +181,7 @@ class DeepRLPlayer(Player):
     def register_winner(self, winner_color):
         if self.train:
             self.__generate_training_labels__(winner_color)
-            self.value_function.update(self.training_samples, self.training_labels)
+            self.plotter.add_loss(self.value_function.update(self.training_samples, self.training_labels))
             self.alpha *= config.ALPHA_REDUCE
             self.opponents[-1][1] += 1
         self.training_samples = []
@@ -219,12 +219,6 @@ class DeepRLPlayer(Player):
         if not os.path.exists("./Weights"):
             os.makedirs("./Weights")
         torch.save(self.value_function, "./Weights/%s.pth" % self.player_name)
-
-    def load_params(self):
-        """  DEPRECATED: Loads model to the device it was saved to, except if cuda is not available -> load to cpu """
-        map_location = None if config.CUDA else lambda storage, loc: storage
-        self.value_function = torch.load("./Weights/%s.pth" % self.player_name, map_location=map_location)
-        self.plotter = self.value_function.plotter
 
 
 class MCPlayer(DeepRLPlayer):

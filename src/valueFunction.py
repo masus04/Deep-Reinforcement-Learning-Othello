@@ -9,8 +9,7 @@ import src.config as config
 
 class ValueFunction:
 
-    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
-        self.plotter = plotter
+    def __init__(self, learning_rate=config.LEARNING_RATE):
         self.model = Model()
         if config.CUDA:
             self.model.cuda(0)
@@ -44,14 +43,14 @@ class ValueFunction:
             accumulated_loss += abs(loss.data[0])
 
         # print("Average episode loss: %s for final label: %s" % (accumulated_loss/len(minibatches_s), minibatches_l[-1][-1].data[0]))
-        self.plotter.add_loss(accumulated_loss/len(minibatches_s))
+        return accumulated_loss/len(minibatches_s)
 
     @staticmethod
     def __generate_minibatches__(lst):
         return [Variable(torch.FloatTensor([lst[i:i+config.MINIBATCH_SIZE]])) for i in range(0, len(lst), config.MINIBATCH_SIZE)]
 
     def copy(self):
-        value_function = self.__class__(plotter=deepcopy(self.plotter), learning_rate=self.learning_rate)
+        value_function = self.__class__(learning_rate=self.learning_rate)
         value_function.model = deepcopy(self.model)
         value_function.optimizer = deepcopy(self.optimizer)
         return value_function
@@ -88,9 +87,8 @@ class Model(torch.nn.Module):
 
 class SimpleValueFunction(ValueFunction):
 
-    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
-        super(SimpleValueFunction, self).__init__(plotter)
-        self.plotter = plotter
+    def __init__(self, learning_rate=config.LEARNING_RATE):
+        super(SimpleValueFunction, self).__init__()
         self.model = SimpleModel()
         if config.CUDA:
             self.model.cuda(0)
@@ -135,8 +133,8 @@ class SimpleModel(torch.nn.Module):
 
 class FCValueFunction(ValueFunction):
 
-    def __init__(self, plotter, learning_rate=config.LEARNING_RATE):
-        super(FCValueFunction, self).__init__(plotter)
+    def __init__(self, learning_rate=config.LEARNING_RATE):
+        super(FCValueFunction, self).__init__()
         self.model = FCModel()
         if config.CUDA:
             self.model.cuda(0)

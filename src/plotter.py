@@ -11,16 +11,16 @@ import pandas as pd
 
 class Plotter:
 
-    def __init__(self, plot_name, plotter=None, history_size=1000):
-        self.plot_name = plotter.plot_name if plotter else plot_name
+    def __init__(self, plot_name, plotter=None):
+        self.plot_name = plot_name
         self.num_episodes = plotter.num_episodes if plotter else 0
-        self.history_size = history_size
+        self.history_size = 1000
 
-        self.losses = DataResolutionManager(plotter.losses if plotter else [], storage_size=history_size)
-        self.accuracies = DataResolutionManager(plotter.accuracies if plotter else [], storage_size=history_size)
-        self.results = DataResolutionManager(plotter.results if plotter else [], storage_size=history_size)
-        self.evaluation_scores = DataResolutionManager(plotter.evaluation_scores if plotter else [], storage_size=history_size)
-        self.last10Results = DataResolutionManager(plotter.last10Results if plotter else [], storage_size=history_size)
+        self.losses = DataResolutionManager(plotter.losses if plotter else [], storage_size=self.history_size)
+        self.accuracies = DataResolutionManager(plotter.accuracies if plotter else [], storage_size=self.history_size)
+        self.results = DataResolutionManager(plotter.results if plotter else [], storage_size=self.history_size)
+        self.evaluation_scores = DataResolutionManager(plotter.evaluation_scores if plotter else [], storage_size=self.history_size)
+        self.last10Results = DataResolutionManager(plotter.last10Results if plotter else [], storage_size=self.history_size)
 
     def add_loss(self, loss):
         self.losses.append(abs(loss))
@@ -57,6 +57,9 @@ class Plotter:
         self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", evaluation_scores, "Evaluation scores %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
+    def copy(self):
+        return Plotter(plot_name=self.plot_name, plotter=self)
+
     @staticmethod
     def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name="."):
         """
@@ -90,6 +93,12 @@ class Plotter:
 class DataResolutionManager:
 
     def __init__(self, data_points=[], storage_size=1000):
+        try:  # data_points can be either DataResolutionManagers or simple lists
+            data_points = data_points.get_values()
+        except AttributeError:
+            pass
+
+        data_points = data_points.copy()
         self.storage_size = storage_size
         self.compression_factor = len(data_points) // storage_size
         self.values = []
