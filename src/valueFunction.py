@@ -41,7 +41,7 @@ class ValueFunction:
             loss.backward()
             self.optimizer.step()
 
-            accumulated_loss += loss.data[0]
+            accumulated_loss += abs(loss.data[0])
 
         # print("Average episode loss: %s for final label: %s" % (accumulated_loss/len(minibatches_s), minibatches_l[-1][-1].data[0]))
         self.plotter.add_loss(accumulated_loss/len(minibatches_s))

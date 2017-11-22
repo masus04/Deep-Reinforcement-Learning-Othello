@@ -11,14 +11,16 @@ import pandas as pd
 
 class Plotter:
 
-    def __init__(self, plot_name, plotter=None):
+    def __init__(self, plot_name, plotter=None, history_size=1000):
         self.plot_name = plotter.plot_name if plotter else plot_name
         self.num_episodes = plotter.num_episodes if plotter else 0
-        self.losses = DataResolutionManager(plotter.losses if plotter else [])
-        self.accuracies = DataResolutionManager(plotter.accuracies if plotter else [])
-        self.results = DataResolutionManager(plotter.results if plotter else [])
-        self.evaluation_scores = DataResolutionManager(plotter.evaluation_scores if plotter else [])
-        self.last10Results = DataResolutionManager(plotter.last10Results if plotter else [])
+        self.history_size = history_size
+
+        self.losses = DataResolutionManager(plotter.losses if plotter else [], storage_size=history_size)
+        self.accuracies = DataResolutionManager(plotter.accuracies if plotter else [], storage_size=history_size)
+        self.results = DataResolutionManager(plotter.results if plotter else [], storage_size=history_size)
+        self.evaluation_scores = DataResolutionManager(plotter.evaluation_scores if plotter else [], storage_size=history_size)
+        self.last10Results = DataResolutionManager(plotter.last10Results if plotter else [], storage_size=history_size)
 
     def add_loss(self, loss):
         self.losses.append(abs(loss))
@@ -47,7 +49,7 @@ class Plotter:
 
         scores = self.evaluation_scores.get_values()
         old_indices = np.arange(0, len(scores))
-        new_length = 1000
+        new_length = len(self.losses.get_values())
         new_indices = np.linspace(0, len(scores) - 1, new_length)
         spl = UnivariateSpline(old_indices, scores, k=1, s=0)
         evaluation_scores = spl(new_indices)
