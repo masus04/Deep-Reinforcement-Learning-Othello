@@ -7,6 +7,13 @@ COMMENT = "|Async|"
 player1 = config.load_player("TDPlayer_Black_ValueFunction" + COMMENT)
 player2 = config.load_player("TDPlayer_White_ValueFunction_BEST" + COMMENT)
 
+"""
+for player in player1, player2:
+    player.plotter.plot_results(comment=COMMENT)
+    player.plotter.plot_scores(comment=COMMENT)
+    player.save(comment=COMMENT)
+"""
+
 for player in player1, player2:
 
     player.plotter.num_episodes = sum([opponent[1] for opponent in player.opponents])
