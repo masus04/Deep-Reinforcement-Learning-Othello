@@ -3,51 +3,56 @@ import os
 import torch
 import matplotlib
 matplotlib.use("Agg")
+import numpy as np
+from scipy.interpolate import UnivariateSpline
 import matplotlib.pyplot as plt
 import pandas as pd
 
 
 class Plotter:
 
-    def __init__(self, plot_name):
-        self.plot_name = plot_name
-        self.losses = []
-        self.accuracies = []
-        self.results = []
-        self.evaluation_scores = []
-        self.last10Results = []
+    def __init__(self, plot_name, plotter=None):
+        self.plot_name = plotter.plot_name if plotter else plot_name
+        self.num_episodes = plotter.num_episodes if plotter else 0
+        self.losses = DataResolutionManager(plotter.losses if plotter else [])
+        self.accuracies = DataResolutionManager(plotter.accuracies if plotter else [])
+        self.results = DataResolutionManager(plotter.results if plotter else [])
+        self.evaluation_scores = DataResolutionManager(plotter.evaluation_scores if plotter else [])
+        self.last10Results = DataResolutionManager(plotter.last10Results if plotter else [])
 
     def add_loss(self, loss):
-        self.losses.append(loss)
+        self.losses.append(abs(loss))
 
     def add_accuracy(self, accuracy):
+        self.num_episodes += 1
         self.accuracies.append(accuracy)
 
     def add_result(self, result):
+        self.num_episodes += 1
         self.results.append(result)
-        self.last10Results.append(sum(self.results[-20:])/(20 if len(self.results)>20 else len(self.results)))
+        self.last10Results.append(sum(self.results.get_values()[-20:])/(20 if len(self.results.get_values())>20 else len(self.results.get_values())))
 
     def add_evaluation_score(self, score):
         self.evaluation_scores.append(score)
 
     def plot_accuracy(self, comment):
-        self.plot_two_lines("losses", self.losses, "accuracies", self.accuracies, "%s, %s Episodes %s" % (self.plot_name, len(self.results), comment))
+        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "%s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     def plot_results(self, comment=""):
-        self.plot_two_lines("losses", self.losses, "results", self.last10Results, "%s, %s Episodes %s" % (self.plot_name, len(self.results), comment))
+        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "%s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     def plot_scores(self, comment=""):
-        stretch_factor = len(self.losses)//(len(self.evaluation_scores)-1)
-        eval_scores = []
-        for i in range(len(self.evaluation_scores)):
-            eval_scores += [self.evaluation_scores[i]]
-            if len(self.evaluation_scores) > i+1:
-                delta = self.evaluation_scores[i+1]-self.evaluation_scores[i]
-                eval_scores += [self.evaluation_scores[i] + delta*j/stretch_factor for j in range(1, stretch_factor)]
 
-        self.plot_two_lines("losses", self.losses, "evaluation score", eval_scores, "Evaluation scores %s, %s Episodes %s"% (self.plot_name, len(self.results), comment))
+        scores = self.evaluation_scores.get_values()
+        old_indices = np.arange(0, len(scores))
+        new_length = 1000
+        new_indices = np.linspace(0, len(scores) - 1, new_length)
+        spl = UnivariateSpline(old_indices, scores, k=1, s=0)
+        evaluation_scores = spl(new_indices)
+
+        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", evaluation_scores, "Evaluation scores %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     @staticmethod
@@ -57,9 +62,12 @@ class Plotter:
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
         line1 = pd.Series(line1_values, name=line1_name)
         line2 = pd.Series(line2_values, name=line2_name)
-        df = pd.DataFrame([line1, line2])
+        line3_name = line2_name + " average"
+        line3 = pd.Series([(sum(line2_values[:i])/i) for i in range(1, len(line2_values)+1)], name=line3_name)
+
+        df = pd.DataFrame([line1, line2, line3])
         df = df.transpose()
-        df.plot(secondary_y=[line2_name], title=plot_name, legend=True, figsize=(16, 9))
+        df.plot(secondary_y=[line2_name, line3_name], title=plot_name, legend=True, figsize=(16, 9))
         plt.title = plot_name
         plt.xlabel = "Episodes"
         plt.savefig("./plots/%s.png" % plot_name)
@@ -77,12 +85,47 @@ class Plotter:
             print(e)
 
 
+class DataResolutionManager:
+
+    def __init__(self, data_points=[], storage_size=1000):
+        self.storage_size = storage_size
+        self.compression_factor = len(data_points) // storage_size
+        self.values = []
+        self.buffer = []
+
+        if self.compression_factor > 0:
+            self.buffer = data_points[len(data_points) - len(data_points) % self.compression_factor:]
+
+            for i in range(len(data_points) // self.compression_factor):
+                self.values.append(sum(data_points[:self.compression_factor]) / self.compression_factor)
+                data_points = data_points[self.compression_factor:]
+        else:
+            self.values = data_points
+
+    def append(self, value):
+        self.buffer.append(value)
+        if len(self.buffer) >= self.compression_factor:
+            self.values.append(sum(self.buffer) / len(self.buffer))
+            self.buffer = []
+            if len(self.values) >= 2*self.storage_size:
+                self.values = [(self.values[i*2]+self.values[i*2+1])/2 for i in range(len(self.values))]
+                self.compression_factor *= 2
+
+    def get_values(self):
+        if len(self.buffer) == 0:
+            return self.values
+        else:
+            return self.values + [sum(self.buffer) / len(self.buffer)]
+
+
+""" DEPRECATED?
 def chunk_list(lst, lst_size):
   if lst_size <= 1:
     return [sum(lst)/len(lst)]
 
   sublist = lst[0:len(lst)//lst_size]
   return [sum(sublist)/len(sublist)] + chunk_list(lst[len(lst)//lst_size:], lst_size-1)
+"""
 
 
 class NoPlotter:
