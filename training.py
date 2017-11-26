@@ -11,19 +11,24 @@ import evaluation
 EXPERIMENT_NAME = "|TDvsMC|"
 
 
+def conditional_evaluation(players, evaluation_games):
+    for player in players:
+        if player.train:
+            evaluation.evaluate(player=player, games=evaluation_games, silent=True)
+
+
 def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME, silent=False):
     simulation = Othello(player1, player2)
 
-    """ Actual training """
     start_time = datetime.now()
-    evaluation.evaluate(player=player1, games=4, silent=True)
-    evaluation.evaluate(player=player2, games=4, silent=True)
+
+    conditional_evaluation([player1, player2], 4)
+
     for i in range(games//evaluation_period):
-        # Training
         simulation.run_simulations(episodes=evaluation_period, silent=True)
-        # Evaluation
-        evaluation.evaluate(player=player1, games=20, silent=True)
-        evaluation.evaluate(player=player2, games=20, silent=True)
+
+        conditional_evaluation([player1, player2], 20)
+
         if not silent:
             Printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 

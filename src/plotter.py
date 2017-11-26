@@ -48,13 +48,15 @@ class Plotter:
     def plot_scores(self, comment=""):
 
         scores = self.evaluation_scores.get_values()
-        old_indices = np.arange(0, len(scores))
-        new_length = len(self.losses.get_values())
-        new_indices = np.linspace(0, len(scores) - 1, new_length)
-        spl = UnivariateSpline(old_indices, scores, k=1, s=0)
-        evaluation_scores = spl(new_indices)
 
-        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", evaluation_scores, "Scores: %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
+        if len(self.losses.get_values()) > len(scores):
+            old_indices = np.arange(0, len(scores))
+            new_length = len(self.losses.get_values())
+            new_indices = np.linspace(0, len(scores) - 1, new_length)
+            spl = UnivariateSpline(old_indices, scores, k=1, s=0)
+            scores = spl(new_indices)
+
+        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", scores, "Scores: %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     def copy(self):
@@ -65,6 +67,9 @@ class Plotter:
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
+        if len(line1_values) == 0 or len(line2_values) == 0:
+            return
+
         line1 = pd.Series(line1_values, name=line1_name)
         line2 = pd.Series(line2_values, name=line2_name)
         line3_name = line2_name + " average"

@@ -21,7 +21,7 @@ class Player(object):
         self.plotter = NoPlotter()
         self.value_function = NoValueFunction()
         self.train = True
-        self.opponents = []
+        self.opponents = {}
 
     def get_move(self, board):
         raise NotImplementedError("function get_move must be implemented by subclass")
@@ -48,9 +48,12 @@ class Player(object):
     def load_player(cls, color):
         return cls(color)
 
-    def add_opponent(self, opponent):
+    def add_opponent(self, opponent, episodes):
         if self.train:
-            self.opponents.append([opponent.__class__.__name__, 0])
+            if opponent.player_name in self.opponents:
+                self.opponents[opponent.player_name] += episodes
+            else:
+                self.opponents[opponent.player_name] = episodes
 
     def __generate_afterstates__(self, board):
         """ returns a list of Board instances, one for each valid move. The player is always Black in this representation. """
@@ -183,7 +186,6 @@ class DeepRLPlayer(Player):
             self.__generate_training_labels__(winner_color)
             self.plotter.add_loss(self.value_function.update(self.training_samples, self.training_labels))
             self.alpha *= config.ALPHA_REDUCE
-            self.opponents[-1][1] += 1
         self.training_samples = []
         self.training_labels = []
 

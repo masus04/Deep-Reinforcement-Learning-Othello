@@ -40,6 +40,7 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
         if compare_players(player1, best, silent=(i != iterations-1)) >= 0:
             best.value_function = player1.value_function.copy()
             best.plotter = player1.plotter.copy()
+            best.opponents = player1.opponents.copy()
             best.replaced.append(i)
 
         Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],
@@ -51,8 +52,8 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = TDPlayer(color=config.BLACK, strategy=SimpleValueFunction)
-    PLAYER2 = TDPlayer(color=config.WHITE, strategy=SimpleValueFunction)
+    PLAYER = TDPlayer(color=config.BLACK, strategy=ValueFunction)
+    PLAYER2 = None
 
     # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
     # PLAYER2 = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
@@ -61,11 +62,11 @@ if __name__ == "__main__":
     # PLAYER2 = config.load_player("TDPlayer_White_ValueFunction|Continuous|")
 
     assert PLAYER.color == config.BLACK
-    assert PLAYER2.color == config.WHITE
+    # assert PLAYER2.color == config.WHITE
 
-    ITERATIONS = 50
-    GAMES_PER_ITERATION = 5000
-    EVALUATION_PERIOD = 5000
+    ITERATIONS = 2
+    GAMES_PER_ITERATION = 100
+    EVALUATION_PERIOD = 100
 
     """ Execution """
     start = datetime.now()

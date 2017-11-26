@@ -44,8 +44,8 @@ class Othello:
     def run_simulations(self, episodes, silent=False):
         colors = (self.player1.color, self.player2.color)
 
-        self.player1.add_opponent(self.player2)
-        self.player2.add_opponent(self.player1)
+        self.player1.add_opponent(self.player2, episodes)
+        self.player2.add_opponent(self.player1, episodes)
         players = [self.player1, self.player2]
         results = []
 
