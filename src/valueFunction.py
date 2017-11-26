@@ -101,7 +101,8 @@ class SimpleModel(torch.nn.Module):
     def __init__(self):
         super(SimpleModel, self).__init__()
 
-        self.conv_to_linear_params_size = 8*8*4
+        self.conv_channels = 8
+        self.conv_to_linear_params_size = self.conv_channels*8*8
 
         # Experiment 1
         # self.final = torch.nn.Conv2d(in_channels=1, out_channels=1, kernel_size=8, padding=0)
@@ -111,10 +112,10 @@ class SimpleModel(torch.nn.Module):
         # self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=9, padding=4)
 
         # Experiment 3
-        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, padding=2)
-        self.conv2 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
-        self.conv3 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
-        self.conv4 = torch.nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5, padding=2)
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=self.conv_channels, kernel_size=5, padding=2)
+        self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=5, padding=2)
+        self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=5, padding=2)
+        self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=5, padding=2)
 
         # Final Layer
         # self.final = torch.nn.Conv2d(in_channels=4, out_channels=1, kernel_size=8, padding=0)

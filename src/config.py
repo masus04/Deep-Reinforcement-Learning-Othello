@@ -1,4 +1,5 @@
 import os
+import sys
 import torch
 
 if not os.path.exists("./plots"):
@@ -6,7 +7,8 @@ if not os.path.exists("./plots"):
 
 # Constants and configuration options.
 
-CUDA = False #  torch.cuda.is_available()
+CUDA = "cuda" in sys.argv
+print("CUDA %s" % ("enabled" if CUDA else "disabled"))
 
 TIMEOUT = 0.2
 
