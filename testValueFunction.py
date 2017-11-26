@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-import os
-import torch
+import math
 from datetime import datetime
 from statistics import median, stdev, variance
 
@@ -9,29 +8,27 @@ from src.player import TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set
 from src.plotter import Printer
-from src.plotter import Plotter
 
 
-def test_with_parameters(games, training_episodes, learning_rate=config.LEARNING_RATE, comment=""):
-    printer = Printer()
-    test_samples, test_labels = generate_heuristic_data_set(100)
+def test_with_parameters(games, learning_rate=config.LEARNING_RATE, comment=""):
     start_time = datetime.now()
-
-    # value_function = ValueFunction(plotter=plotter, learning_rate=learning_rate)
+    test_samples, test_labels = generate_heuristic_data_set(100)
 
     """ Load ValueFunction """
     player = TDPlayer(config.BLACK, strategy=SimpleValueFunction, lr=learning_rate)
 
-    for i in range(training_episodes):
-        samples, labels = generate_heuristic_data_set(games)
-        printer.print_inplace("Training Episode %s/%s" % (i+1, training_episodes), (i+1)/training_episodes*100, datetime.now()-start_time)
+    samples, labels = generate_heuristic_data_set(games)
+    i, batches = 1, math.ceil(len(samples)/30) + 1
+    while len(samples) > 0:
+        i += 1
+        printer.print_inplace("Training batch %s/%s" % (i, batches), 100*i//batches, (str(datetime.now()-start_time)).split(".")[0])
+        batch_samples, batch_labels = samples[:30], labels[:30]
+        samples, labels = samples[30:], labels[30:]
         player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
-        player.value_function.update(samples, labels)
+        player.value_function.update(batch_samples, batch_labels)
 
     print("Evaluation:")
-    evaluate_accuracy(test_samples, test_labels, player.value_function)
-    print("Training %s episodes for %s games took %s" % (training_episodes, games, datetime.now()-start_time))
-    print("Final accuracy: %s\n" % player.plotter.accuracies.get_values()[-1])
+    player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
     player.plotter.plot_accuracy(" lr:{} ".format(learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
     # player.save()
 
@@ -60,11 +57,18 @@ def compare_afterstate_values(value_function):
 
 """ Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
 
+printer = Printer()
+start_time = datetime.now()
+
+GAMES = 100000
+
 # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
 # compare_afterstate_values(value_function)
 
-# test_with_parameters(games=100, training_episodes=1500, learning_rate=float(round(0.1**3.5, 7)))
+# test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
 
-for i, lr in enumerate([1, 1, 2, 2, 3, 3, 4, 4, 5, 5]):
-    test_with_parameters(games=100, training_episodes=1500, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
+learning_rates = range(6)
+for i, lr in enumerate(learning_rates):
+    test_with_parameters(games=GAMES, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
+    print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 

@@ -38,11 +38,11 @@ class Plotter:
         self.evaluation_scores.append(score)
 
     def plot_accuracy(self, comment):
-        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "%s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
+        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "Accuracies: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     def plot_results(self, comment=""):
-        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "%s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
+        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "Results: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     def plot_scores(self, comment=""):
@@ -54,7 +54,7 @@ class Plotter:
         spl = UnivariateSpline(old_indices, scores, k=1, s=0)
         evaluation_scores = spl(new_indices)
 
-        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", evaluation_scores, "Evaluation scores %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
+        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", evaluation_scores, "Scores: %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
         plt.close("all")
 
     def copy(self):

@@ -19,7 +19,7 @@ def train_continuous(player1, player2, games, evaluation_period, experiment_name
         player1, player2 = (player1, player2) if compare_players(player1, player2, silent=(i != iterations-1)) >= 0 else (player2, player1)
         player2 = player1.copy_with_inversed_color()
 
-        print("Simulation time: %s\n" % str(datetime.now()-start).split(".")[0])
+        print("Iteration %s/%s Simulation time: %s\n" % (i, iterations, str(datetime.now()-start).split(".")[0]))
 
     return player1, player2
 
