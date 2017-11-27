@@ -135,6 +135,10 @@ class ReportingPlayer:
         self.reportedBoards = []
         self.train = False
 
+    @property
+    def player_name(self):
+        return self.player.player_name
+
     def get_move(self, board):
         self.player.color = self.color
         move = self.player.get_move(board)

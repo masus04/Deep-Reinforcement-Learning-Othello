@@ -17,15 +17,15 @@ def test_with_parameters(games, learning_rate=config.LEARNING_RATE, comment=""):
     """ Load ValueFunction """
     player = TDPlayer(config.BLACK, strategy=SimpleValueFunction, lr=learning_rate)
 
-    i, batches = 1, math.ceil(games/30) + 1
-    while len(samples) > 0:
+    i = 0
+    batch_size = 100
+    batches = math.ceil(games/batch_size)
+    while i < batches:
         i += 1
-        samples, labels = generate_heuristic_data_set(games)
+        samples, labels = generate_heuristic_data_set(batch_size if games//(i*batch_size) >= 1 else games%batch_size)
         printer.print_inplace("Training batch %s/%s" % (i, batches), 100*i//batches, (str(datetime.now()-start_time)).split(".")[0])
-        batch_samples, batch_labels = samples[:30], labels[:30]
-        samples, labels = samples[30:], labels[30:]
         player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
-        player.value_function.update(batch_samples, batch_labels)
+        player.value_function.update(samples, labels)
 
     print("Evaluation:")
     player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
