@@ -17,10 +17,10 @@ def test_with_parameters(games, learning_rate=config.LEARNING_RATE, comment=""):
     """ Load ValueFunction """
     player = TDPlayer(config.BLACK, strategy=SimpleValueFunction, lr=learning_rate)
 
-    samples, labels = generate_heuristic_data_set(games)
-    i, batches = 1, math.ceil(len(samples)/30) + 1
+    i, batches = 1, math.ceil(games/30) + 1
     while len(samples) > 0:
         i += 1
+        samples, labels = generate_heuristic_data_set(games)
         printer.print_inplace("Training batch %s/%s" % (i, batches), 100*i//batches, (str(datetime.now()-start_time)).split(".")[0])
         batch_samples, batch_labels = samples[:30], labels[:30]
         samples, labels = samples[30:], labels[30:]
