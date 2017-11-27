@@ -2,10 +2,10 @@ import src.config as config
 from src.plotter import Plotter
 from datetime import datetime
 
-COMMENT = "|Async|"
+COMMENT = "|Continuous|"
 
 player1 = config.load_player("TDPlayer_Black_ValueFunction" + COMMENT)
-player2 = config.load_player("TDPlayer_White_ValueFunction_BEST" + COMMENT)
+player2 = config.load_player("TDPlayer_White_ValueFunction" + COMMENT)
 
 """
 for player in player1, player2:

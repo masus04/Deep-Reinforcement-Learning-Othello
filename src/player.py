@@ -148,8 +148,8 @@ class ReportingPlayer:
     def register_winner(self, winner_color):
         return self.player.register_winner(winner_color)
 
-    def add_opponent(self, opponent):
-        return self.player.add_opponent(opponent)
+    def add_opponent(self, opponent, episodes):
+        return self.player.add_opponent(opponent, episodes)
 
     def pop_report(self):
         report = self.reportedBoards
