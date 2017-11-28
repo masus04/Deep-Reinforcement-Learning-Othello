@@ -23,12 +23,11 @@ def test_with_parameters(games, learning_rate=config.LEARNING_RATE, comment=""):
     while i < batches:
         i += 1
         samples, labels = generate_heuristic_data_set(batch_size if games//(i*batch_size) >= 1 else games%batch_size)
+        player.plotter.add_loss(player.value_function.update(samples, labels))
         printer.print_inplace("Training batch %s/%s" % (i, batches), 100*i//batches, (str(datetime.now()-start_time)).split(".")[0])
         player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
-        player.value_function.update(samples, labels)
 
     print("Evaluation:")
-    player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
     player.plotter.plot_accuracy(" lr:{} ".format(learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
     # player.save()
 
@@ -60,7 +59,7 @@ def compare_afterstate_values(value_function):
 printer = Printer()
 start_time = datetime.now()
 
-GAMES = 100000
+GAMES = 50000
 
 # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
 # compare_afterstate_values(value_function)
