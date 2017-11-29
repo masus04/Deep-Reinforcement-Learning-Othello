@@ -6,30 +6,31 @@ from statistics import median, stdev, variance
 import src.config as config
 from src.player import TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
-from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set
+from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set
 from src.plotter import Printer
 
 
-def test_with_parameters(games, learning_rate=config.LEARNING_RATE, comment=""):
+def test_with_parameters(games, strategy, labeling_strategy, learning_rate=config.LEARNING_RATE, comment=""):
     start_time = datetime.now()
-    test_samples, test_labels = generate_heuristic_data_set(100)
+    test_samples, test_labels = labeling_strategy(100)
 
     """ Load ValueFunction """
-    player = TDPlayer(config.BLACK, strategy=SimpleValueFunction, lr=learning_rate)
+    player = TDPlayer(config.BLACK, strategy=strategy, lr=learning_rate)
 
     i = 0
-    batch_size = 100
+    batch_size = 10
     batches = math.ceil(games/batch_size)
     while i < batches:
         i += 1
-        samples, labels = generate_heuristic_data_set(batch_size if games//(i*batch_size) >= 1 else games%batch_size)
+        samples, labels = labeling_strategy(batch_size if games//(i*batch_size) >= 1 else games%batch_size)
         player.plotter.add_loss(player.value_function.update(samples, labels))
         printer.print_inplace("Training batch %s/%s" % (i, batches), 100*i//batches, (str(datetime.now()-start_time)).split(".")[0])
         player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
 
     print("Evaluation:")
-    player.plotter.plot_accuracy(" lr:{} ".format(learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
+    player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
     # player.save()
+    return player.plotter.accuracies.get_values()[-1]
 
 
 def evaluate_accuracy(samples, labels, value_function, silent=True):
@@ -43,9 +44,9 @@ def evaluate_accuracy(samples, labels, value_function, silent=True):
     return accuracy_sum/evaluation_samples
 
 
-def compare_afterstate_values(value_function):
+def compare_afterstate_values(value_function, labeling_strategy):
 
-    test_samples, test_labels = generate_greedy_data_set(250)
+    test_samples, test_labels = labeling_strategy(250)
     afterstate_values = [value_function.evaluate(sample) for sample in test_samples]
 
     print("Max:%s Min:%s Median:%s StandardDeviation:%s" % (max(afterstate_values), min(afterstate_values), median(afterstate_values), stdev(afterstate_values)), variance(afterstate_values))
@@ -59,16 +60,27 @@ def compare_afterstate_values(value_function):
 printer = Printer()
 start_time = datetime.now()
 
-GAMES = 50000
+GAMES = 1
+STRATEGY = SimpleValueFunction
+LABELING_STRATEGY = generate_greedy_data_set
+
+print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
 # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
-# compare_afterstate_values(value_function)
+# compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
 # test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
+for label_strategy in [generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
+    print("  | --- Labeling strategy: %s --- |  " % LABELING_STRATEGY.__name__)
+    results = []
+    for i, exponent in enumerate(range(0, 7)):
+        lr = float(round(0.1**exponent, 7))
+        results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=LABELING_STRATEGY, learning_rate=lr)))
+        print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 
-learning_rates = range(6)
-for i, lr in enumerate(learning_rates):
-    test_with_parameters(games=GAMES, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
-    print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
+    results.sort()
+    print("\nAccuracy scores:")
+    for result in results:
+        print("lr: %s, accuracy: %s" % (result[0], result[1]))
 
-print("\nExperiment completed")
+print("\nExperiment completed\n")
