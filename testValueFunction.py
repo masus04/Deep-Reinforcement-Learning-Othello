@@ -28,7 +28,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
     print("Evaluation:")
     player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
     # player.save()
-    return player.plotter.accuracies.get_values()[-1]
+    return player.plotter.accuracies.get_values()[-1], player
 
 
 def evaluate_accuracy(samples, labels, value_function, silent=True):
@@ -58,11 +58,11 @@ def compare_afterstate_values(value_function, labeling_strategy):
 printer = Printer()
 start_time = datetime.now()
 
-GAMES = 1000
+GAMES = 10000
 STRATEGY = SimpleValueFunction
 LABELING_STRATEGY = generate_greedy_data_set
 
-test_set = LABELING_STRATEGY(1000)
+test_set = LABELING_STRATEGY(GAMES)
 
 print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
@@ -75,7 +75,7 @@ for label_strategy in [generate_greedy_data_set, generate_heuristic_data_set, ge
     results = []
     for i, exponent in enumerate(range(0, 7)):
         lr = float(round(0.1**exponent, 7))
-        results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=LABELING_STRATEGY, test_set=test_set, learning_rate=lr)))
+        results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
         print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 
     results.sort()
