@@ -57,6 +57,15 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     return (player1.score - player2.score)/2
 
 
+def train_black_supervised_save_stones_player(games):
+    from generateDataSet import generate_save_stones_data_set
+    from testValueFunction import test_with_parameters
+
+    testset = generate_save_stones_data_set(100)
+
+    return test_with_parameters(games=games, strategy=SimpleValueFunction, labeling_strategy=generate_save_stones_data_set, test_set=testset, learning_rate=0.1)[1]
+
+
 if __name__ == "__main__":
 
     # td_black = config.load_player("TDPlayer_Black_ValueFunction|Async|")
@@ -68,11 +77,15 @@ if __name__ == "__main__":
     assert td_black.color == config.BLACK
     assert td_white.color == config.WHITE
 
+    # Just out of curiosity:
+
+    td_black = train_black_supervised_save_stones_player(1000)
+
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
-    print(compare_players(player1=td_black, player2=td_white, games=1000))
+    print(compare_players(player1=td_black, player2=td_white, games=100))
 
     for player in [td_black, td_white]:
-        evaluate(player, games=1000)
-        player.plotter.plot_results()
-        player.plotter.plot_scores()
+        evaluate(player, games=100)
+        # player.plotter.plot_results()
+        # player.plotter.plot_scores()

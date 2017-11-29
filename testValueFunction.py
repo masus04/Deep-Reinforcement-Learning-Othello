@@ -9,6 +9,7 @@ from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunctio
 from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set
 from src.plotter import Printer
 
+printer = Printer()
 
 def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_rate=config.LEARNING_RATE, comment=""):
     test_samples, test_labels = test_set[0], test_set[1]
@@ -53,34 +54,33 @@ def compare_afterstate_values(value_function, labeling_strategy):
         print(value)
 
 
-""" Configure Parameters here, adjust Network in valueFunction.SimpleValueFunction """
+if __name__ == "__main__":
 
-printer = Printer()
-start_time = datetime.now()
+    start_time = datetime.now()
 
-GAMES = 1000
-STRATEGY = SimpleValueFunction
-LABELING_STRATEGY = generate_greedy_data_set
+    GAMES = 1000
+    STRATEGY = SimpleValueFunction
+    LABELING_STRATEGY = generate_greedy_data_set
 
-test_set = LABELING_STRATEGY(GAMES)
+    test_set = LABELING_STRATEGY(GAMES)
 
-print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
+    print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
-# value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
-# compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
+    # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
+    # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
-# test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
-for label_strategy in [generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
-    print("  | --- Labeling strategy: %s --- |  " % LABELING_STRATEGY.__name__)
-    results = []
-    for i, exponent in enumerate(range(0, 7)):
-        lr = float(round(0.1**exponent, 7))
-        results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
-        print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
+    # test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
+    for label_strategy in [generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
+        print("  | --- Labeling strategy: %s --- |  " % LABELING_STRATEGY.__name__)
+        results = []
+        for i, exponent in enumerate(range(0, 7)):
+            lr = float(round(0.1**exponent, 7))
+            results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
+            print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 
-    results.sort()
-    print("\nAccuracy scores:")
-    for result in results:
-        print("lr: %s, accuracy: %s" % (result[0], result[1]))
+        results.sort()
+        print("\nAccuracy scores:")
+        for result in results:
+            print("lr: %s, accuracy: %s" % (result[0], result[1]))
 
-print("\nExperiment completed\n")
+    print("\nExperiment completed\n")
