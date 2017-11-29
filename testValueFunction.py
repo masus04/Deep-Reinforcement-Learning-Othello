@@ -10,16 +10,14 @@ from generateDataSet import generate_greedy_data_set, generate_heuristic_data_se
 from src.plotter import Printer
 
 
-def test_with_parameters(games, strategy, labeling_strategy, learning_rate=config.LEARNING_RATE, comment=""):
-    start_time = datetime.now()
-    test_samples, test_labels = labeling_strategy(100)
-
-    """ Load ValueFunction """
+def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_rate=config.LEARNING_RATE, comment=""):
+    test_samples, test_labels = test_set[0], test_set[1]
     player = TDPlayer(config.BLACK, strategy=strategy, lr=learning_rate)
 
     i = 0
     batch_size = 10
     batches = math.ceil(games/batch_size)
+    start_time = datetime.now()
     while i < batches:
         i += 1
         samples, labels = labeling_strategy(batch_size if games//(i*batch_size) >= 1 else games%batch_size)
@@ -64,6 +62,8 @@ GAMES = 1000
 STRATEGY = SimpleValueFunction
 LABELING_STRATEGY = generate_greedy_data_set
 
+test_set = LABELING_STRATEGY(1000)
+
 print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
 # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
@@ -75,7 +75,7 @@ for label_strategy in [generate_greedy_data_set, generate_heuristic_data_set, ge
     results = []
     for i, exponent in enumerate(range(0, 7)):
         lr = float(round(0.1**exponent, 7))
-        results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=LABELING_STRATEGY, learning_rate=lr)))
+        results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=LABELING_STRATEGY, test_set=test_set, learning_rate=lr)))
         print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 
     results.sort()
