@@ -1,0 +1,17 @@
+\BOOKMARK [0][-]{chapter.1}{1 Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{2 Related Works}{}% 2
+\BOOKMARK [1][-]{section.2.1}{2.1 Othello}{chapter.2}% 3
+\BOOKMARK [2][-]{subsection.2.1.1}{2.1.1 Search based Algorithms}{section.2.1}% 4
+\BOOKMARK [2][-]{subsection.2.1.2}{2.1.2 Learning based Algorithms}{section.2.1}% 5
+\BOOKMARK [1][-]{section.2.2}{2.2 Machine learning}{chapter.2}% 6
+\BOOKMARK [2][-]{subsection.2.2.1}{2.2.1 Convolutional Neural Networks}{section.2.2}% 7
+\BOOKMARK [1][-]{section.2.3}{2.3 Reinforcement Learning}{chapter.2}% 8
+\BOOKMARK [2][-]{subsection.2.3.1}{2.3.1 Monte Carlo Learning}{section.2.3}% 9
+\BOOKMARK [2][-]{subsection.2.3.2}{2.3.2 Temporal Difference Learning }{section.2.3}% 10
+\BOOKMARK [2][-]{subsection.2.3.3}{2.3.3 Monte Carlo Tree Search}{section.2.3}% 11
+\BOOKMARK [0][-]{chapter.3}{3 Thesis Objectives}{}% 12
+\BOOKMARK [0][-]{chapter.4}{4 Implementation}{}% 13
+\BOOKMARK [0][-]{chapter.5}{5 Validation}{}% 14
+\BOOKMARK [0][-]{chapter.6}{6 Conclusion}{}% 15
+\BOOKMARK [0][-]{chapter.7}{7 Future Work}{}% 16
+\BOOKMARK [0][-]{chapter.8}{8 Bibliography}{}% 17

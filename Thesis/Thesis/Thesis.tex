@@ -1,0 +1,93 @@
+
+\documentclass[oneside,a4paper]{book}
+%\pagestyle{headings}
+
+\input{preamble}
+
+% A B S T R A C T
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\chapter*{\centering Abstract}
+\begin{quotation}
+\noindent 
+Abstract (max. 1 page)
+
+Name of the Supervisor, Group, Institute, University, Supervisor
+
+Name of the Assistant, Group, Institute, University, Assistant
+\end{quotation}
+\clearpage
+
+
+% C O N T E N T S 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\tableofcontents
+
+%%%%%%%% Introduction %%%%%%%%
+\chapter {Introduction}
+\label {cha:introduction}
+With recent successes such as AlphaGo defeating the reigning world champion and fast progress towards fully autonomous cars by Tesla as well as Weymo it is clear that Reinforcement Learning is the solution to many problems that could not even be tackled before. Many of these powerful implementations rely on equally powerful machines in order to train them, often requiring over hundred CPUs and GPUs for weeks on end. Inspired by these grand achievements and the technology behind them but lacking comparable resources I settled on a more achievable goal: Othello. This simple board game has accompanied me since the first semester when we were tasked to implement a search based Othello player. During my masters studies I suspected that a superior player could be created using machine learning techniques. This thesis documents the way to such a player and its key components.
+
+
+%%%%%%%% Related Works %%%%%%%%
+\chapter {Related Works}
+\label {cha:Related Works}
+
+\section {Othello}
+\label{sec:Othello}
+
+\subsection {Search based Algorithms}
+\label{sec:Search based Algorithms}
+\subsection {Learning based Algorithms}
+\label{sec:Learning based Algorithms}
+
+\section {Machine learning}					% ?
+\label{sec:Machine Learning}
+\subsection {Convolutional Neural Networks}	% ?
+\label{sec:Convolutional Neural Networks}
+
+\section {Reinforcement Learning}
+\label{sec:Reinforcement Learning}
+\subsection {Monte Carlo Learning}
+\label{sec:Monte Carlo Learning}
+\subsection {Temporal Difference Learning }
+\label{sec:Temporal difference Learning}
+\subsection {Monte Carlo Tree Search}
+\label{sec:Monte Carlo Tree Search}
+
+%%%%%%%% Thesis Objectives %%%%%%%%
+\chapter {Thesis Objectives}
+\label{cha:Thesis Objectives}
+1. Framwork for othello agents
+2. Playground for RL algorithms, network optimizations, regularizations, etc.
+3. High performance Othello Agent
+
+%%%%%%%% Implementation %%%%%%%%
+\chapter {Implementation}
+\label{cha:Implementation}
+
+%%%%%%%% Validation %%%%%%%%
+\chapter {Validation}
+\label{cha:Validation}
+
+%%%%%%%% Conclusion %%%%%%%%
+\chapter {Conclusion}
+\label{cha:Conclusion}
+
+%%%%%%%% Future Work %%%%%%%%
+\chapter {Future Work}
+\label{cha:Future Work}
+
+%%%%%%%% Bibliography %%%%%%%%
+\chapter {Bibliography}
+\label{cha:Bibliography}
+
+
+
+
+%END Doc
+%-------------------------------------------------------
+
+\bibliography{thesis}
+\bibliographystyle{plain}
+
+\end{document}
