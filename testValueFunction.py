@@ -71,3 +71,4 @@ for i, lr in enumerate(learning_rates):
     test_with_parameters(games=GAMES, learning_rate=float(round(0.1**lr, 7)), comment="(%s)" % (i%2))
     print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 
+print("\nExperiment completed")
