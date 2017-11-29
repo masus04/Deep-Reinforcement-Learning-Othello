@@ -60,7 +60,7 @@ def compare_afterstate_values(value_function, labeling_strategy):
 printer = Printer()
 start_time = datetime.now()
 
-GAMES = 1
+GAMES = 1000
 STRATEGY = SimpleValueFunction
 LABELING_STRATEGY = generate_greedy_data_set
 
