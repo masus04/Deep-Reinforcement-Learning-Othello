@@ -11,6 +11,7 @@ from src.plotter import Printer
 
 printer = Printer()
 
+
 def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_rate=config.LEARNING_RATE, comment=""):
     test_samples, test_labels = test_set[0], test_set[1]
     player = TDPlayer(config.BLACK, strategy=strategy, lr=learning_rate)
@@ -58,7 +59,7 @@ if __name__ == "__main__":
 
     start_time = datetime.now()
 
-    GAMES = 1000
+    GAMES = 100000
     STRATEGY = SimpleValueFunction
     LABELING_STRATEGY = generate_greedy_data_set
 
@@ -70,8 +71,8 @@ if __name__ == "__main__":
     # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
     # test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
-    for label_strategy in [generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
-        print("  | --- Labeling strategy: %s --- |  " % LABELING_STRATEGY.__name__)
+    for label_strategy in [generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
+        print("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
         for i, exponent in enumerate(range(0, 7)):
             lr = float(round(0.1**exponent, 7))
