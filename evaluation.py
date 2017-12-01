@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     # Just out of curiosity:
 
-    td_black = train_black_supervised_save_stones_player(1000)
+    td_black = train_black_supervised_save_stones_player(10000)
 
     # mc_player = MCPlayer.load_player(color=config.BLACK, strategy=ValueFunction)
 
