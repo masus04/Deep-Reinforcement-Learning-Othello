@@ -3,6 +3,7 @@
 %\pagestyle{headings}
 
 \input{preamble}
+\graphicspath{{images/}}
 
 % A B S T R A C T
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -34,16 +35,25 @@ With recent successes such as AlphaGo defeating the reigning world champion and 
 
 \section {Othello}
 \label{sec:Othello}
-According to \cite{RULES} Standard Othello is a game played on a board made up of eight by eight tiles. Two players, black and white, take turns setting a stone in their respective color to the board.
-All opposing stones that lie between the newly placed stone and a friendly stone already on the board 
-Stones can only be placed on a free tile 
 
-The possible moves are very limited...
+\begin{figure}[!b]
+  \centering
+	\includegraphics[scale=0.2]{OpeningPosition.png}
+	\caption{The opening position}
+	\label{fig:OpeningPosition}
+\end{figure}
+
+According to \cite{RULES} Othello is a game played on a  square board, usually made up of eight by eight tiles.
+The opening position is shown in Figure \ref{fig:OpeningPosition}
+Othello stones are black on one side and white on the other. Players take turns in placing one of these stones in their respective color on the board. Stones can only be placed in such a way that the new stone \textit{traps} one or more of the opponents stones inbetween itself and any other stone of the same color. All opposing stones that were trapped by placing the new stone are flipped and now belong to the player who trapped them. If a player cannot perform a legal move he simply passed and his opponent places the next stone. The game ends if both players pass successively or there are no free tiles left on the board. The player who controls more stones at this time wins the game.
 
 \subsection {Search based Algorithms}
 \label{sec:Search based Algorithms}
-\subsection {Learning based Algorithms}
-\label{sec:Learning based Algorithms}
+Othello is widely used to teach search based game theory algorithms, most notably the min-max algorithm and its optimization the alpha-beta pruning.
+
+
+\subsection {Machine Learning based Algorithms}
+\label{sec:Machine Learning based Algorithms}
 
 \section {Machine learning}					% ?
 \label{sec:Machine Learning}
