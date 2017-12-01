@@ -17,7 +17,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
     player = TDPlayer(config.BLACK, strategy=strategy, lr=learning_rate)
 
     i = 0
-    batch_size = 10
+    batch_size = 100
     batches = math.ceil(games/batch_size)
     start_time = datetime.now()
     while i < batches:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     STRATEGY = SimpleValueFunction
     LABELING_STRATEGY = generate_greedy_data_set
 
-    test_set = LABELING_STRATEGY(GAMES)
+    test_set = LABELING_STRATEGY(1000)
 
     print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
