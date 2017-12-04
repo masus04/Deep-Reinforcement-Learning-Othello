@@ -1,6 +1,5 @@
 import sys
 import os
-import torch
 import matplotlib
 matplotlib.use("Agg")
 import numpy as np
@@ -67,20 +66,27 @@ class Plotter:
         """
         @plot_name: The name under which to save the plot
         @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
-        if len(line1_values) == 0 or len(line2_values) == 0:
-            return
+        try:
+            if len(line1_values) == 0 or len(line2_values) == 0:
+                return
 
-        line1 = pd.Series(line1_values, name=line1_name)
-        line2 = pd.Series(line2_values, name=line2_name)
-        line3_name = line2_name + " average"
-        line3 = pd.Series([(sum(line2_values[:i])/i) for i in range(1, len(line2_values)+1)], name=line3_name)
+            line1 = pd.Series(line1_values, name=line1_name)
+            line2 = pd.Series(line2_values, name=line2_name)
+            line3_name = line2_name + " average"
+            line3 = pd.Series([(sum(line2_values[:i])/i) for i in range(1, len(line2_values)+1)], name=line3_name)
 
-        df = pd.DataFrame([line1, line2, line3])
-        df = df.transpose()
-        df.plot(secondary_y=[line2_name, line3_name], title=plot_name, legend=True, figsize=(16, 9))
-        plt.title = plot_name
-        plt.xlabel = "Episodes"
-        plt.savefig("./plots/%s.png" % plot_name)
+            df = pd.DataFrame([line1, line2, line3])
+            df = df.transpose()
+            df.plot(secondary_y=[line2_name, line3_name], title=plot_name, legend=True, figsize=(16, 9))
+            plt.title = plot_name
+            plt.xlabel = "Episodes"
+            plt.savefig("./plots/%s.png" % plot_name)
+        except Exception as e:
+            import traceback, sys
+            print("| %s |" % ("-" * 50))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2, file=sys.stdout)
+            print("| %s |" % ("-" * 50))
 
     @staticmethod
     def clear_plots(pattern):

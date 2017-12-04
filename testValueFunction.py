@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     start_time = datetime.now()
 
-    GAMES = 100000
+    GAMES = 500000
     STRATEGY = SimpleValueFunction
     LABELING_STRATEGY = generate_greedy_data_set
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     for label_strategy in [generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
         print("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
-        for i, exponent in enumerate(range(0, 7)):
+        for i, exponent in enumerate(range(3, 5)):
             lr = float(round(0.1**exponent, 7))
             results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
             print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
