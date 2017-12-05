@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import src.config as config
 from src.valueFunction import ValueFunction, SimpleValueFunction
 from src.player import TDPlayer
