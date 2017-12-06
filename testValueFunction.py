@@ -25,7 +25,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
         samples, labels = labeling_strategy(batch_size if games//(i*batch_size) >= 1 else games%batch_size)
         player.plotter.add_loss(player.value_function.update(samples, labels))
         printer.print_inplace("Training batch %s/%s" % (i, batches), 100*i//batches, (str(datetime.now()-start_time)).split(".")[0])
-        player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function))
+        player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function, test_time=True))
 
     print("Evaluation:")
     player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
@@ -33,12 +33,14 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
     return player.plotter.accuracies.get_values()[-1], player
 
 
-def evaluate_accuracy(samples, labels, value_function, silent=True):
+def evaluate_accuracy(samples, labels, value_function, test_time=False, silent=True):
+    mapping = round if test_time else id  # At training time, compare with real label value, at test time only expect boolean decision
+
     accuracy_sum = 0
     evaluation_samples = round(len(samples)/10)
     for i in range(evaluation_samples):
         prediction = value_function.evaluate(samples[i])
-        accuracy_sum += (prediction > (config.LABEL_WIN - config.LABEL_LOSS)/2) == (labels[i] > (config.LABEL_WIN - config.LABEL_LOSS)/2)
+        accuracy_sum += mapping(prediction) == mapping(labels[i])
         if not silent:
             print("Sample: %s, Label: %s, Prediction: %s" % (i, labels[i], "{0:.3g}".format(prediction)))
     return accuracy_sum/evaluation_samples

@@ -11,7 +11,7 @@ class OthelloHeuristic(object):
     END_GAME = 2
 
     DEFAULT_STRATEGY = 0
-    SAVE_STONES_STRATEGY = 1
+    PURE_SAVE_STONES_STRATEGY = 1
     PURE_MOBILITY_STRATEGY = 2
     GREEDY_STRATEGY = 3
 
@@ -23,30 +23,23 @@ class OthelloHeuristic(object):
             self.EDGE_FACTOR = [25, 25, 0]
             self.CORNER_EDGE_FACTOR = [400, 400, 0]
             self.STABILITY_FACTOR = [120, 120, 0]
-
-        if strategy == self.SAVE_STONES_STRATEGY:
-            self.PIECE_COUNT_FACTOR = [0, 0, 1]
+            self.SAVE_STONES_FACTOR = [0, 0, 0]
+        else:
             self.CORNER_FACTOR = [0, 0, 0]
             self.MOBILITY_FACTOR = [0, 0, 0]
             self.EDGE_FACTOR = [0, 0, 0]
-            self.CORNER_EDGE_FACTOR = [1, 1, 0]
-            self.STABILITY_FACTOR = [0, 0, 0]
-
-        if strategy == self.PURE_MOBILITY_STRATEGY:
-            self.PIECE_COUNT_FACTOR = [0, 0, 1]
-            self.CORNER_FACTOR = [0, 0, 0]
-            self.MOBILITY_FACTOR = [1, 1, 0]
-            self.EDGE_FACTOR = [0, 0, 0]
             self.CORNER_EDGE_FACTOR = [0, 0, 0]
             self.STABILITY_FACTOR = [0, 0, 0]
+            self.SAVE_STONES_FACTOR = [0, 0, 0]
+
+        if strategy == self.PURE_SAVE_STONES_STRATEGY:
+            self.SAVE_STONES_FACTOR = [1, 1, 0]
+
+        if strategy == self.PURE_MOBILITY_STRATEGY:
+            self.MOBILITY_FACTOR = [1, 1, 0]
 
         if strategy == self.GREEDY_STRATEGY:
             self.PIECE_COUNT_FACTOR = [1, 1, 1]
-            self.CORNER_FACTOR = [0, 0, 0]
-            self.MOBILITY_FACTOR = [0, 0, 0]
-            self.EDGE_FACTOR = [0, 0, 0]
-            self.CORNER_EDGE_FACTOR = [0, 0, 0]
-            self.STABILITY_FACTOR = [0, 0, 0]
 
     def evaluate(self, board, current_player, other_player):
         # Check for win conditions
@@ -78,6 +71,8 @@ class OthelloHeuristic(object):
             score += self.evaluate_corner_edge(board, current_player, other_player, game_state)
         if self.STABILITY_FACTOR[game_state] != 0:
             score += self.evaluate_stability(board, current_player, other_player, game_state)
+        if self.SAVE_STONES_FACTOR[game_state] != 0:
+            score += self.evaluate_save_stones(board, current_player, other_player, game_state)
         return score
 
     def evaluate_heuristical_strategy(self, board, current_player, other_player):
@@ -244,6 +239,47 @@ class OthelloHeuristic(object):
                     else:
                         score += self.CORNER_EDGE_FACTOR[game_state] / 2
         return score
+
+    def evaluate_save_stones(self, board, current_player, other_player, game_state):
+        corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
+        directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+
+        all_save_stones = set()
+        for corner, direction in zip(corners, directions):
+            save_stones = []
+            # Extend in y direction
+            if board.board[corner[0]][corner[1]] == current_player:
+                # invert axes in order to extend in y direction first
+                self.extend_in_y(board, corner, direction, current_player, save_stones)
+
+                # Extend in x direction by dinamic programming
+                for tile in save_stones:
+                    self.extend_save_stones(board, tile, direction, current_player, all_save_stones)
+
+        return self.SAVE_STONES_FACTOR[game_state] * len(all_save_stones)
+
+    def extend_save_stones(self, board, tile, direction, current_player, save_stones):
+        """Extends save stones in x direction"""
+        guardian1 = self.guarding((tile[0]-direction[0], tile[1]), save_stones)  # The stone that makes this one safe in the other axis
+        guardian2 = self.guarding((tile[0]-direction[0], tile[1]+direction[1]), save_stones)
+        guardian3 = self.guarding((tile[0]+direction[0], tile[1]-direction[1]), save_stones)
+
+        guarded = guardian1 and (guardian2 or guardian3)
+        if self.coordinates_in_bounds(tile) and board.board[tile[0]][tile[1]] == current_player and guarded:
+            save_stones.add(tile)
+            self.extend_save_stones(board, (tile[0], tile[1]+direction[1]), direction, current_player, save_stones)
+
+    def extend_in_y(self, board, tile, direction, current_player, save_stones):
+        if self.coordinates_in_bounds(tile) and board.board[tile[0]][tile[1]] == current_player:
+            save_stones.append(tile)
+            self.extend_in_y(board, (tile[0]+direction[0], tile[1]), direction, current_player, save_stones)
+
+    @staticmethod
+    def coordinates_in_bounds(coordinates):
+        return coordinates[0] >= 0 and coordinates[0] < 8 and coordinates[1] >= 0 and coordinates[1] < 8
+
+    def guarding(self, guardian, save_stones):
+        return guardian in save_stones or not self.coordinates_in_bounds(guardian)
 
     def evaluate_mobility(self, board, current_player, other_player, game_state):
         score = 0
