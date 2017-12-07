@@ -130,7 +130,9 @@ class DataResolutionManager:
             self.values.append(sum(self.buffer) / len(self.buffer))
             self.buffer = []
             if len(self.values) >= 2*self.storage_size:
-                self.values = [(self.values[i*2]+self.values[i*2+1])/2 for i in range(len(self.values))]
+                if len(self.values) % 2 != 0:  # Move uneven element back to buffer
+                    self.buffer.append(self.values.pop())
+                self.values = [a + b / 2 for a, b in zip(self.values[0::2], self.values[1::2])]
                 self.compression_factor *= 2
 
     def get_values(self):
