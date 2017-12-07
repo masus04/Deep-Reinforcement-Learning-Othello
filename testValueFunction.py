@@ -10,6 +10,14 @@ from generateDataSet import generate_greedy_data_set, generate_heuristic_data_se
 from src.plotter import Printer
 
 printer = Printer()
+STRATEGY = ValueFunction
+
+evaluation_file = open("./plots/testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
+
+
+def log_message(message):
+    print(message)
+    evaluation_file.write(message + "\n")
 
 
 def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_rate=config.LEARNING_RATE, comment=""):
@@ -62,28 +70,27 @@ if __name__ == "__main__":
     start_time = datetime.now()
 
     GAMES = 500000
-    STRATEGY = SimpleValueFunction
     LABELING_STRATEGY = generate_greedy_data_set
 
     test_set = LABELING_STRATEGY(1000)
 
-    print("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
+    log_message("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
     # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
     # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
     # test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
     for label_strategy in [generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
-        print("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
+        log_message("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
         for i, exponent in enumerate(range(3, 5)):
             lr = float(round(0.1**exponent, 7))
             results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
-            print("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
+            log_message("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
 
         results.sort()
-        print("\nAccuracy scores:")
+        log_message("\nAccuracy scores:")
         for result in results:
-            print("lr: %s, accuracy: %s" % (result[0], result[1]))
+            log_message("lr: %s, accuracy: %s" % (result[0], result[1]))
 
     print("\nExperiment completed\n")
