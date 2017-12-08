@@ -38,7 +38,7 @@ With recent successes such as AlphaGo defeating the reigning world champion and 
 
 \begin{figure}[!b]
   \centering
-	\includegraphics[scale=0.2]{OpeningPosition.png}
+	\includegraphics[scale=0.5]{OpeningPosition.png}
 	\caption{The opening position}
 	\label{fig:OpeningPosition}
 \end{figure}
@@ -47,18 +47,17 @@ According to \cite{RULES} Othello is a game played on a  square board, usually m
 The opening position is shown in Figure \ref{fig:OpeningPosition}
 Othello stones are black on one side and white on the other. Players take turns in placing one of these stones in their respective color on the board. Stones can only be placed in such a way that the new stone \textit{traps} one or more of the opponents stones inbetween itself and any other stone of the same color. All opposing stones that were trapped by placing the new stone are flipped and now belong to the player who trapped them. If a player cannot perform a legal move he simply passed and his opponent places the next stone. The game ends if both players pass successively or there are no free tiles left on the board. The player who controls more stones at this time wins the game.
 
-\subsection {Search based Algorithms}
+\section {Heuristic Player}
+\label{sec:Heuristic Player}
+The player we call the \textit{Heuristic} Player in this thesis is often used for benchmarking because of its decent performance, low computational cost and deterministic nature. It utilises a heuristic table which assigns a value to each tile on the board. These values are symmetrical for eight axes through the board. The table gives high values to tiles such as the edges that are of high value because they lead to stones that cannot be captured later in the game. Tiles around the edges however receive a low value because occupying one of them may allow the opponent to occupy the adjacent corner.
+
+\section {Search based Algorithms}
 \label{sec:Search based Algorithms}
-Othello is widely used to teach search based game theory algorithms, most notably the min-max algorithm and its optimization the alpha-beta pruning.
+Othello is widely used to teach search based game theory algorithms, most notably the min-max algorithm and its optimization the alpha-beta pruning. \cite{AI} The general idea of these methods is to build a search tree of all relevant moves for both players and the resulting game states. Ideally a complete graph for such a game could be computed and a computer player would just choose a move that results in a win for every single turn. However the search space for most games is so big that such a graph is not feasible with the computational resources available. The ancient chinese game of Go for example is said to have more possible game states than there are atoms in the universe. The challenge lies therefore in approximating a complete graph as close as possible and with maximal efficiency. For this the search tree is usually truncated at a certain depth or after a given time has passed and the rest of the tree is approximated with a so called value function that evaluates the value of the state where the tree stopped. This value function traditionally consists of a set of given features such as possible moves for each player, save stones that cannot be captured again or just greedily the number of stones a player controls. Search based algorithms can also be used to improve the \textit{Heuristic Player} described in section \ref{sec:Heuristic Player}. In most search based algorithms this would make the player nondeterministic however.
 
-
-\subsection {Machine Learning based Algorithms}
+\section {Machine Learning based Algorithms}
 \label{sec:Machine Learning based Algorithms}
-
-\section {Machine learning}					% ?
-\label{sec:Machine Learning}
-\subsection {Convolutional Neural Networks}	% ?
-\label{sec:Convolutional Neural Networks}
+Machine learning techniques for Othello are related to search based algorithms but often do not perform a search at play time. A straight forward approach is to inprove a search based algorithm by learning its value function. \cite{CHERRY} used machine learning to learn his own heuristics function, similar to the one used by the \textit{Heuristic Player}, in his alpha-beta search algorithm. A more advanced technique basically moves the search from play time to training time by simulating thousands or millions of games and uses them to train an agent. This agent learns a value function that captures the knowledge gained during the search and predicts the value of a possible move without having to perform another search at play time. Such an approach was used by \cite{DEEPMIND} to master Go. They went one step further still and used training time search in order to train an agent and then improved that agents decision again with another search at play time.
 
 \section {Reinforcement Learning}
 \label{sec:Reinforcement Learning}

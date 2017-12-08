@@ -1,7 +1,21 @@
 \begin{thebibliography}{1}
 
+\bibitem{DEEPMIND}
+2017.
+
+\bibitem{CHERRY}
+Kevin~Anthony Charry.
+\newblock An intelligent othello combining machine learning and game specific
+  heuristics.
+\newblock Master's thesis, Louisiana State University, 2008.
+
 \bibitem{RULES}
 British othello federation.
 \newblock \url{http://www.britishothello.org.uk/rules.html}.
+
+\bibitem{AI}
+Stuart Russell and Peter Norvig.
+\newblock {\em Artificial Intelligence: A Modern Approach}.
+\newblock Pearson, third edition, 2009.
 
 \end{thebibliography}
