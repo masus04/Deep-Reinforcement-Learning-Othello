@@ -205,9 +205,6 @@ class DeepRLPlayer(Player):
         # self.e = self.e*config.EPSILON_REDUCE  # This is experimental
         return result
 
-    def __label_from_winner_color__(self, winner_color):
-        return config.LABEL_WIN if winner_color == self.color else config.LABEL_LOSS
-
     def save(self, comment=""):
         if not os.path.exists("./Players"):
             os.makedirs("./Players")
@@ -244,7 +241,7 @@ class TDPlayer(MCPlayer):
     def __generate_training_labels__(self, winner_color):
         for i in range(len(self.training_samples)-1):
             self.training_labels.append(self.__td_error__(self.training_samples[i], self.training_samples[i+1]))
-        self.training_labels.append(self.__label_from_winner_color__(winner_color))
+        self.training_labels.append(config.get_result_label(winner_color, self.color))
 
     def __td_error__(self, state, next_state):
         v_state = self.value_function.evaluate(state)

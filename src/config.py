@@ -24,6 +24,7 @@ COMPUTER = "Computer"
 # LABEL_LOSS < prediction < LABEL_WIN
 LABEL_LOSS = 0
 LABEL_WIN = 1
+LABEL_DRAW = (LABEL_WIN + LABEL_LOSS) / 2
 
 # Hyperparameters
 LEARNING_RATE = 1e-3
@@ -34,6 +35,15 @@ EPSILON_REDUCE = 0.999995
 
 ALPHA = 1e-1
 ALPHA_REDUCE = 0.999995
+
+
+def get_result_label(winner_color, player_color):
+    if winner_color == player_color:
+        return LABEL_WIN
+    if winner_color == other_color(player_color):
+        return LABEL_LOSS
+    if winner_color == EMPTY:
+        return LABEL_DRAW
 
 
 def get_color_from_player_number(number):

@@ -4,7 +4,7 @@ import src.config as config
 from src.othello import Othello
 from src.plotter import Printer
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, DecoupledValueFunction
 
 import evaluation
 
@@ -43,15 +43,15 @@ def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT
 if __name__ == "__main__":
 
     """ Parameters """
-    # player1 = TDPlayer(color=config.BLACK, strategy=ValueFunction)
-    # player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
+    player1 = TDPlayer(color=config.BLACK, strategy=DecoupledValueFunction)
+    player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
 
     """ Continue training """
-    player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
-    player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
+    # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
+    # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-    TOTAL_GAMES = 250000
-    EVALUATION_PERIOD = 1000
+    TOTAL_GAMES = 1000
+    EVALUATION_PERIOD = 250
 
     """ Execution """
     print("Experiment name: %s" % EXPERIMENT_NAME)
