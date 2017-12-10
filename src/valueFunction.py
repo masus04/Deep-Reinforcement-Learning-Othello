@@ -113,9 +113,6 @@ class DecoupledModel(torch.nn.Module):
     def __init__(self):
         super(DecoupledModel, self).__init__()
 
-        self.conv_channels = 8
-        self.conv_to_linear_params_size = self.conv_channels * 8 * 8
-
         self.conv1 = torch.nn.Conv2d(in_channels=3, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
