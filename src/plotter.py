@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 import matplotlib
 matplotlib.use("Agg")
 import numpy as np
@@ -111,11 +112,11 @@ class DataResolutionManager:
 
         data_points = data_points.copy()
         self.storage_size = storage_size
-        self.compression_factor = len(data_points) // storage_size
+        self.compression_factor = math.ceil((len(data_points)+1) / storage_size)
         self.values = []
         self.buffer = []
 
-        if self.compression_factor > 0:
+        if self.compression_factor > 1:
             self.buffer = data_points[len(data_points) - len(data_points) % self.compression_factor:]
 
             for i in range(len(data_points) // self.compression_factor):
@@ -132,7 +133,7 @@ class DataResolutionManager:
             if len(self.values) >= 2*self.storage_size:
                 if len(self.values) % 2 != 0:  # Move uneven element back to buffer
                     self.buffer.append(self.values.pop())
-                self.values = [a + b / 2 for a, b in zip(self.values[0::2], self.values[1::2])]
+                self.values = [(a + b) / 2 for a, b in zip(self.values[0::2], self.values[1::2])]
                 self.compression_factor *= 2
 
     def get_values(self):
