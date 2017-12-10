@@ -1,3 +1,4 @@
+import numpy as np
 from copy import deepcopy
 
 import torch
@@ -17,8 +18,11 @@ class ValueFunction:
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
 
+    def data_reshaping(self, board_sample):
+        return [board_sample]
+
     def evaluate(self, board_sample):
-        tensor = torch.FloatTensor([[board_sample]])
+        tensor = torch.FloatTensor([self.data_reshaping(board_sample)])
 
         if config.CUDA:
             tensor = tensor.cuda(0)
@@ -26,6 +30,7 @@ class ValueFunction:
         return self.model(Variable(tensor)).data[0][0]
 
     def update(self, training_samples, training_labels):
+        training_samples = [self.data_reshaping(sample) for sample in training_samples]
         minibatches_s = self.__generate_minibatches__(training_samples)
         minibatches_l = self.__generate_minibatches__(training_labels)
 
@@ -47,7 +52,7 @@ class ValueFunction:
 
     @staticmethod
     def __generate_minibatches__(lst):
-        return [Variable(torch.FloatTensor([lst[i:i+config.MINIBATCH_SIZE]])) for i in range(0, len(lst), config.MINIBATCH_SIZE)]
+        return [Variable(torch.FloatTensor(lst[i:i+config.MINIBATCH_SIZE])) for i in range(0, len(lst), config.MINIBATCH_SIZE)]
 
     def copy(self):
         value_function = self.__class__(learning_rate=self.learning_rate)
@@ -85,10 +90,57 @@ class Model(torch.nn.Module):
         return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
 
 
+class DecoupledValueFunction(ValueFunction):
+
+    def __init__(self, learning_rate=config.LEARNING_RATE):
+        super(DecoupledValueFunction, self).__init__(learning_rate=learning_rate)
+        self.model = DecoupledModel()
+        if config.CUDA:
+            self.model.cuda(0)
+
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
+
+    def data_reshaping(self, board_sample):
+        black_board = board_sample == config.BLACK
+        white_board = board_sample == config.WHITE
+        empty_board = board_sample == config.EMPTY
+
+        return np.array([black_board, white_board, empty_board], dtype=np.float)
+
+
+class DecoupledModel(torch.nn.Module):
+
+    def __init__(self):
+        super(DecoupledModel, self).__init__()
+
+        self.conv_channels = 8
+        self.conv_to_linear_params_size = self.conv_channels * 8 * 8
+
+        self.conv1 = torch.nn.Conv2d(in_channels=3, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
+        x = F.relu(self.conv4(x))
+        x = F.relu(self.conv5(x))
+        x = F.relu(self.conv6(x))
+        x = F.relu(self.conv7(x))
+        x = x.view(-1, self.conv_to_linear_params_size)
+        return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
+
+
 class SimpleValueFunction(ValueFunction):
 
     def __init__(self, learning_rate=config.LEARNING_RATE):
-        super(SimpleValueFunction, self).__init__()
+        super(SimpleValueFunction, self).__init__(learning_rate=learning_rate)
         self.model = SimpleModel()
         if config.CUDA:
             self.model.cuda(0)
