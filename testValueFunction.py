@@ -37,7 +37,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
 
     print("Evaluation:")
     player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
-    # player.save()
+    player.save()
     return player.plotter.accuracies.get_values()[-1], player
 
 
