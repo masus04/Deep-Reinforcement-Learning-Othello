@@ -9,14 +9,16 @@ from generateDataSet import generate_greedy_data_set, generate_heuristic_data_se
 
 import math
 from datetime import datetime
+from bunch import Bunch
 
-EXPERIMENT_NAME = "Supervised_Training"
+EXPERIMENT_NAME = "_Supervised_Training"
 printer = Printer()
 
 
 def train_supervised(color, strategy, labeling_strategy, games, learning_rate=config.LEARNING_RATE, experiment_name=EXPERIMENT_NAME):
     test_samples, test_labels = labeling_strategy(100)
     player = TDPlayer(color, strategy=strategy, lr=learning_rate)
+    player.add_opponent(Bunch(player_name="supervised_training: HeuristicPlayer"), games)
 
     i = 0
     batch_size = 100
