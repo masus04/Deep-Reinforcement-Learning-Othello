@@ -1,13 +1,15 @@
 \begin{thebibliography}{1}
 
-\bibitem{DEEPMIND}
-2017.
-
 \bibitem{CHERRY}
 Kevin~Anthony Charry.
 \newblock An intelligent othello combining machine learning and game specific
   heuristics.
 \newblock Master's thesis, Louisiana State University, 2008.
+
+\bibitem{DEEPMIND}
+Demis~Hassabis et~al.
+\newblock Mastering the game of go without human knowledge.
+\newblock {\em Nature}, 2017.
 
 \bibitem{RULES}
 British othello federation.

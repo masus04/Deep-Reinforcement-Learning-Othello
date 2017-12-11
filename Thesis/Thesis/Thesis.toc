@@ -9,6 +9,7 @@
 \contentsline {subsection}{\numberline {2.5.2}Temporal Difference Learning }{6}{subsection.2.5.2}
 \contentsline {subsection}{\numberline {2.5.3}Monte Carlo Tree Search}{6}{subsection.2.5.3}
 \contentsline {chapter}{\numberline {3}Thesis Objectives}{7}{chapter.3}
+\contentsline {section}{\numberline {3.1}Othello}{7}{section.3.1}
 \contentsline {chapter}{\numberline {4}Implementation}{8}{chapter.4}
 \contentsline {chapter}{\numberline {5}Validation}{9}{chapter.5}
 \contentsline {chapter}{\numberline {6}Conclusion}{10}{chapter.6}

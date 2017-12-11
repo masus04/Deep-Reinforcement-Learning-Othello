@@ -61,10 +61,20 @@ Machine learning techniques for Othello are related to search based algorithms b
 
 \section {Reinforcement Learning}
 \label{sec:Reinforcement Learning}
+Reinforcement Learning levarages special algorithms to train an agent on a task while performing it. In regular intervals the agent receives feedback, reinforcing behaviour that leads to good results while discouraging less performant ones. This is handled by awarding a positive or negative reward respectively, whenever the algorithm can determine something good or bad happened based on the agent's actions.
+
 \subsection {Monte Carlo Learning}
 \label{sec:Monte Carlo Learning}
+Monte Carlo Learning is the most basic variant of a group of reinforcement learning algorithms called Monte Carlo Methods. In contrast to many other reinforcement learning algorithms they do not require full knowledge of the environment that they are applied o. Instead they work on experience alone. This experience can be gathered in the real environment and learning can therefore be done on the fly, without any prior knowledge. Another very powerful approach is to simulate the environment which allows for simpler aggregation of training data that would be difficult to obtain in the real world, such as driving cars, steering rockets or playing millions of board game iterations on a physical board.
+
+In Monte Carlo Methods a task can be split in two major parts. First the reinforcement algorithm which is generating training data from real or simulated experience and an according label. Second a supervised learning task where an agent is trained on the data generated from the first part. Those two parts are mostly independent of each other, as long as the structure of in and outputs match. This means that the same reinforcement algorithm can be used with a variety of different learning agents such as, in the case of this thesis, multiple different neural networks.
+
+The basic Monte Carlo Algorithm simply simulates an entire episode, evaluates the final state and labels each training sample with the resulting label. In a board game this would mean playing a single game, computing the winner and labeling the game state for each time step with the final result.
+
 \subsection {Temporal Difference Learning }
 \label{sec:Temporal difference Learning}
+The Temporal Difference algorithm is a variant of the basic Monte Carlo algorithm decribed above. In contrast to its predecessor it does not assign the same label to each game state but rather computes each label based on the prediction of the subsequent state's value. This can be better understood when analysing the algorithm from the end of an episode. The final label is still the result of the game just like in the basic Monte Carlo algorithm. \ugh{check this again}The label of the second to last game state however is computed from its current value as well as the value of the final state. This allows for a so called online version of the algorithm which does not have to complete an entire episode before it can learn from the gathered experience, but can apply changes at every time step of the episode. Although the online version has weaker convergence guarantees and since standard Othello episodes have a maximum length of 30 game states per player there is a guaranteed reward in relatively few time steps which makes offline Temporal Difference Learning more suitable for this thesis.
+
 \subsection {Monte Carlo Tree Search}
 \label{sec:Monte Carlo Tree Search}
 
@@ -74,6 +84,11 @@ Machine learning techniques for Othello are related to search based algorithms b
 1. Framwork for othello agents
 2. Playground for RL algorithms, network optimizations, regularizations, etc.
 3. High performance Othello Agent
+
+\section {Othello}
+\label{sec:Othello}
+One of the main difficulties in applying reinforcement learning to Othello is the very delayed and sparse reward. The only evaluation the learning algorithm can make is the result of the game, every other measure would introduce prior knowledge and therefore influence the strategy that is learned by the player. This constrains the learning algorithm to a single reward per game, rather than one for every action taken like for example in a jump and run game.
+
 
 %%%%%%%% Implementation %%%%%%%%
 \chapter {Implementation}
