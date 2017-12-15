@@ -90,6 +90,46 @@ class Model(torch.nn.Module):
         return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
 
 
+class LargeValueFunction(ValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE):
+        super(LargeValueFunction, self).__init__(learning_rate=learning_rate)
+        self.model = LargeModel()
+        if config.CUDA:
+            self.model.cuda(0)
+
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
+
+
+class LargeModel(torch.nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+
+        self.conv_channels = 16
+        self.conv_to_linear_params_size = self.conv_channels*8*8
+
+        self.conv1 = torch.nn.Conv2d(in_channels= 1, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size/2)
+        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size/2, out_features=1)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
+        x = F.relu(self.conv4(x))
+        x = F.relu(self.conv5(x))
+        x = F.relu(self.conv6(x))
+        x = F.relu(self.conv7(x))
+        x = x.view(-1, self.conv_to_linear_params_size)
+        x = F.relu((self.fc1(x)))
+        return F.sigmoid(self.fc2(x)) + config.LABEL_LOSS
+
+
 class DecoupledValueFunction(ValueFunction):
 
     def __init__(self, learning_rate=config.LEARNING_RATE):
