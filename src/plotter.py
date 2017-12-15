@@ -64,17 +64,14 @@ class Plotter:
 
     @staticmethod
     def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name="."):
-        """
-        @plot_name: The name under which to save the plot
-        @resolution: The number of points plotted. Losses and results will be averaged in groups of [resolution]"""
         try:
             if len(line1_values) == 0 or len(line2_values) == 0:
                 return
 
             line1 = pd.Series(line1_values, name=line1_name)
             line2 = pd.Series(line2_values, name=line2_name)
-            line3_name = line2_name + " average"
-            line3 = pd.Series([(sum(line2_values[:i])/i) for i in range(1, len(line2_values)+1)], name=line3_name)
+            line3_name = line2_name + " average (last 100)"
+            line3 = pd.Series([(sum(line2_values[(i-100) if i > 100 else 0 :i])/(100 if i > 100 else i)) for i in range(1, len(line2_values)+1)], name=line3_name)
 
             df = pd.DataFrame([line1, line2, line3])
             df = df.transpose()
