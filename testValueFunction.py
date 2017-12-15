@@ -37,7 +37,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
 
     print("Evaluation:")
     player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
-    player.save()
+    player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr))
     return player.plotter.accuracies.get_values()[-1], player
 
 
@@ -69,20 +69,18 @@ if __name__ == "__main__":
 
     start_time = datetime.now()
 
-    GAMES = 500000
-    LABELING_STRATEGY = generate_greedy_data_set
-
-    test_set = LABELING_STRATEGY(1000)
+    GAMES = 250000
 
     log_message("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
-    # value_function = config.load_player("TDPlayer_Black_ValueFunction|Async|").value_function
     # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
-    # test_with_parameters(games=GAMES, learning_rate=float(round(0.1**3.5, 7)))
     for label_strategy in [generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
         log_message("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
+
+        test_set = label_strategy(1000)
+
         for i, exponent in enumerate(range(3, 5)):
             lr = float(round(0.1**exponent, 7))
             results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
