@@ -53,6 +53,15 @@ def generate_save_stones_data_set(games, silent=True):
     return __generate_data_set__(games, criterion, silent)
 
 
+def generate_combined_data_set(games, silent=True):
+    """ Generates a dataset containing pairs of (Board, label) where label is the color of the winning player according to the DEFAULT combined strategy (stones that cannot be flipped again)"""
+
+    def criterion(board):
+        return heuristic.evaluate(board, config.BLACK, config.WHITE, 0) - heuristic.evaluate(board, config.WHITE, config.BLACK, 0)
+
+    return __generate_data_set__(games, criterion, silent)
+
+
 def __generate_data_set__(games, criterion, silent):
     """Simulates a number of games between a HeuristicPlayer and a RandomPlayer and applies a given criterion to label the resulting board states"""
     boards = []
