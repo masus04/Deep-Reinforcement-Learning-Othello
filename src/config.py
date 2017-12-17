@@ -34,7 +34,7 @@ EPSILON = 0.05
 EPSILON_REDUCE = 0.999995
 
 ALPHA = 1e-1
-ALPHA_REDUCE = 0.999995
+ALPHA_REDUCE = 0.99999
 
 
 def get_result_label(winner_color, player_color):

@@ -233,17 +233,17 @@ class MCPlayer(DeepRLPlayer):
         return afterstate[2]
 
     def __generate_training_labels__(self, winner_color):
-        self.training_labels = [config.LABEL_WIN if (self.color == winner_color) else config.LABEL_LOSS for sample in self.training_samples]
+        self.training_labels = [config.get_result_label(winner_color, self.color) for sample in self.training_samples]
 
 
 class TDPlayer(MCPlayer):
 
     def __generate_training_labels__(self, winner_color):
         for i in range(len(self.training_samples)-1):
-            self.training_labels.append(self.__td_error__(self.training_samples[i], self.training_samples[i+1]))
+            self.training_labels.append(self.__td_target__(self.training_samples[i], self.training_samples[i + 1]))
         self.training_labels.append(config.get_result_label(winner_color, self.color))
 
-    def __td_error__(self, state, next_state):
+    def __td_target__(self, state, next_state):
         v_state = self.value_function.evaluate(state)
         v_next_state = self.value_function.evaluate(next_state)
         return v_state + self.alpha * (v_next_state - v_state)
