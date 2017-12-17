@@ -5,12 +5,12 @@ from statistics import median, stdev, variance
 
 import src.config as config
 from src.player import TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, DecoupledValueFunction
+from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, DecoupledValueFunction, LargeValueFunction
 from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set
 from src.plotter import Printer
 
 printer = Printer()
-STRATEGY = DecoupledValueFunction
+STRATEGY = LargeValueFunction
 
 evaluation_file = open("./plots/testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
 

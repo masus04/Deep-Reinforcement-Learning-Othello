@@ -102,7 +102,7 @@ class LargeValueFunction(ValueFunction):
 
 class LargeModel(torch.nn.Module):
     def __init__(self):
-        super(Model, self).__init__()
+        super(LargeModel, self).__init__()
 
         self.conv_channels = 16
         self.conv_to_linear_params_size = self.conv_channels*8*8
@@ -114,8 +114,8 @@ class LargeModel(torch.nn.Module):
         self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size/2)
-        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size/2, out_features=1)
+        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
+        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=1)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
