@@ -25,7 +25,7 @@ def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT
     conditional_evaluation([player1, player2], 4)
 
     for i in range(games//evaluation_period):
-        simulation.run_simulations(episodes=evaluation_period, silent=True)
+        simulation.run_simulations(episodes=evaluation_period, silent=False)
 
         conditional_evaluation([player1, player2], 20)
 

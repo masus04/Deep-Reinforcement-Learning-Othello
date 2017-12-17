@@ -6,11 +6,11 @@ from statistics import median, stdev, variance
 import src.config as config
 from src.player import TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, DecoupledValueFunction, LargeValueFunction
-from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set
+from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set, generate_combined_data_set
 from src.plotter import Printer
 
 printer = Printer()
-STRATEGY = LargeValueFunction
+STRATEGY = ValueFunction
 
 evaluation_file = open("./plots/testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
 
@@ -69,19 +69,19 @@ if __name__ == "__main__":
 
     start_time = datetime.now()
 
-    GAMES = 250000
+    GAMES = 100000
 
     log_message("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
     # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
-    for label_strategy in [generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
+    for label_strategy in [generate_heuristic_data_set, generate_mobility_data_set, generate_save_stones_data_set, generate_combined_data_set]:
         log_message("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
 
         test_set = label_strategy(1000)
 
-        for i, exponent in enumerate(range(3, 5)):
+        for i, exponent in enumerate(range(1, 3)):
             lr = float(round(0.1**exponent, 7))
             results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
             log_message("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
