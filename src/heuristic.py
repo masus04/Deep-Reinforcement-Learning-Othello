@@ -241,6 +241,9 @@ class OthelloHeuristic(object):
         return score
 
     def evaluate_save_stones(self, board, current_player, other_player, game_state):
+        return self.evaluate_save_stones_h(board, current_player, other_player, game_state) - self.evaluate_save_stones_h(board, other_player, current_player, game_state)
+
+    def evaluate_save_stones_h(self, board, current_player, other_player, game_state):
         corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
         directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 
