@@ -6,7 +6,7 @@ from statistics import median, stdev, variance
 import src.config as config
 from src.player import TDPlayer
 from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, DecoupledValueFunction, LargeValueFunction
-from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set
+from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set, generate_combined_data_set
 from src.plotter import Printer
 
 printer = Printer()
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
-    for label_strategy in [generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set]:
+    for label_strategy in [generate_combined_data_set]:
         log_message("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
 
