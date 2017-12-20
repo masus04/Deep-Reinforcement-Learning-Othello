@@ -23,7 +23,7 @@ class OthelloHeuristic(object):
             self.EDGE_FACTOR = [25, 25, 0]
             self.CORNER_EDGE_FACTOR = [400, 400, 0]
             self.STABILITY_FACTOR = [120, 120, 0]
-            self.SAVE_STONES_FACTOR = [0, 0, 0]
+            self.SAVE_STONES_FACTOR = [1000, 1000, 0]
         else:
             self.CORNER_FACTOR = [0, 0, 0]
             self.MOBILITY_FACTOR = [0, 0, 0]
