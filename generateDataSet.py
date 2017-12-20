@@ -39,7 +39,7 @@ def generate_mobility_data_set(games, silent=True):
     """ Generates a dataset containing pairs of (Board, label) where label is the color of the player with the higher mobility (possible moves) """
 
     def criterion(board):
-        return heuristic.evaluate_mobility(board, config.BLACK, config.WHITE, 0) - heuristic.evaluate_mobility(board, config.WHITE, config.BLACK, 0)
+        return heuristic.evaluate_mobility(board, config.BLACK, config.WHITE, 0) / 250
 
     return __generate_data_set__(games, criterion, silent)
 
@@ -48,7 +48,7 @@ def generate_save_stones_data_set(games, silent=True):
     """ Generates a dataset containing pairs of (Board, label) where label is the color of the player with control over more save stones (stones that cannot be flipped again)"""
 
     def criterion(board):
-        return heuristic.evaluate_save_stones(board, config.BLACK, config.WHITE, 0) - heuristic.evaluate_save_stones(board, config.WHITE, config.BLACK, 0)
+        return (heuristic.evaluate_save_stones(board, config.BLACK, config.WHITE, 0) - heuristic.evaluate_save_stones(board, config.WHITE, config.BLACK, 0))/1000
 
     return __generate_data_set__(games, criterion, silent)
 
