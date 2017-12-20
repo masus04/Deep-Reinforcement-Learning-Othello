@@ -57,7 +57,7 @@ def generate_combined_data_set(games, silent=True):
     """ Generates a dataset containing pairs of (Board, label) where label is the color of the winning player according to the DEFAULT combined strategy (stones that cannot be flipped again)"""
 
     def criterion(board):
-        return heuristic.evaluate(board, config.BLACK, config.WHITE, 0) - heuristic.evaluate(board, config.WHITE, config.BLACK, 0)
+        return heuristic.evaluate(board, config.BLACK, config.WHITE) - heuristic.evaluate(board, config.WHITE, config.BLACK)
 
     return __generate_data_set__(games, criterion, silent)
 

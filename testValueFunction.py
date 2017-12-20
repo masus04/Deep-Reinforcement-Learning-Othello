@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     # compare_afterstate_values(value_function=value_function, labeling_strategy=LABELING_STRATEGY)
 
-    for label_strategy in [generate_heuristic_data_set, generate_mobility_data_set, generate_save_stones_data_set, generate_combined_data_set]:
+    for label_strategy in [generate_mobility_data_set, generate_save_stones_data_set, generate_combined_data_set]:
         log_message("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
 
