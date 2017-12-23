@@ -13,13 +13,15 @@ import src.config as config
 
 class Model(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, decoupled=False):
         super(Model, self).__init__()
+
+        self.input_channels = 3 if decoupled else 1
 
         self.conv_channels = 8
         self.conv_to_linear_params_size = self.conv_channels*8*8
 
-        self.conv1 = torch.nn.Conv2d(in_channels= 1, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv1 = torch.nn.Conv2d(in_channels=self.input_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
@@ -41,13 +43,15 @@ class Model(torch.nn.Module):
 
 
 class LargeModel(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, decoupled=False):
         super(LargeModel, self).__init__()
+
+        self.input_channels = 3 if decoupled else 1
 
         self.conv_channels = 16
         self.conv_to_linear_params_size = self.conv_channels*8*8
 
-        self.conv1 = torch.nn.Conv2d(in_channels= 1, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv1 = torch.nn.Conv2d(in_channels=self.input_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
@@ -70,52 +74,26 @@ class LargeModel(torch.nn.Module):
         return F.sigmoid(self.fc2(x)) + config.LABEL_LOSS
 
 
-class DecoupledModel(torch.nn.Module):
+class HugeModel(torch.nn.Module):
+    def __init__(self, decoupled=False):
+        super(HugeModel, self).__init__()
 
-    def __init__(self):
-        super(DecoupledModel, self).__init__()
+        self.input_channels = 3 if decoupled else 1
 
-        self.conv_channels = 8
-        self.conv_to_linear_params_size = self.conv_channels * 8 * 8
+        self.conv_channels = 32
+        self.conv_to_linear_params_size = self.conv_channels*8*8
 
-        self.conv1 = torch.nn.Conv2d(in_channels=3, out_channels=self.conv_channels, kernel_size=3, padding=1)
+        self.conv1 = torch.nn.Conv2d(in_channels=self.input_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = F.relu(self.conv4(x))
-        x = F.relu(self.conv5(x))
-        x = F.relu(self.conv6(x))
-        x = F.relu(self.conv7(x))
-        x = x.view(-1, self.conv_to_linear_params_size)
-        return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
-
-
-class LargeDecoupledModel(torch.nn.Module):
-
-    def __init__(self):
-        super(LargeDecoupledModel, self).__init__()
-
-        self.conv_channels = 16
-        self.conv_to_linear_params_size = self.conv_channels * 8 * 8
-
-        self.conv1 = torch.nn.Conv2d(in_channels=3, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv2 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv3 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv4 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
-        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size // 2)
-        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size // 2, out_features=1)
+        self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
+        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=self.conv_to_linear_params_size//4)
+        self.fc3 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//4, out_features=self.conv_to_linear_params_size//8)
+        self.fc4 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//8, out_features=1)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -127,7 +105,9 @@ class LargeDecoupledModel(torch.nn.Module):
         x = F.relu(self.conv7(x))
         x = x.view(-1, self.conv_to_linear_params_size)
         x = F.relu((self.fc1(x)))
-        return F.sigmoid(self.fc2(x)) + config.LABEL_LOSS
+        x = F.relu((self.fc2(x)))
+        x = F.relu((self.fc3(x)))
+        return F.sigmoid(self.fc4(x)) + config.LABEL_LOSS
 
 
 class SimpleModel(torch.nn.Module):
@@ -166,32 +146,13 @@ class SimpleModel(torch.nn.Module):
         return F.sigmoid(self.final(x)) + config.LABEL_LOSS
 
 
-class FCModel(torch.nn.Module):
-
-    def __init__(self):
-        super(FCModel, self).__init__()
-
-        self.fc1 = torch.nn.Linear(in_features=64, out_features=64*10)
-        self.fc2 = torch.nn.Linear(in_features=64*10, out_features=64*10)
-        self.fc3 = torch.nn.Linear(in_features=64*10, out_features=1)
-
-    def forward(self, x):
-
-        x = x.view(-1, 64)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-
-        return F.sigmoid(x) + config.LABEL_LOSS
-
-
 """ | ---------- ValueFunctions ---------- | """
 
 
 class ValueFunction:
 
-    def __init__(self, learning_rate=config.LEARNING_RATE, model=None):
-        self.model = Model() if not model else model
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=Model()):
+        self.model = model
         if config.CUDA:
             self.model.cuda(0)
         self.learning_rate = learning_rate
@@ -242,14 +203,23 @@ class ValueFunction:
 
 
 class LargeValueFunction(ValueFunction):
-    def __init__(self, learning_rate=config.LEARNING_RATE):
-        super(LargeValueFunction, self).__init__(learning_rate=learning_rate, model=LargeModel())
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=LargeModel()):
+        super(LargeValueFunction, self).__init__(learning_rate=learning_rate, model=model)
+
+
+class HugeValueFunction(ValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=HugeModel()):
+        super(HugeValueFunction, self).__init__(learning_rate=learning_rate, model=model)
+
+
+class SimpleValueFunction(ValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=SimpleModel()):
+        super(SimpleValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
 
 class DecoupledValueFunction(ValueFunction):
-
-    def __init__(self, learning_rate=config.LEARNING_RATE, model=None):
-        super(DecoupledValueFunction, self).__init__(learning_rate=learning_rate, model=DecoupledModel() if not model else model)
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=Model(decoupled=True)):
+        super(DecoupledValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
     def data_reshaping(self, board_sample):
         black_board = board_sample == config.BLACK
@@ -260,22 +230,38 @@ class DecoupledValueFunction(ValueFunction):
 
 
 class LargeDecoupledValueFunction(DecoupledValueFunction):
-    pass
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=LargeModel(decoupled=True)):
+        super(LargeDecoupledValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
 
-class SimpleValueFunction(ValueFunction):
+class HugeDecoupledValueFunction(DecoupledValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=HugeModel(decoupled=True)):
+        super(HugeDecoupledValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
-    def __init__(self, learning_rate=config.LEARNING_RATE):
-        super(SimpleValueFunction, self).__init__(learning_rate=learning_rate)
-        self.model = SimpleModel()
-        if config.CUDA:
-            self.model.cuda(0)
 
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
+""" | ---------- Special cases ---------- | """
+
+
+class FCModel(torch.nn.Module):
+
+    def __init__(self):
+        super(FCModel, self).__init__()
+
+        self.fc1 = torch.nn.Linear(in_features=64, out_features=64*10)
+        self.fc2 = torch.nn.Linear(in_features=64*10, out_features=64*10)
+        self.fc3 = torch.nn.Linear(in_features=64*10, out_features=1)
+
+    def forward(self, x):
+
+        x = x.view(-1, 64)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+
+        return F.sigmoid(x) + config.LABEL_LOSS
 
 
 class FCValueFunction(ValueFunction):
-
     def __init__(self, learning_rate=config.LEARNING_RATE):
         super(FCValueFunction, self).__init__()
         self.model = FCModel()
