@@ -10,7 +10,7 @@ from generateDataSet import generate_greedy_data_set, generate_heuristic_data_se
 from src.plotter import Printer
 
 printer = Printer()
-STRATEGY = LargeValueFunction
+STRATEGY = ValueFunction
 
 evaluation_file = open("./plots/testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
 
@@ -37,7 +37,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
 
     print("Evaluation:")
     player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
-    player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr))
+    # player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr))
     return player.plotter.accuracies.get_values()[-1], player
 
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
         test_set = label_strategy(1000)
 
-        for i, exponent in enumerate(range(3, 5)):
+        for i, exponent in enumerate(range(1, 3)):
             lr = float(round(0.1**exponent, 7))
             results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
             log_message("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
