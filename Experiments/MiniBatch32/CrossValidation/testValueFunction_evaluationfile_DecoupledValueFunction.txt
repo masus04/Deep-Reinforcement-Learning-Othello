@@ -1,0 +1,43 @@
+Crossvalidation of <class 'src.valueFunction.DecoupledValueFunction'> over 250000 games
+  | --- Labeling strategy: generate_mobility_data_set --- |
+^MTraining batch 1/2500 |..........|0%|..........| Time: 0:00:13^MTraining batch 2/2500 |..........|0%|..........| Time: 0:00:50^MTraining batch 3/2500 |..........|0%|..........| Time: $
+Evaluation:
+Simulation time: 21:15:08
+
+^MTraining batch 1/2500 |..........|0%|..........| Time: 0:00:17^MTraining batch 2/2500 |..........|0%|..........| Time: 0:00:45^MTraining batch 3/2500 |..........|0%|..........| Time: $
+Evaluation:
+Simulation time: 1 day, 18:27:00
+
+
+Accuracy scores:
+lr: 0.01, accuracy: 0.799262562168
+lr: 0.1, accuracy: 0.851397701938
+  | --- Labeling strategy: generate_save_stones_data_set --- |
+^MTraining batch 1/2500 |..........|0%|..........| Time: 0:00:11^MTraining batch 2/2500 |..........|0%|..........| Time: 0:00:46^MTraining batch 3/2500 |..........|0%|..........| Time: $
+Evaluation:
+Simulation time: 2 days, 7:58:42
+
+^MTraining batch 1/2500 |..........|0%|..........| Time: 0:00:09^MTraining batch 2/2500 |..........|0%|..........| Time: 0:00:26^MTraining batch 3/2500 |..........|0%|..........| Time: $
+Evaluation:
+Simulation time: 2 days, 19:11:59
+
+
+Accuracy scores:
+lr: 0.01, accuracy: 0.87495697074
+lr: 0.1, accuracy: 0.782099827883
+  | --- Labeling strategy: generate_combined_data_set --- |
+^MTraining batch 1/2500 |..........|0%|..........| Time: 0:00:11^MTraining batch 2/2500 |..........|0%|..........| Time: 0:00:29^MTraining batch 3/2500 |..........|0%|..........| Time: $
+Evaluation:
+Simulation time: 5 days, 14:56:43
+
+^MTraining batch 1/2500 |..........|0%|..........| Time: 0:00:47^MTraining batch 2/2500 |..........|0%|..........| Time: 0:01:44^MTraining batch 3/2500 |..........|0%|..........| Time: $
+Evaluation:
+Simulation time: 7 days, 2:54:41
+
+
+Accuracy scores:
+lr: 0.0001, accuracy: 0.842775960048
+lr: 0.001, accuracy: 0.86834854486
+
+Experiment completed
+
