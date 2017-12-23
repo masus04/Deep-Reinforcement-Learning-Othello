@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     start_time = datetime.now()
 
-    GAMES = 250000
+    GAMES = 500000
 
     log_message("Crossvalidation of %s over %s games" % (STRATEGY, GAMES))
 
