@@ -37,15 +37,15 @@ class Plotter:
     def add_evaluation_score(self, score):
         self.evaluation_scores.append(score)
 
-    def plot_accuracy(self, comment):
-        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "Accuracies: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
+    def plot_accuracy(self, comment, path="/"):
+        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "Accuracies: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment), path=path)
         plt.close("all")
 
-    def plot_results(self, comment=""):
-        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "Results: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment))
+    def plot_results(self, comment="", path="/"):
+        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "Results: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment), path=path)
         plt.close("all")
 
-    def plot_scores(self, comment=""):
+    def plot_scores(self, comment="", path="/"):
 
         scores = self.evaluation_scores.get_values()
 
@@ -56,14 +56,14 @@ class Plotter:
             spl = UnivariateSpline(old_indices, scores, k=1, s=0)
             scores = spl(new_indices)
 
-        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", scores, "Scores: %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment))
+        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", scores, "Scores: %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment), path=path)
         plt.close("all")
 
     def copy(self):
         return Plotter(plot_name=self.plot_name, plotter=self)
 
     @staticmethod
-    def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name="."):
+    def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name=".", path="/"):
         try:
             if len(line1_values) == 0 or len(line2_values) == 0:
                 return
@@ -78,7 +78,7 @@ class Plotter:
             df.plot(secondary_y=[line2_name, line3_name], title=plot_name, legend=True, figsize=(16, 9))
             plt.title = plot_name
             plt.xlabel = "Episodes"
-            plt.savefig("./plots/%s.png" % plot_name)
+            plt.savefig("./plots" + path + "%s.png" % plot_name)
         except Exception as e:
             import traceback, sys
             print("| %s |" % ("-" * 50))

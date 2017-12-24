@@ -4,7 +4,7 @@ import src.config as config
 from src.othello import Othello
 from src.plotter import Printer
 from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction, DecoupledValueFunction
+import src.valueFunction as vF
 
 import evaluation
 
@@ -41,21 +41,25 @@ def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT
 
 
 if __name__ == "__main__":
+    """ This script is run in order to test if all available ValueFunctions can be trained as expected """
 
-    """ Parameters """
-    player1 = TDPlayer(color=config.BLACK, strategy=DecoupledValueFunction)
-    player2 = HeuristicPlayer(color=config.WHITE, strategy=ValueFunction)
+    strategies = [vF.ValueFunction, vF.LargeValueFunction, vF.HugeValueFunction, vF.SimpleValueFunction, vF.DecoupledValueFunction, vF.LargeDecoupledValueFunction, vF.HugeDecoupledValueFunction]
 
-    """ Continue training """
-    # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
-    # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
+    for strategy in strategies:
+        """ Parameters """
+        player1 = TDPlayer(color=config.BLACK, strategy=strategy)
+        player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
 
-    TOTAL_GAMES = 1000
-    EVALUATION_PERIOD = 1000
+        """ Continue training """
+        # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
+        # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-    """ Execution """
-    start = datetime.now()
-    print("Experiment name: %s" % EXPERIMENT_NAME)
-    print("Training %s VS %s" % (player1.player_name, player2.player_name))
-    train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
-    print("Training completed, took %s" % (datetime.now() - start))
+        TOTAL_GAMES = 200
+        EVALUATION_PERIOD = 100
+
+        """ Execution """
+        start = datetime.now()
+        print("Experiment name: %s" % EXPERIMENT_NAME)
+        print("Training %s VS %s" % (player1.player_name, player2.player_name))
+        train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
+        print("Training completed, took %s\n" % (datetime.now() - start))
