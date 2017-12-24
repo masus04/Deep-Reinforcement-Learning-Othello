@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import math
 from datetime import datetime
 from statistics import median, stdev, variance
@@ -11,8 +12,13 @@ from src.plotter import Printer
 
 printer = Printer()
 STRATEGY = vF.HugeDecoupledValueFunction
+EXPERIMENT_NAME = "/testValueFunction/" + STRATEGY.__name__ + "/"
 
-evaluation_file = open("./plots/testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
+if not os.path.exists("./plots/" + EXPERIMENT_NAME):
+    os.makedirs("./plots/" + EXPERIMENT_NAME)
+
+
+evaluation_file = open("./plots" + EXPERIMENT_NAME + "testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
 
 
 def log_message(message):
@@ -36,8 +42,8 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
         player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function, test_time=True))
 
     print("Evaluation:")
-    player.plotter.plot_accuracy("labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]))
-    player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr))
+    player.plotter.plot_accuracy(comment="labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]), path="/" + EXPERIMENT_NAME)
+    player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr), path=EXPERIMENT_NAME)
     return player.plotter.accuracies.get_values()[-1], player
 
 
@@ -69,7 +75,7 @@ if __name__ == "__main__":
 
     start_time = datetime.now()
 
-    GAMES = 500000
+    GAMES = 100
 
     log_message("Crossvalidation of %s over %s games" % (STRATEGY.__name__, GAMES))
 
@@ -79,7 +85,7 @@ if __name__ == "__main__":
         log_message("  | --- Labeling strategy: %s --- |  " % label_strategy.__name__)
         results = []
 
-        test_set = label_strategy(1000)
+        test_set = label_strategy(100)
 
         for i, exponent in enumerate(range(1, 3)):
             lr = float(round(0.1**exponent, 7))

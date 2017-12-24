@@ -36,10 +36,6 @@ class Player(object):
     def save(self, comment=""):
         pass
 
-    def load_params(self):
-        """ DEPRECATED """
-        pass
-
     def set_name(self, name):
         self.player_name = name
         self.plotter.plot_name = self.player_name
@@ -205,10 +201,10 @@ class DeepRLPlayer(Player):
         # self.e = self.e*config.EPSILON_REDUCE  # This is experimental
         return result
 
-    def save(self, comment=""):
-        if not os.path.exists("./Players"):
-            os.makedirs("./Players")
-        torch.save(self, "./Players/%s%s.pth" % (self.player_name, comment))
+    def save(self, comment="", path="/"):
+        if not os.path.exists("./Players" + path):
+            os.makedirs("./Players" + path)
+        torch.save(self, "./Players" + path + "%s%s.pth" % (self.player_name, comment))
 
     @classmethod
     def load_player(cls, color, strategy):
