@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from datetime import datetime
 
-import src.config as config
-import src.board as board
-from src.gui import Gui, NoGui
-from src.config import HEADLESS, get_color_from_player_number
-from src.plotter import Printer
+import core.config as config
+import core.board as board
+from core.gui import Gui, NoGui
+from core.config import HEADLESS, get_color_from_player_number
+from core.plotter import Printer
 
 
 class Othello:

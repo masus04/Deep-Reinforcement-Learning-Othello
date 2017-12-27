@@ -1,5 +1,5 @@
-import src.config as config
-from src.plotter import Plotter
+import core.config as config
+from core.plotter import Plotter
 from datetime import datetime
 
 COMMENT = "|Continuous|"

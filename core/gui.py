@@ -1,9 +1,9 @@
 import sys
 from pygame.locals import *
 import time
-from src.config import BLACK, WHITE
+from core.config import BLACK, WHITE
 import os
-from src.menu import *
+from core.menu import *
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 

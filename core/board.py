@@ -1,4 +1,4 @@
-from src.config import EMPTY, BLACK, WHITE
+from core.config import EMPTY, BLACK, WHITE
 import numpy as np
 from ctypes import *
 import random
@@ -6,7 +6,7 @@ import random
 
 class Board:
 
-    LIBFUNCTIONS = cdll.LoadLibrary("./src/libfunctions.so")
+    LIBFUNCTIONS = cdll.LoadLibrary("./core/libfunctions.so")
 
     def __init__(self, board = None):
         if board is not None:

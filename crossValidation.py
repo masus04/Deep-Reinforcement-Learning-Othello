@@ -1,9 +1,9 @@
 from datetime import datetime
 
-import src.config as config
-from src.othello import Othello
-from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
+import core.config as config
+from core.othello import Othello
+from core.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
+from core.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 import training
 from evaluation import evaluate
 

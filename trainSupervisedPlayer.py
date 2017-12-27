@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
-import src.config as config
-from src.valueFunction import ValueFunction, SimpleValueFunction
-from src.player import TDPlayer
-from src.plotter import Printer
+import core.config as config
+from core.valueFunction import ValueFunction, SimpleValueFunction
+from core.player import TDPlayer
+from core.plotter import Printer
 from testValueFunction import evaluate_accuracy
 from evaluation import evaluate
 from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_save_stones_data_set, generate_mobility_data_set

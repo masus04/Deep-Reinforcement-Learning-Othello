@@ -1,11 +1,11 @@
 from datetime import datetime
 
-import src.config as config
+import core.config as config
 from training import train
 from evaluation import compare_players
-from src.player import MCPlayer, TDPlayer
-from src.valueFunction import ValueFunction, SimpleValueFunction
-from src.plotter import Printer
+from core.player import MCPlayer, TDPlayer
+from core.valueFunction import ValueFunction, SimpleValueFunction
+from core.plotter import Printer
 
 EXPERIMENT_NAME = "|FAST|"
 

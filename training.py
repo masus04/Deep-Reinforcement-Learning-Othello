@@ -1,10 +1,10 @@
 from datetime import datetime
 
-import src.config as config
-from src.othello import Othello
-from src.plotter import Printer
-from src.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
-import src.valueFunction as vF
+import core.config as config
+from core.othello import Othello
+from core.plotter import Printer
+from core.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
+import core.valueFunction as vF
 
 import evaluation
 

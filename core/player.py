@@ -2,13 +2,13 @@ import os
 import random
 import torch
 
-import src.config as config
-from src.game_ai import GameArtificialIntelligence
-from src.heuristic import OthelloHeuristic
-from src.gui import NoGui
-from src.valueFunction import ValueFunction, NoValueFunction
-from src.board import Board
-from src.plotter import Plotter, NoPlotter
+import core.config as config
+from core.game_ai import GameArtificialIntelligence
+from core.heuristic import OthelloHeuristic
+from core.gui import NoGui
+from core.valueFunction import ValueFunction, NoValueFunction
+from core.board import Board
+from core.plotter import Plotter, NoPlotter
 
 
 class Player(object):

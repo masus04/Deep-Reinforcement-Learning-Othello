@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-import src.config as config
+import core.config as config
 
 
 """ | ---------- Models ---------- | """

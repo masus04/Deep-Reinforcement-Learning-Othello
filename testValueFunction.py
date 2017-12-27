@@ -4,11 +4,11 @@ import math
 from datetime import datetime
 from statistics import median, stdev, variance
 
-import src.config as config
-from src.player import TDPlayer
-import src.valueFunction as vF
+import core.config as config
+from core.player import TDPlayer
+import core.valueFunction as vF
 from generateDataSet import generate_greedy_data_set, generate_heuristic_data_set, generate_combined_data_set, generate_save_stones_data_set, generate_mobility_data_set
-from src.plotter import Printer
+from core.plotter import Printer
 
 printer = Printer()
 STRATEGY = vF.HugeDecoupledValueFunction

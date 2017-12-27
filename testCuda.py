@@ -1,8 +1,8 @@
 import sys
 
-import src.config as config
-from src.othello import Othello
-from src.player import MCPlayer, TDPlayer
+import core.config as config
+from core.othello import Othello
+from core.player import MCPlayer, TDPlayer
 
 player1 = TDPlayer(color=config.BLACK)
 player2 = MCPlayer(color=config.WHITE)

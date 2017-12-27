@@ -1,10 +1,10 @@
 import math
 from scipy.special import expit
 
-import src.config as config
-from src.othello import Othello
-from src.player import ReportingPlayer, RandomPlayer, HeuristicPlayer
-from src.heuristic import OthelloHeuristic
+import core.config as config
+from core.othello import Othello
+from core.player import ReportingPlayer, RandomPlayer, HeuristicPlayer
+from core.heuristic import OthelloHeuristic
 
 heuristic_player = HeuristicPlayer(color=config.BLACK)
 
