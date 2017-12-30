@@ -4,10 +4,8 @@ import core.config as config
 from training import train
 from evaluation import compare_players
 from core.player import MCPlayer, TDPlayer
-from core.valueFunction import ValueFunction, SimpleValueFunction
+from core.valueFunction import ValueFunction, SimpleValueFunction, HugeDecoupledValueFunction, HugeValueFunction, LargeDecoupledValueFunction, LargeValueFunction
 from core.plotter import Printer
-
-EXPERIMENT_NAME = "|FAST|"
 
 
 def train_continuous(player1, player2, games, evaluation_period, experiment_name, iterations):
@@ -52,7 +50,7 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = TDPlayer(color=config.BLACK, strategy=SimpleValueFunction, lr=0.01, alpha=1)
+    PLAYER = TDPlayer(color=config.BLACK, strategy=HugeValueFunction, lr=0.1, alpha=0.3)
     PLAYER2 = None
 
     # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
@@ -66,7 +64,7 @@ if __name__ == "__main__":
 
     ITERATIONS = 100
     GAMES_PER_ITERATION = 10000
-    EVALUATION_PERIOD = 1000
+    EVALUATION_PERIOD = 5000
 
     """ Execution """
     start = datetime.now()
