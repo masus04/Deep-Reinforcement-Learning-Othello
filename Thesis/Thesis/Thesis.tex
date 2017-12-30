@@ -73,26 +73,116 @@ The basic Monte Carlo Algorithm simply simulates an entire episode, evaluates th
 
 \subsection {Temporal Difference Learning }
 \label{sec:Temporal difference Learning}
-The Temporal Difference algorithm is a variant of the basic Monte Carlo algorithm decribed above. In contrast to its predecessor it does not assign the same label to each game state but rather computes each label based on the prediction of the subsequent state's value. This can be better understood when analysing the algorithm from the end of an episode. The final label is still the result of the game just like in the basic Monte Carlo algorithm. \ugh{check this again}The label of the second to last game state however is computed from its current value as well as the value of the final state. This allows for a so called online version of the algorithm which does not have to complete an entire episode before it can learn from the gathered experience, but can apply changes at every time step of the episode. Although the online version has weaker convergence guarantees and since standard Othello episodes have a maximum length of 30 game states per player there is a guaranteed reward in relatively few time steps which makes offline Temporal Difference Learning more suitable for this thesis.
+The Temporal Difference algorithm is a variant of the basic Monte Carlo algorithm decribed above. In contrast to its predecessor it does not assign the same label to each game state but rather computes each label based on the prediction of the subsequent state's value. This can be better understood when analysing the algorithm from the end of an episode. The final label is still the result of the game just like in the basic Monte Carlo algorithm. The labels of all other states n however are computed based on the value predictions of states n and n+1.  This allows for a so called online version of the algorithm which does not have to complete an entire episode before it can learn from the gathered experience, but can apply changes at every time step of the episode. However the online version has weaker convergence guarantees and since standard Othello episodes have a maximum length of 30 game states per player there is a guaranteed reward in relatively few time steps which makes offline Temporal Difference Learning more suitable for this thesis.
 
 \subsection {Monte Carlo Tree Search}
 \label{sec:Monte Carlo Tree Search}
 
+
+
 %%%%%%%% Thesis Objectives %%%%%%%%
 \chapter {Thesis Objectives}
 \label{cha:Thesis Objectives}
-1. Framwork for othello agents
-2. Playground for RL algorithms, network optimizations, regularizations, etc.
-3. High performance Othello Agent
+The objectives of this thesis are threefold: \textit{Build a framework for a reinforcement learning othello player}, \textit{Build and train a RL othello player} and \textit{experiment with different optimizations with the goal of beating a set of predefined search based players}. 
 
-\section {Othello}
-\label{sec:Othello}
-One of the main difficulties in applying reinforcement learning to Othello is the very delayed and sparse reward. The only evaluation the learning algorithm can make is the result of the game, every other measure would introduce prior knowledge and therefore influence the strategy that is learned by the player. This constrains the learning algorithm to a single reward per game, rather than one for every action taken like for example in a jump and run game.
+\section {Framework}
+\label{sec:ObjFramework}
+The framework is responsible for simulating one or several games of othello automatically given two players as well as documentig the results. It therefore contains and enforces the game rules and provides an interface in order to interact with two players regardles of their implementation and strategy. It also computes and plots statistics of results over time in order to give insight into how an agent behaves during training.
 
+\section {Othello Player}
+\label{sec:ObjOthello Player}
+The othello player is at the core of the othello framework. It can represent any kind of strategy from one step heuristic evaluations to intricately learned agents using neural networks, search algorithms etc. In the case of a machine learning player this is where training data is aquired and the agent is trained.
+
+\section {Optimization}
+\label{sec:ObjOptimization}
+Once the first iteration of the framework and a reinforcement player are working, the goal shifts towards optimizing all parts of their implementation. This includes performance in regards to computation time for the framework as well as in regards to winning rate for the players.
+
+\ugh{
+1. Framwork for othello agents \newline
+2. Playground for RL algorithms, network optimizations, regularizations, etc. \newline
+3. High performance Othello Agent \newline
+}
 
 %%%%%%%% Implementation %%%%%%%%
 \chapter {Implementation}
 \label{cha:Implementation}
+
+\section {Framework}
+\label{sec:ImplFramework}
+The framework is an integral part of the application and makes up the largest part of the code base. As a base we forked \cite{RGRUENER}, a python othello framework that allowed both human and computer players to compete against each other. The computer player was implemented using an alpha-beta search and evaluating positions on the basis of several hand crafted heuristics. It included a graphical user interface for interacting with the games in progres. \newline
+Since the framework was intended for a human to play or at least spectate the games being played, some major changes had to be made for automated play, such as the introduction of a headless mode and support for running thousands of games in rapid succession. For this purpose the core framework was wrapped in an additional layer of scripts that control the different use cases such as evaluation and several different training algorithms.
+ In order to analize training and evaluation games, a Plotter was introduced, accumulating data and representing them in a human readable form using several plots.
+ 
+ \ugh{| UML? |}
+
+\section {Othello Player}
+\label{sec:ImplOthello Player}
+The Player is the origin of all the different strategies. It is an interface between an agent and the othello framework. For machine learning agents this is where most of the actual learning algorithm is implemented. First however, we introduced several non learning players as a baseline. A \textit{RandomPlayer} as well as a search based \textit{ComputerPlayer} were also available from the framework. We introduced three more: a \textit{HeuristicPlayer}, a \textit{MobilityPlayer} and a \textit{SaveStonesPlayer}
+
+\subsection {HeuristicPlayer}
+\label{sec:HeuristicPlayer}
+The HeuristicPlayer uses a Heuristic Table of tile values for its value function. It then alots points to the player holding these tiles according to the table. This rather simple player is often used as a baseline because it is fast to execute, deterministic and easy to understand and debug. The Heuristic Table gives this player its strategy. We used table \ref{table:HeuristicTable} as found in \cite{HEUR} as our strategy for the \textit{HeuristicPlayer}. By looking at the values alotted to each tile one can see that the corners are regarded as the most important tiles on the board, therefore whenever the \textit{HeuristicPlayer} has the chance to take a corner, he will. Additionally the tiles around a corner have negative values. This prevents the player from taking those tiles because doing so would allow its opponent to take the corner. Further more the table is symmetrical by eight axes which guarantees that rotations and reflections of a game state do not change its value.
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{ | c | c | c | c | c | c | c | c | }
+			\hline
+			100 & -25 & 10 & 5 & 5 & 10 & -25 & 100 \\ \hline
+			-25 & -25 & 2 & 2 & 2 & 2 & -25 & -25 \\ \hline
+			10 & 2 & 5 & 1 & 1 & 5 & 2 & 10 \\ \hline
+			5 & 2 & 1 & 2 & 2 & 1 & 2 & 5 \\ \hline
+			5 & 2 & 1 & 2 & 2 & 1 & 2 & 5 \\ \hline
+			10 & 2 & 5 & 1 & 1 & 5 & 2 & 10 \\ \hline
+			-25 & -25 & 2 & 2 & 2 & 2 & -25 & -25 \\ \hline
+			100 & -25 & 10 & 5 & 5 & 10 & -25 & 100 \\ \hline
+		\end{tabular}
+		\caption{\label{table:HeuristicTable} The Heuristic Table of \textit{HeuristicPlayer}}
+	\end{center}
+\end{table}
+
+\subsection {ComputerPlayers}
+\label{sec:ComputerPlayers}
+The \textit{ComputerPlayer} consists of two main parts: the alpha-beta cut algorithm that simulates multiple moves ahead of the current game state \cite{AI}, and the value function that scores each game state in order to determine its value. The original player available in the framework used following features and weighted them depending on how far the game has progressed:
+\begin{itemize}
+	\item \textbf{Stone count} \newline
+	The number of stones each player controls. This is most important in the endgame since it determines the winner of the game.
+	
+	\item \textbf{Corner count}	\newline
+	The number of edges each player controls. This is most important in the midgame since corner stones cannot be taken by the opponent.
+	
+	\item \textbf{Mobility} \newline
+	The number of valid moves each player has. Restricting the opponents possibilities may interfere with the opponents strategy and allow the player to take many stones at a time in the endgame.
+	
+	\item \textbf{Edge count} \newline
+	The number of edges each player controls. Edge stones are valuable because they are harder to overturn and may lead to winning a corner. They are most valuable early and midgame, depending on the game state.
+	
+	\item \textbf{Corner edge count} \newline
+	The number of stones directly surrounding an empty corner each player controls. These stones are valued negatively since they may allow the opponent to occupy a corner.
+	
+	\item \textbf{Stability count} \newline
+	The number of stones connected to a corner through stones of the same color. These stones are protected from four sides, three from the edge of the board and one from the corner stone or a number of other stones that are connected to the edge stone, and therefore cannot be taken by the opponent.
+\end{itemize}
+
+We created two additional players for more variety and to assess if our agents can learn the concepts behind them:
+\begin{itemize}
+	\item \textbf{MobilityPlayer} \newline
+	A player implementing a strategy based purely on maximizing the mobility in the early and midgame. As soon as the end of the game can be simulated the stones count is considered instead.
+	
+	\item \textbf{SaveStonesPlayer} \newline
+	A player maximizes its own save stones and minimizes its opponent's. A save stone is any stone that cannot be taken by the opponent for the rest of the game. The computation of save stones starts at a corner stone which is the first save stone. The number of save stones can then be expanded along one of the two edges adjacent to the corner. Each stone along the edge and directly adjacent to a save stone is also save as it is protected from four sides. The same can then be applied for the next row where every stone that is protected by four save stones becomes a save stone as well. Just with any other player in the endgame only the stone count is considered for scoring.
+	
+\end{itemize}
+
+
+\subsection {ReinforcementLearningPlayers}
+\label{sec:ReinforcementLearningPlayers}
+
+
+
+\section {Optimization}
+\label{sec:ImplOptimization}
+
+\ugh{One of the main difficulties in applying reinforcement learning to Othello is the very delayed and sparse reward. The only evaluation the learning algorithm can make is the result of the game, every other measure would introduce prior knowledge and therefore influence the strategy that is learned by the player. This constrains the learning algorithm to a single reward per game, rather than one for every action taken like for example in a jump and run game.}
 
 %%%%%%%% Validation %%%%%%%%
 \chapter {Validation}

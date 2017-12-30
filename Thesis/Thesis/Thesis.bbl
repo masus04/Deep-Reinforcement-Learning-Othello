@@ -11,6 +11,10 @@ Demis~Hassabis et~al.
 \newblock Mastering the game of go without human knowledge.
 \newblock {\em Nature}, 2017.
 
+\bibitem{RGRUENER}
+Othello by rgruener.
+\newblock https://github.com/rgruener/othello.
+
 \bibitem{RULES}
 British othello federation.
 \newblock \url{http://www.britishothello.org.uk/rules.html}.
@@ -19,5 +23,10 @@ British othello federation.
 Stuart Russell and Peter Norvig.
 \newblock {\em Artificial Intelligence: A Modern Approach}.
 \newblock Pearson, third edition, 2009.
+
+\bibitem{HEUR}
+Michiel van~der Ree and Marco Wiering.
+\newblock Reinforcement learning in the game of othello: Learning against a
+  fixed opponent and learning from self-play.
 
 \end{thebibliography}

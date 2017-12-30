@@ -25,6 +25,7 @@ class OthelloHeuristic(object):
             self.STABILITY_FACTOR = [120, 120, 0]
             self.SAVE_STONES_FACTOR = [1000, 1000, 0]
         else:
+            self.PIECE_COUNT_FACTOR = [0, 0, 1]
             self.CORNER_FACTOR = [0, 0, 0]
             self.MOBILITY_FACTOR = [0, 0, 0]
             self.EDGE_FACTOR = [0, 0, 0]
@@ -133,6 +134,7 @@ class OthelloHeuristic(object):
         return score
 
     def evaluate_stability(self, board, current_player, other_player, game_state):
+        """Calculates difference between both player's save edge stones but does not correct for redundancy when an entire edge is occupied by the same player. Also does not calculate other save stones"""
         score = 0
         corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
         for corner in corners:
@@ -141,6 +143,7 @@ class OthelloHeuristic(object):
         return score
 
     def edge_stability(self, board, corner, current_player, game_state):
+        """Calculates number of save edge stones for a given player"""
         score = 0
         if corner == (0, 0) and board.board[corner[0]][corner[1]] == current_player:
             score += self.STABILITY_FACTOR[game_state]
@@ -185,6 +188,7 @@ class OthelloHeuristic(object):
         return score
 
     def evaluate_corner_edge(self, board, current_player, other_player, game_state):
+        """Calculates the number of tiles surrounding an EMPTY corner for both players, scoring them negatively"""
         score = 0
         corner = (0, 0)
         for (i, j) in [(1, 0), (1, 1), (0, 1)]:
@@ -247,7 +251,7 @@ class OthelloHeuristic(object):
         corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
         directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 
-        all_save_stones = set()
+        all_save_stones = set()  # Use array instead?
         for corner, direction in zip(corners, directions):
             save_stones = []
             # Extend in y direction

@@ -9,8 +9,16 @@
 \contentsline {subsection}{\numberline {2.5.2}Temporal Difference Learning }{6}{subsection.2.5.2}
 \contentsline {subsection}{\numberline {2.5.3}Monte Carlo Tree Search}{6}{subsection.2.5.3}
 \contentsline {chapter}{\numberline {3}Thesis Objectives}{7}{chapter.3}
-\contentsline {section}{\numberline {3.1}Othello}{7}{section.3.1}
+\contentsline {section}{\numberline {3.1}Framework}{7}{section.3.1}
+\contentsline {section}{\numberline {3.2}Othello Player}{7}{section.3.2}
+\contentsline {section}{\numberline {3.3}Optimization}{7}{section.3.3}
 \contentsline {chapter}{\numberline {4}Implementation}{8}{chapter.4}
-\contentsline {chapter}{\numberline {5}Validation}{9}{chapter.5}
-\contentsline {chapter}{\numberline {6}Conclusion}{10}{chapter.6}
-\contentsline {chapter}{\numberline {7}Future Work}{11}{chapter.7}
+\contentsline {section}{\numberline {4.1}Framework}{8}{section.4.1}
+\contentsline {section}{\numberline {4.2}Othello Player}{8}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}HeuristicPlayer}{8}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}ComputerPlayers}{9}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}ReinforcementLearningPlayers}{10}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}Optimization}{10}{section.4.3}
+\contentsline {chapter}{\numberline {5}Validation}{11}{chapter.5}
+\contentsline {chapter}{\numberline {6}Conclusion}{12}{chapter.6}
+\contentsline {chapter}{\numberline {7}Future Work}{13}{chapter.7}
