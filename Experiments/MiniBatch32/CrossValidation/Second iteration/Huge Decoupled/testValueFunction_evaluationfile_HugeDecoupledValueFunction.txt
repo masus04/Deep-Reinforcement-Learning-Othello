@@ -1,0 +1,28 @@
+Crossvalidation of <class 'src.valueFunction.HugeDecoupledValueFunction'> over 500000 games
+  | --- Labeling strategy: generate_mobility_data_set --- |  
+Simulation time: 1 day, 14:18:50
+
+Simulation time: 3 days, 4:35:00
+
+
+Accuracy scores:
+lr: 0.01, accuracy: 0.88647260274
+lr: 0.1, accuracy: 0.911001712329
+  | --- Labeling strategy: generate_save_stones_data_set --- |  
+Simulation time: 4 days, 19:03:42
+
+Simulation time: 6 days, 9:27:48
+
+
+Accuracy scores:
+lr: 0.01, accuracy: 0.851141434947
+lr: 0.1, accuracy: 0.927651905252
+  | --- Labeling strategy: generate_combined_data_set --- |  
+Simulation time: 8 days, 0:50:46
+
+Simulation time: 9 days, 16:04:44
+
+
+Accuracy scores:
+lr: 0.01, accuracy: 0.959544282029
+lr: 0.1, accuracy: 0.940713671539
