@@ -8,10 +8,14 @@ import core.valueFunction as vF
 
 import evaluation
 
-EXPERIMENT_NAME = "|TDvsMC|"
+from core.player import GridWorldOpponent
+
+EXPERIMENT_NAME = "|GridWorld|"
 
 
 def conditional_evaluation(players, evaluation_games):
+    return
+
     for player in players:
         if player.train:
             evaluation.evaluate(player=player, games=evaluation_games, silent=True)
@@ -36,30 +40,31 @@ def train(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT
         player1.plotter.clear_plots(experiment_name)
         for player in (player1, player2):
             player.plotter.plot_results(experiment_name)
-            player.plotter.plot_scores(experiment_name)
+            # player.plotter.plot_scores(experiment_name)
             player.save(experiment_name)
 
 
 if __name__ == "__main__":
     """ This script is run in order to test if all available ValueFunctions can be trained as expected """
 
-    strategies = [vF.ValueFunction, vF.LargeValueFunction, vF.HugeValueFunction, vF.SimpleValueFunction, vF.DecoupledValueFunction, vF.LargeDecoupledValueFunction, vF.HugeDecoupledValueFunction]
+    # strategies = [vF.ValueFunction, vF.LargeValueFunction, vF.HugeValueFunction, vF.SimpleValueFunction, vF.DecoupledValueFunction, vF.LargeDecoupledValueFunction, vF.HugeDecoupledValueFunction]
 
+    strategies = [vF.SimpleValueFunction, vF.LargeValueFunction]
     for strategy in strategies:
         """ Parameters """
         player1 = TDPlayer(color=config.BLACK, strategy=strategy)
-        player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
+        player2 = GridWorldOpponent(color=config.WHITE, strategy=vF.NoValueFunction)
 
         """ Continue training """
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 200
-        EVALUATION_PERIOD = 100
+        TOTAL_GAMES = 100000
+        EVALUATION_PERIOD = 100000
 
         """ Execution """
         start = datetime.now()
-        print("Experiment name: %s" % EXPERIMENT_NAME)
+        print("Experiment name: %s" % (EXPERIMENT_NAME+strategy.__name__))
         print("Training %s VS %s" % (player1.player_name, player2.player_name))
-        train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD)
+        train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD, EXPERIMENT_NAME+strategy.__name__)
         print("Training completed, took %s\n" % (datetime.now() - start))

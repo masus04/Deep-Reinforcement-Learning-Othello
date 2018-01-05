@@ -7,9 +7,10 @@ from core.game_ai import GameArtificialIntelligence
 from core.heuristic import OthelloHeuristic
 from core.gui import NoGui
 from core.valueFunction import ValueFunction, NoValueFunction
-from core.board import Board
+# from core.board import Board
 from core.plotter import Plotter, NoPlotter
 
+from core.gridWorld import GridWorldBoard as Board
 
 class Player(object):
 
@@ -194,7 +195,10 @@ class DeepRLPlayer(Player):
 
     def __e_greedy__(self, lst):
         if random.random() > self.e:
-            result = max(lst)
+            try:
+                result = max(lst)
+            except Exception:
+                result = random.choice(lst)
         else:
             result = random.choice(lst)
 
@@ -247,3 +251,9 @@ class TDPlayer(MCPlayer):
         v_state = self.value_function.evaluate(state)
         v_next_state = self.value_function.evaluate(next_state)
         return v_state + self.alpha * (v_next_state - v_state)
+
+
+class GridWorldOpponent(Player):
+
+    def get_move(self, board):
+        return None

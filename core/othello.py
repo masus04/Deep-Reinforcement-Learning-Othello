@@ -3,6 +3,7 @@ from datetime import datetime
 
 import core.config as config
 import core.board as board
+import core.gridWorld as gridWorldBoard
 from core.gui import Gui, NoGui
 from core.config import HEADLESS, get_color_from_player_number
 from core.plotter import Printer
@@ -18,7 +19,7 @@ class Othello:
         self.printer = Printer()
 
     def __run__(self, player1, player2):
-        self.board = board.Board()
+        self.board = gridWorldBoard.GridWorldBoard()
 
         self.now_playing = player1
         self.other_player = player2
@@ -35,7 +36,7 @@ class Othello:
             if valid_moves != []:
                 move = self.now_playing.get_move(self.board)
                 self.gui.flash_move(move, self.now_playing.color)
-                if not move in valid_moves:
+                if not move in valid_moves and move:
                     raise Exception("Player %s performed an illegal move: %s" % (get_color_from_player_number(self.now_playing.color), move))
                 self.board.apply_move(move, self.now_playing.color)
             self.gui.update(self.board, self.other_player)
@@ -51,8 +52,8 @@ class Othello:
 
         start_time = datetime.now()
         for i in range(episodes):
-            if i % 2 == 0:  # switch colors
-                self.player1.color, self.player2.color =self.player2.color, self.player1.color
+            # if i % 2 == 0:  # switch colors
+            #    self.player1.color, self.player2.color =self.player2.color, self.player1.color
 
             result = config.get_result_label(self.__run__(players[i % 2], players[(i + 1) % 2]), self.player1.color)
             results.append(result)
