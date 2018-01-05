@@ -24,7 +24,6 @@ class Board:
         self.valid_moves = []
         self.now_playing = BLACK
 
-
     def get_possible_moves(self, row, column, color):
         if color == BLACK:
             other = WHITE
