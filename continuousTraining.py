@@ -34,14 +34,14 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
     # continuously improve
     for i in range(iterations):
         best.train = False
-        train(player1, best, games, evaluation_period, experiment_name, silent=True)
+        train(player1, best, games, evaluation_period, experiment_name)
         if compare_players(player1, best, silent=(i != iterations-1)) >= 0:
             best.value_function = player1.value_function.copy()
             best.plotter = player1.plotter.copy()
             best.opponents = player1.opponents.copy()
             best.replaced.append(i)
 
-        Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],
+        Printer.print_inplace(text="\nIteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],
                               comment=" | Best player replaced at: %s" % best.replaced)
 
     return player1, best
@@ -62,13 +62,13 @@ if __name__ == "__main__":
     assert PLAYER.color == config.BLACK
     # assert PLAYER2.color == config.WHITE
 
-    ITERATIONS = 100
+    ITERATIONS = 50
     GAMES_PER_ITERATION = 10000
     EVALUATION_PERIOD = 5000
 
     """ Execution """
     start = datetime.now()
-    # train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|", iterations=ITERATIONS)
-    train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async|", iterations=ITERATIONS)
+    # train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Continuous|training lr:%s a:%s|" % (PLAYER.value_function.learning_rate, PLAYER.alpha), iterations=ITERATIONS)
+    train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, evaluation_period=EVALUATION_PERIOD, experiment_name="|Async training lr:%s a:%s|" % (PLAYER.value_function.learning_rate, PLAYER.alpha), iterations=ITERATIONS)
 
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])
