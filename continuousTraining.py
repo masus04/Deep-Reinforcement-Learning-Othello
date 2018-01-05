@@ -41,8 +41,8 @@ def train_continuous_asymmetrical(player1, games, evaluation_period, experiment_
             best.opponents = player1.opponents.copy()
             best.replaced.append(i)
 
-        Printer.print_inplace(text="\nIteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],
-                              comment=" | Best player replaced at: %s" % best.replaced)
+        Printer.print_inplace(text="Iteration %s/%s" % (i+1, iterations), percentage=100 * (i+1) / (iterations), time_taken=str(datetime.now() - start).split(".")[0],
+                              comment=" | Best player replaced at: %s\n" % best.replaced)
 
     return player1, best
 
