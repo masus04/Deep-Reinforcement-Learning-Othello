@@ -62,8 +62,8 @@ if __name__ == "__main__":
     assert PLAYER.color == config.BLACK
     # assert PLAYER2.color == config.WHITE
 
-    ITERATIONS = 50
-    GAMES_PER_ITERATION = 10000
+    ITERATIONS = 100
+    GAMES_PER_ITERATION = 5000
     EVALUATION_PERIOD = 5000
 
     """ Execution """
