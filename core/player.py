@@ -224,7 +224,10 @@ class MCPlayer(DeepRLPlayer):
 
     def __behaviour_policy__(self, board):
         afterstates = self.__generate_afterstates__(board)
-        afterstate = self.__e_greedy__([(self.value_function.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates])
+        if self.train:
+            afterstate = self.__e_greedy__([(self.value_function.evaluate(afterstate[0].board), afterstate[0], afterstate[1]) for afterstate in afterstates])
+        else:
+            afterstate = max(afterstates)
         self.training_samples += [afterstate[1].board]  # Add afterstate board_sample
         return afterstate[2]
 
