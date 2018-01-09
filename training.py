@@ -59,12 +59,12 @@ if __name__ == "__main__":
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 100000
-        EVALUATION_PERIOD = 100000
+        TOTAL_GAMES = 10000
+        EVALUATION_PERIOD = 10000
 
         """ Execution """
         start = datetime.now()
-        print("Experiment name: %s" % (EXPERIMENT_NAME+strategy.__name__))
+        print("Experiment name: %s" % (EXPERIMENT_NAME+player1.player_name))
         print("Training %s VS %s" % (player1.player_name, player2.player_name))
-        train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD, EXPERIMENT_NAME+strategy.__name__)
+        train(player1, player2, TOTAL_GAMES, EVALUATION_PERIOD, EXPERIMENT_NAME+player1.player_name)
         print("Training completed, took %s\n" % (datetime.now() - start))

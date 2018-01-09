@@ -29,7 +29,7 @@ class GridWorldBoard:
 
         moves = []
 
-        for i in range(2):
+        for i in range(-1, 2):
             for j in range(-1, 2):
                 x = self.position[0] + i
                 y = self.position[1] + j
