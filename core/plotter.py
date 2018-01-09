@@ -65,17 +65,23 @@ class Plotter:
     @staticmethod
     def plot_two_lines(line1_name, line1_values, line2_name, line2_values, plot_name=".", path="/"):
         try:
-            if len(line1_values) == 0 or len(line2_values) == 0:
-                return
+            if len(line1_values) == 0:
+                if len(line2_values) == 0:
+                    return
+                else:
+                    line = pd.Series(line2_values, name=line2_name)
+                    df = pd.DataFrame([line])
+                    df = df.transpose()
+                    df.plot(title=plot_name, legend=True, figsize=(16, 9))
+            else:
+                line1 = pd.Series(line1_values, name=line1_name)
+                line2 = pd.Series(line2_values, name=line2_name)
+                line3_name = line2_name + " average (last 100)"
+                line3 = pd.Series([(sum(line2_values[(i-100) if i > 100 else 0 :i])/(100 if i > 100 else i)) for i in range(1, len(line2_values)+1)], name=line3_name)
+                df = pd.DataFrame([line1, line2, line3])
+                df = df.transpose()
+                df.plot(secondary_y=[line2_name, line3_name], title=plot_name, legend=True, figsize=(16, 9))
 
-            line1 = pd.Series(line1_values, name=line1_name)
-            line2 = pd.Series(line2_values, name=line2_name)
-            line3_name = line2_name + " average (last 100)"
-            line3 = pd.Series([(sum(line2_values[(i-100) if i > 100 else 0 :i])/(100 if i > 100 else i)) for i in range(1, len(line2_values)+1)], name=line3_name)
-
-            df = pd.DataFrame([line1, line2, line3])
-            df = df.transpose()
-            df.plot(secondary_y=[line2_name, line3_name], title=plot_name, legend=True, figsize=(16, 9))
             plt.title = plot_name
             plt.xlabel = "Episodes"
             plt.savefig("./plots" + path + "%s.png" % plot_name)
