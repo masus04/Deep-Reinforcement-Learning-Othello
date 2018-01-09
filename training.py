@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     # strategies = [vF.ValueFunction, vF.LargeValueFunction, vF.HugeValueFunction, vF.SimpleValueFunction, vF.DecoupledValueFunction, vF.LargeDecoupledValueFunction, vF.HugeDecoupledValueFunction]
 
-    strategies = [vF.SimpleValueFunction, vF.LargeValueFunction]
+    strategies = [vF.ValueFunction]
     for strategy in strategies:
         """ Parameters """
         player1 = TDPlayer(color=config.BLACK, strategy=strategy)
@@ -59,8 +59,8 @@ if __name__ == "__main__":
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 10000
-        EVALUATION_PERIOD = 10000
+        TOTAL_GAMES = 200000
+        EVALUATION_PERIOD = 200000
 
         """ Execution """
         start = datetime.now()
