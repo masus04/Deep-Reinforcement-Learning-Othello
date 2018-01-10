@@ -241,12 +241,9 @@ class TDPlayer(MCPlayer):
     def __generate_training_labels__(self, winner_color):
         for i in range(len(self.training_samples)-1):
             self.training_labels.append(self.__td_target__(self.training_samples[i], self.training_samples[i + 1]))
-        self.training_labels.append(self.__td_target__(self.training_samples[-1], next_state=None, last_label=config.get_result_label(winner_color, self.color)))
+        self.training_labels.append(config.get_result_label(winner_color, self.color))
 
-    def __td_target__(self, state, next_state, last_label=None):
+    def __td_target__(self, state, next_state):
         v_state = self.value_function.evaluate(state)
-        if last_label is not None:
-            v_next_state = last_label
-        else:
-            v_next_state = self.value_function.evaluate(next_state)
+        v_next_state = self.value_function.evaluate(next_state)
         return v_state + self.alpha * (v_next_state - v_state)
