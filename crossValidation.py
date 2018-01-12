@@ -34,7 +34,7 @@ def evaluation(lr, a):
 
     """ Training """
 
-    training.train(player1=player1, player2=player2, games=TRAINING_GAMES, evaluation_period=EVALUATION_PERIOD)
+    training.train_and_evaluate(player1=player1, player2=player2, games=TRAINING_GAMES, evaluation_period=EVALUATION_PERIOD)
 
     """ Evaluation """
 

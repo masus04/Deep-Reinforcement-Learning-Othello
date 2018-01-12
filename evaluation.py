@@ -38,6 +38,11 @@ def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
     return player.score
 
 
+def evaluate_all(players, evaluation_games, silent=True):
+    for player in players:
+        evaluate(player=player, games=evaluation_games, silent=silent)
+
+
 def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
     training_flags = player1.train, player2.train
 
@@ -45,6 +50,8 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
         player.train = False
 
     simulation = Othello(player1, player2)
+    if not silent:
+        print()
     results = simulation.run_simulations(games, silent=silent)
     player1.score = sum(results)
     player2.score = games*config.LABEL_WIN - player1.score
