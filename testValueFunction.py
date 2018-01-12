@@ -42,7 +42,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
         player.plotter.add_accuracy(evaluate_accuracy(test_samples, test_labels, player.value_function, test_time=True))
 
     print("Evaluation:")
-    player.plotter.plot_accuracy(comment="labelingStrategy: {} lr:{} ".format(labeling_strategy.__name__, learning_rate) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]), path="/" + EXPERIMENT_NAME)
+    player.plotter.plot_accuracy(experiment_name=EXPERIMENT_NAME, comment="labelingStrategy: {}".format(labeling_strategy.__name__) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]), path="/" + EXPERIMENT_NAME)
     player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr), path=EXPERIMENT_NAME)
     return player.plotter.accuracies.get_values()[-1], player
 

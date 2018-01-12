@@ -8,6 +8,8 @@ import training
 from evaluation import evaluate
 
 PLAYER = TDPlayer
+EXPERIMENT_NAME = "CROSS_VALIDATION"
+
 evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
 
 

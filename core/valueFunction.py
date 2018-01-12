@@ -275,6 +275,8 @@ class FCValueFunction(ValueFunction):
 
 class NoValueFunction:
 
+    learning_rate = 0
+
     def evaluate(self, board_sample):
         pass
 

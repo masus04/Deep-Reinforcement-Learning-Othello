@@ -21,8 +21,8 @@ def train(player1, player2, games, silent=False):
 
 
 def generate_and_save_artefacts(players, experiment_name):
-    players[0].plotter.clear_plots(experiment_name)
     for player in players:
+        player.plotter.clear_plots(experiment_name)
         player.plotter.plot_results(experiment_name)
         player.plotter.plot_scores(experiment_name)
         player.save(experiment_name)
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 100000
+        TOTAL_GAMES = 200000
         EVALUATION_PERIOD = TOTAL_GAMES//4
 
         """ Execution """
