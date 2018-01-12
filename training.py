@@ -15,7 +15,7 @@ def conditional_evaluation(players, evaluation_games):
     return
 
 
-def train(player1, player2, games, experiment_name=EXPERIMENT_NAME, silent=False):
+def train(player1, player2, games, silent=False):
     simulation = Othello(player1, player2)
     simulation.run_simulations(episodes=games, silent=silent)
 
