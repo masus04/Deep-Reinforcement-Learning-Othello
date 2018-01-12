@@ -249,9 +249,3 @@ class TDPlayer(MCPlayer):
         v_state = self.value_function.evaluate(state)
         v_next_state = self.value_function.evaluate(next_state)
         return v_state + self.alpha * (v_next_state - v_state)
-
-
-class GridWorldOpponent(Player):
-
-    def get_move(self, board):
-        return None

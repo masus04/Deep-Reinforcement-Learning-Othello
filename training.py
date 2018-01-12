@@ -8,8 +8,6 @@ import core.valueFunction as vF
 
 import evaluation
 
-from core.player import GridWorldOpponent
-
 EXPERIMENT_NAME = "|GridWorld|"
 
 
@@ -65,8 +63,8 @@ if __name__ == "__main__":
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 200000
-        EVALUATION_PERIOD = 200000
+        TOTAL_GAMES = 100000
+        EVALUATION_PERIOD = TOTAL_GAMES
 
         """ Execution """
         start = datetime.now()
