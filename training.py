@@ -8,7 +8,7 @@ import core.valueFunction as vF
 
 import evaluation
 
-EXPERIMENT_NAME = "|TDvsMC|"
+EXPERIMENT_NAME = "|Training|"
 
 
 def train(player1, player2, games, experiment_name=EXPERIMENT_NAME, silent=False):
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     for strategy in strategies:
         """ Parameters """
-        player1 = TDPlayer(color=config.BLACK, strategy=strategy)
+        player1 = TDPlayer(color=config.BLACK, strategy=strategy, lr=0.1)
         player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
 
         """ Continue training """
