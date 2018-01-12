@@ -60,10 +60,10 @@ if __name__ == "__main__":
         player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
 
         """ Continue training """
-        # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
+        player1 = config.load_player("TDPlayer_Black_ValueFunction|GridWorld|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 200000
+        TOTAL_GAMES = 100000
         EVALUATION_PERIOD = TOTAL_GAMES//4
 
         """ Execution """
