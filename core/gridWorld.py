@@ -59,3 +59,6 @@ class GridWorldBoard:
     def copy(self):
         return GridWorldBoard(np.copy(self.board))
 
+    def __lt__(self, other):
+        return randint(0,1) - 0.5
+

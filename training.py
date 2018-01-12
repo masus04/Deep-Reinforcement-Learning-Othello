@@ -59,8 +59,6 @@ if __name__ == "__main__":
     for strategy in strategies:
         """ Parameters """
         player1 = TDPlayer(color=config.BLACK, strategy=strategy)
-        player2 = GridWorldOpponent(color=config.WHITE, strategy=vF.NoValueFunction)
-        player1 = TDPlayer(color=config.BLACK, strategy=strategy, lr=0.1)
         player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
 
         """ Continue training """

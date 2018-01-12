@@ -12,6 +12,7 @@ from core.plotter import Plotter, NoPlotter
 
 from core.gridWorld import GridWorldBoard as Board
 
+
 class Player(object):
 
     def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
@@ -195,10 +196,7 @@ class DeepRLPlayer(Player):
 
     def __e_greedy__(self, lst):
         if random.random() > self.e:
-            try:
-                result = max(lst)
-            except Exception:
-                result = random.choice(lst)
+            result = max(lst)
         else:
             result = random.choice(lst)
 
