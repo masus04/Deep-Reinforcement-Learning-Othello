@@ -9,7 +9,7 @@ from core.plotter import Printer
 
 
 def train_continuous(player1, player2, games, experiment_name, iterations, start_time=datetime.now()):
-    """Trains a pair of players for @games games, evaluating them every @evaluation_period games and repeats the process with the stronger of the two players for @iterations iterations"""
+    """Trains a pair of players for @games, selects the stronger of both to continue and repeats the process for @iterations"""
     print("Experiment name: %s" % experiment_name)
 
     # Initial evaluation
@@ -44,7 +44,7 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
     for i in range(iterations):
         best.train = False
 
-        train(player1, best, games, experiment_name, silent=True)
+        train(player1, best, games, silent=True)
         evaluate_all([player1, best], 20)
         generate_and_save_artefacts([player1, best], experiment_name)
 
@@ -65,7 +65,7 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = TDPlayer(color=config.BLACK, strategy=HugeValueFunction, lr=0.1, alpha=0.3)
+    PLAYER = TDPlayer(color=config.BLACK, strategy=HugeValueFunction, lr=0.1, alpha=0.3, e=0.005)
     PLAYER2 = None
 
     # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
@@ -79,11 +79,10 @@ if __name__ == "__main__":
 
     ITERATIONS = 100
     GAMES_PER_ITERATION = 5000
-    EVALUATION_PERIOD = 5000
 
     """ Execution """
     start = datetime.now()
     # train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, experiment_name="|Continuous|training lr:%s a:%s|" % (PLAYER.value_function.learning_rate, PLAYER.alpha), iterations=ITERATIONS)
-    player1, best = train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, experiment_name="|Async training lr:%s a:%s|" % (PLAYER.value_function.learning_rate, PLAYER.alpha), iterations=ITERATIONS)
+    player1, best = train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, experiment_name="|Async training|", iterations=ITERATIONS)
 
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])

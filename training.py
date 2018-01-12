@@ -17,8 +17,8 @@ def train(player1, player2, games, experiment_name=EXPERIMENT_NAME, silent=False
 
 
 def generate_and_save_artefacts(players, experiment_name):
-    players[0].plotter.clear_plots(experiment_name)
     for player in players:
+        player.plotter.clear_plots(experiment_name)
         player.plotter.plot_results(experiment_name)
         player.plotter.plot_scores(experiment_name)
         player.save(experiment_name)
@@ -47,7 +47,7 @@ def train_and_evaluate(player1, player2, games, evaluation_period, experiment_na
 if __name__ == "__main__":
     """ This script is run in order to test if all available ValueFunctions can be trained as expected """
 
-    strategies = [vF.ValueFunction, vF.LargeValueFunction, vF.HugeValueFunction, vF.SimpleValueFunction, vF.DecoupledValueFunction, vF.LargeDecoupledValueFunction, vF.HugeDecoupledValueFunction]
+    strategies = [vF.ValueFunction]
 
     for strategy in strategies:
         """ Parameters """
@@ -58,8 +58,8 @@ if __name__ == "__main__":
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 200
-        EVALUATION_PERIOD = 100
+        TOTAL_GAMES = 200000
+        EVALUATION_PERIOD = TOTAL_GAMES//4
 
         """ Execution """
         start = datetime.now()

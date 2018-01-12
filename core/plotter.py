@@ -12,7 +12,7 @@ import pandas as pd
 class Plotter:
 
     def __init__(self, player, plotter=None):
-        self.plot_name = player.player_name
+        self.plot_name = "%s lr:%s a:%s e:%s" % (player.player_name, player.value_function.learning_rate, player.alpha, player.e)
         self.player = player
 
         self.num_episodes = plotter.num_episodes if plotter else 0
@@ -39,15 +39,15 @@ class Plotter:
     def add_evaluation_score(self, score):
         self.evaluation_scores.append(score)
 
-    def plot_accuracy(self, comment, path="/"):
-        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "Accuracies: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment), path=path)
+    def plot_accuracy(self, experiment_name="", comment="", path="/"):
+        self.plot_two_lines("losses", self.losses.get_values(), "accuracies", self.accuracies.get_values(), "ACCURACIES " + self.create_file_name(experiment_name, comment), path=path)
         plt.close("all")
 
-    def plot_results(self, comment="", path="/"):
-        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "Results: %s, %s Episodes %s" % (self.plot_name, self.num_episodes, comment), path=path)
+    def plot_results(self, experiment_name="", comment="", path="/"):
+        self.plot_two_lines("losses", self.losses.get_values(), "results", self.last10Results.get_values(), "RESULTS " + self.create_file_name(experiment_name, comment), path=path)
         plt.close("all")
 
-    def plot_scores(self, comment="", path="/"):
+    def plot_scores(self, experiment_name="", comment="", path="/"):
 
         scores = self.evaluation_scores.get_values()
 
@@ -58,13 +58,13 @@ class Plotter:
             spl = UnivariateSpline(old_indices, scores, k=1, s=0)
             scores = spl(new_indices)
 
-        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", scores, "Scores: %s, %s Episodes %s"% (self.plot_name, self.num_episodes, comment), path=path)
+        self.plot_two_lines("losses", self.losses.get_values(), "evaluation score", scores, "SCORES " + self.create_file_name(experiment_name, comment), path=path)
         plt.close("all")
 
     def copy(self):
         return Plotter(player=self.player, plotter=self)
 
-    def plot_two_lines(self, line1_name, line1_values, line2_name, line2_values, plot_name=".", path="/"):
+    def plot_two_lines(self, line1_name, line1_values, line2_name, line2_values, file_name=".", path="/"):
         try:
             if len(line1_values) == 0:
                 if len(line2_values) == 0:
@@ -83,9 +83,9 @@ class Plotter:
                 df = df.transpose()
                 df.plot(secondary_y=[line2_name, line3_name], legend=True, figsize=(16, 9))
 
-            plt.title(plot_name + "\nStrategy: %s | Lr: %s | alpha: %s | epsilon: %s " % (self.player.value_function.__class__.__name__, self.player.value_function.learning_rate, self.player.alpha, self.player.e))
+            plt.title(self.player.player_name + "\nStrategy: %s | Lr: %s | alpha: %s | epsilon: %s " % (self.player.value_function.__class__.__name__, self.player.value_function.learning_rate, self.player.alpha, self.player.e))
             plt.xlabel = "Episodes"
-            plt.savefig("./plots" + path + "%s.png" % plot_name)
+            plt.savefig("./plots" + path + "%s.png" % file_name)
         except Exception as e:
             import traceback, sys
             print("| %s |" % ("-" * 50))
@@ -93,17 +93,19 @@ class Plotter:
             traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2, file=sys.stdout)
             print("| %s |" % ("-" * 50))
 
-    @staticmethod
-    def clear_plots(pattern):
+    def clear_plots(self, pattern):
         """Clears all .png files that match a certain @pattern"""
         try:
             folder = "./plots"
-            for file in os.listdir(folder):
-                file = os.path.join(folder, file)
-                if os.path.isfile(file) and ".png" in file and pattern in file:
-                    os.unlink(file)
+            for file_name in os.listdir(folder):
+                file_name = os.path.join(folder, file_name)
+                if os.path.isfile(file_name) and ".png" in file_name and pattern in file_name and self.plot_name in file_name:
+                    os.unlink(file_name)
         except Exception as e:
             print(e)
+
+    def create_file_name(self, experiment_name, comment=""):
+        return "%s Episodes:%s %s %s" % (self.plot_name, self.num_episodes, experiment_name, comment)
 
 
 class DataResolutionManager:

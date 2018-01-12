@@ -5,6 +5,7 @@ from core.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer,
 from core.valueFunction import ValueFunction, SimpleValueFunction
 
 EVALUATION_GAMES = 100
+EXPERIMENT_NAME = "Evaluation"
 
 
 def evaluate(player, games=EVALUATION_GAMES, log_method=print, silent=False):
@@ -81,5 +82,5 @@ if __name__ == "__main__":
 
     for player in [td_black, td_white]:
         evaluate(player, games=100)
-        player.plotter.plot_results()
-        player.plotter.plot_scores()
+        player.plotter.plot_results(EXPERIMENT_NAME)
+        player.plotter.plot_scores(EXPERIMENT_NAME)

@@ -7,15 +7,8 @@ from core.valueFunction import ValueFunction, SimpleValueFunction, FCValueFuncti
 import training
 from evaluation import evaluate
 
-start_time = datetime.now()
-
-learning_rates = [float("1e-%d" %i) for i in range(3, 4)]
-alphas =         [float("1e-%d" %i) for i in range(1, 7)]
-
-TRAINING_GAMES = 30000
-EVALUATION_PERIOD = 300  # How often the performance is evaluated
-EVALUATION_GAMES = 20   # Number of final evaluation games
 PLAYER = TDPlayer
+EXPERIMENT_NAME = "CROSS_VALIDATION"
 
 evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
 
@@ -25,7 +18,7 @@ def log_message(message):
     evaluation_file.write(message + "\n")
 
 
-def evaluation(lr, a):
+def evaluation(games, evaluation_period, evaluation_games, lr, a):
     log_message("\nEvaluating LR:%s a:%s" % (lr, a))
 
     player1 = PLAYER(color=config.BLACK, strategy=ValueFunction, lr=lr, alpha=a)
@@ -34,27 +27,37 @@ def evaluation(lr, a):
 
     """ Training """
 
-    training.train_and_evaluate(player1=player1, player2=player2, games=TRAINING_GAMES, evaluation_period=EVALUATION_PERIOD)
+    training.train_and_evaluate(player1=player1, player2=player2, games=games, evaluation_period=evaluation_period)
 
     """ Evaluation """
 
     for player in players:
         player.train = False
         player.score = 0
-        player.plotter.evaluation_scores = player.plotter.evaluation_scores[:-1]  # Replace last evaluation with a more accurate one
-        evaluate(player=player, games=EVALUATION_GAMES, log_method=log_message, silent=False)
-        player.plotter.plot_results(comment=" lr:%s, a:%s" % (lr, a))
-        player.plotter.plot_scores(comment=" lr:%s, a:%s" % (lr, a))
+        player.plotter.evaluation_scores = player.plotter.evaluation_scores.get_values()[:-1]  # Replace last evaluation with a more accurate one
+        evaluate(player=player, games=evaluation_games, log_method=log_message, silent=False)
+        player.plotter.plot_results(experiment_name=EXPERIMENT_NAME)
+        # player.plotter.plot_scores(comment=" e:%s, a:%s" % (e, a))
 
     log_message("|--- LR:%s Alpha: %s Score: %s Simulation time: %s ---|" % (lr, a, (player1.score+player2.score)/2, str(datetime.now() - start_time).split(".")[0]))
 
     return (player1.score + player2.score)/2
 
 
-results = [(evaluation(lr, a), lr, a) for lr in learning_rates for a in alphas]
-log_message("\n")
-for r in sorted(results):
-    log_message("score:%s lr:%s a:%s" % r)
+if __name__ == "__main__":
+    learning_rates = [float("1e-%d" %i) for i in range(3, 4)]
+    alphas = [float("1e-%d" %i) for i in range(1, 7)]
 
-print("CrossValidation timer: %s" % str(datetime.now() - start_time).split(".")[0])
-evaluation_file.close()
+    TRAINING_GAMES = 30000
+    EVALUATION_PERIOD = 300  # How often the performance is evaluated
+    EVALUATION_GAMES = 20   # Number of final evaluation games
+
+    start_time = datetime.now()
+
+    results = [(evaluation(TRAINING_GAMES, EVALUATION_PERIOD, EVALUATION_GAMES, lr, a), lr, a) for lr in learning_rates for a in alphas]
+    log_message("\n")
+    for r in sorted(results):
+        log_message("score:%s lr:%s a:%s" % r)
+
+    print("CrossValidation timer: %s" % str(datetime.now() - start_time).split(".")[0])
+    evaluation_file.close()
