@@ -167,7 +167,7 @@ class DeepRLPlayer(Player):
         super(DeepRLPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
         self.e = e
         self.alpha = alpha
-        self.plotter = Plotter(self.player_name)
+        self.plotter = Plotter(self)
         self.value_function = strategy(learning_rate=lr)
         self.training_samples = []
         self.training_labels = []
