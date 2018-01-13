@@ -27,20 +27,21 @@ def evaluation(games, evaluation_period, evaluation_games, lr, e, a):
 
     """ Training """
 
-    training.train_and_evaluate(player1=player1, player2=player2, evaluation_period=evaluation_period, games=games)
+    training.train(player1=player1, player2=player2, games=games)
 
     """ Evaluation """
 
     player1.train = False
-    player1.score = 0
-    player1.plotter.evaluation_scores = player1.plotter.evaluation_scores.get_values()[:-1]  # Replace last evaluation with a more accurate one
-    evaluate(player=player1, games=evaluation_games, log_method=log_message, silent=True)
+    last_10 = player1.plotter.last10Results.get_values()
+    player1.score = sum(last_10)/len(last_10)
+    # player1.plotter.evaluation_scores = player1.plotter.evaluation_scores.get_values()[:-1]  # Replace last evaluation with a more accurate one
+    # evaluate(player=player1, games=evaluation_games, log_method=log_message, silent=True)
     player1.plotter.plot_results(comment=" e:%s, a:%s" % (e, a))
     # player1.plotter.plot_scores(comment=" e:%s, a:%s" % (e, a))
 
     log_message("|--- LR:%s Alpha:%s Epsilon:%s Score:%s Simulation time: %s ---|\n" % (lr, a, e, player1.score, str(datetime.now() - start_time).split(".")[0]))
 
-    return (player1.score + player2.score)/2
+    return player1.score
 
 
 if __name__ == "__main__":

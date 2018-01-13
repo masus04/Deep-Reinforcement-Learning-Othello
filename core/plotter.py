@@ -34,7 +34,7 @@ class Plotter:
     def add_result(self, result):
         self.num_episodes += 1
         self.results.append(result)
-        self.last10Results.append(sum(self.results.get_values()[-20:])/(20 if len(self.results.get_values())>20 else len(self.results.get_values())))
+        self.last10Results.append(sum(self.results.get_values()[-20:])/(20 if len(self.results.get_values()) > 20 else len(self.results.get_values())))
 
     def add_evaluation_score(self, score):
         self.evaluation_scores.append(score)
