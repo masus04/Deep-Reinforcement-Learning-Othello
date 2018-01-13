@@ -19,7 +19,7 @@ def log_message(message):
 
 
 def evaluation(games, evaluation_period, evaluation_games, lr, e, a):
-    log_message("Evaluating epsilon:%s alpha:%s" % (e, a))
+    log_message("Evaluating lr:%s alpha:%s epsilon:%s " % (lr, a, e))
 
     player1 = PLAYER(color=config.BLACK, strategy=ValueFunction, lr=lr, e=e, alpha=a)
     player2 = PLAYER(color=config.WHITE, strategy=ValueFunction, lr=lr, e=e, alpha=a)
@@ -31,15 +31,14 @@ def evaluation(games, evaluation_period, evaluation_games, lr, e, a):
 
     """ Evaluation """
 
-    for player in players:
-        player.train = False
-        player.score = 0
-        player.plotter.evaluation_scores = player.plotter.evaluation_scores.get_values()[:-1]  # Replace last evaluation with a more accurate one
-        evaluate(player=player, games=evaluation_games, log_method=log_message, silent=False)
-        player.plotter.plot_results(comment=" e:%s, a:%s" % (e, a))
-        # player.plotter.plot_scores(comment=" e:%s, a:%s" % (e, a))
+    player1.train = False
+    player1.score = 0
+    player1.plotter.evaluation_scores = player1.plotter.evaluation_scores.get_values()[:-1]  # Replace last evaluation with a more accurate one
+    evaluate(player=player1, games=evaluation_games, log_method=log_message, silent=True)
+    player1.plotter.plot_results(comment=" e:%s, a:%s" % (e, a))
+    # player1.plotter.plot_scores(comment=" e:%s, a:%s" % (e, a))
 
-    log_message("|--- Epsilon:%s Alpha: %s Score: %s Simulation time: %s ---|\n" % (e, a, (player1.score+player2.score)/2, str(datetime.now() - start_time).split(".")[0]))
+    log_message("|--- LR:%s Alpha:%s Epsilon:%s Score:%s Simulation time: %s ---|\n" % (lr, a, e, player1.score, str(datetime.now() - start_time).split(".")[0]))
 
     return (player1.score + player2.score)/2
 
