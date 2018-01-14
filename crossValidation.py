@@ -8,7 +8,7 @@ import training
 from evaluation import evaluate
 
 PLAYER = TDPlayer
-EXPERIMENT_NAME = "CROSS_VALIDATION"
+EXPERIMENT_NAME = "|CROSS_VALIDATION|"
 
 evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
 
@@ -18,7 +18,7 @@ def log_message(message):
     evaluation_file.write(message + "\n")
 
 
-def evaluation(games, evaluation_period, evaluation_games, lr, e, a):
+def evaluation(games, evaluation_games, lr, e, a, experiment_name):
     log_message("Evaluating lr:%s alpha:%s epsilon:%s " % (lr, a, e))
 
     player1 = PLAYER(color=config.BLACK, strategy=ValueFunction, lr=lr, e=e, alpha=a)
@@ -36,7 +36,7 @@ def evaluation(games, evaluation_period, evaluation_games, lr, e, a):
     player1.score = sum(last_10)/len(last_10)
     # player1.plotter.evaluation_scores = player1.plotter.evaluation_scores.get_values()[:-1]  # Replace last evaluation with a more accurate one
     # evaluate(player=player1, games=evaluation_games, log_method=log_message, silent=True)
-    player1.plotter.plot_results(comment=" e:%s, a:%s" % (e, a))
+    player1.plotter.plot_results(experiment_name=experiment_name)
     # player1.plotter.plot_scores(comment=" e:%s, a:%s" % (e, a))
 
     log_message("|--- LR:%s Alpha:%s Epsilon:%s Score:%s Simulation time: %s ---|\n" % (lr, a, e, player1.score, str(datetime.now() - start_time).split(".")[0]))
@@ -52,11 +52,10 @@ if __name__ == "__main__":
     epsilons = [0.001, 0.0003, 0.0001, 0.00003, 0.00001]
     alphas = [0.03, 0.01, 0.003, 0.001]
 
-    TRAINING_GAMES = 200000     # Total training games per configuration
-    EVALUATION_PERIOD = 1000    # How often the performance is evaluated
-    EVALUATION_GAMES = 80       # Number of final evaluation games
+    TRAINING_GAMES = 10     # Total training games per configuration
+    EVALUATION_GAMES = 10      # Number of final evaluation games
 
-    results = [(evaluation(TRAINING_GAMES, EVALUATION_PERIOD, EVALUATION_GAMES, lr, e, a), lr, e, a) for e in epsilons for a in alphas]
+    results = [(evaluation(TRAINING_GAMES, EVALUATION_GAMES, lr, e, a, EXPERIMENT_NAME), lr, e, a) for e in epsilons for a in alphas]
     for r in sorted(results, reverse=True):
         log_message("score:%s lr:%s e:%s a:%s" % r)
 
