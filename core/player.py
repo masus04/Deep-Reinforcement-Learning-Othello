@@ -38,9 +38,9 @@ class Player(object):
     def save(self, comment=""):
         pass
 
-    def set_name(self, name):
-        self.player_name = name
-        self.plotter.plot_name = self.player_name
+    def add_to_name(self, suffix):
+        self.player_name += suffix
+        self.plotter.add_to_player_name(suffix)
 
     @classmethod
     def load_player(cls, color):

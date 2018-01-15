@@ -34,7 +34,7 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
 
     if not best:
         best = player1.copy_with_inversed_color()
-        best.set_name(best.player_name + "_BEST")
+        best.add_to_name("-BEST-")
         best.replaced = []
 
     # Initial evaluation
@@ -45,10 +45,10 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
         best.train = False
 
         train(player1, best, games, silent=True)
-        evaluate_all([player1, best], 20)
+        evaluate_all([player1, best], 16)
         generate_and_save_artefacts([player1, best], experiment_name)
 
-        if compare_players(player1, best, games=80, silent=(i != iterations-1)) >= 0:
+        if compare_players(player1, best, games=40, silent=(i != iterations-1)) >= 0:
             best.value_function = player1.value_function.copy()
             best.plotter = player1.plotter.copy()
             best.opponents = player1.opponents.copy()
