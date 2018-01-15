@@ -18,8 +18,8 @@ class Player(object):
         self.player_name = "%s_%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color), strategy.__name__ if strategy else "")
         self.time_limit = time_limit
         self.gui = gui
-        self.plotter = NoPlotter()
         self.value_function = NoValueFunction()
+        self.plotter = NoPlotter()
         self.train = True
         self.opponents = {}
 
@@ -36,9 +36,9 @@ class Player(object):
     def save(self, comment=""):
         pass
 
-    def set_name(self, name):
-        self.player_name = name
-        self.plotter.plot_name = self.player_name
+    def add_to_name(self, suffix):
+        self.player_name += suffix
+        self.plotter.add_to_player_name(suffix)
 
     @classmethod
     def load_player(cls, color):
@@ -166,8 +166,8 @@ class DeepRLPlayer(Player):
         super(DeepRLPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
         self.e = e
         self.alpha = alpha
-        self.plotter = Plotter(self)
         self.value_function = strategy(learning_rate=lr)
+        self.plotter = Plotter(self)
         self.training_samples = []
         self.training_labels = []
 

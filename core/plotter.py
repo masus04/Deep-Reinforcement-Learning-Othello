@@ -12,8 +12,9 @@ import pandas as pd
 class Plotter:
 
     def __init__(self, player, plotter=None):
-        self.plot_name = "%s lr:%s a:%s e:%s" % (player.player_name, player.value_function.learning_rate, player.alpha, player.e)
         self.player = player
+        self.lr, self.alpha, self.e = (plotter.lr, plotter.alpha, plotter.e) if plotter else (player.value_function.learning_rate, player.alpha, player.e)
+        self.plot_name = "%s lr:%s a:%s e:%s" % (player.player_name, self.lr, self.alpha, self.e)
 
         self.num_episodes = plotter.num_episodes if plotter else 0
         self.history_size = 1000
@@ -23,6 +24,9 @@ class Plotter:
         self.results = DataResolutionManager(plotter.results if plotter else [], storage_size=self.history_size)
         self.evaluation_scores = DataResolutionManager(plotter.evaluation_scores if plotter else [], storage_size=self.history_size)
         self.last10Results = DataResolutionManager(plotter.last10Results if plotter else [], storage_size=self.history_size)
+
+    def add_to_player_name(self, suffix):
+        self.plot_name = self.plot_name.replace(self.player.player_name, self.player.player_name+suffix, 1)
 
     def add_loss(self, loss):
         self.losses.append(abs(loss))
@@ -83,7 +87,7 @@ class Plotter:
                 df = df.transpose()
                 df.plot(secondary_y=[line2_name, line3_name], legend=True, figsize=(16, 9))
 
-            plt.title(self.player.player_name + "\nStrategy: %s | Lr: %s | alpha: %s | epsilon: %s " % (self.player.value_function.__class__.__name__, self.player.value_function.learning_rate, self.player.alpha, self.player.e))
+            plt.title(self.player.player_name + "%s Episodes\nStrategy: %s | Lr: %s | alpha: %s | epsilon: %s " % (self.num_episodes, self.player.value_function.__class__.__name__, self.lr, self.alpha, self.e))
             plt.xlabel = "Episodes"
             plt.savefig("./plots" + path + "%s.png" % file_name)
         except Exception as e:
@@ -93,13 +97,13 @@ class Plotter:
             traceback.print_exception(exc_type, exc_value, exc_traceback, limit=2, file=sys.stdout)
             print("| %s |" % ("-" * 50))
 
-    def clear_plots(self, pattern):
+    def clear_plots(self, experiment_name, comment=""):
         """Clears all .png files that match a certain @pattern"""
         try:
             folder = "./plots"
             for file_name in os.listdir(folder):
                 file_name = os.path.join(folder, file_name)
-                if os.path.isfile(file_name) and ".png" in file_name and pattern in file_name and self.plot_name in file_name:
+                if os.path.isfile(file_name) and ".png" in file_name and self.plot_name in file_name and experiment_name in file_name and comment in file_name:
                     os.unlink(file_name)
         except Exception as e:
             print(e)
