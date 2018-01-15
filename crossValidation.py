@@ -52,8 +52,8 @@ if __name__ == "__main__":
     epsilons = [0.001, 0.0003, 0.0001, 0.00003, 0.00001]
     alphas = [0.03, 0.01, 0.003, 0.001]
 
-    TRAINING_GAMES = 10     # Total training games per configuration
-    EVALUATION_GAMES = 10      # Number of final evaluation games
+    TRAINING_GAMES = 200000     # Total training games per configuration
+    EVALUATION_GAMES = 100      # Number of final evaluation games
 
     results = [(evaluation(TRAINING_GAMES, EVALUATION_GAMES, lr, e, a, EXPERIMENT_NAME), lr, e, a) for e in epsilons for a in alphas]
     for r in sorted(results, reverse=True):
