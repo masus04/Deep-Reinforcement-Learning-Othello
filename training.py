@@ -57,14 +57,14 @@ if __name__ == "__main__":
     strategies = [vF.ValueFunction]
     for strategy in strategies:
         """ Parameters """
-        player1 = TDPlayer(color=config.BLACK, strategy=strategy)
+        player1 = TDPlayer(color=config.BLACK, strategy=strategy, lr=0.1, alpha=0.003, e=0.001)
         player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
 
         """ Continue training """
-        player1 = config.load_player("TDPlayer_Black_ValueFunction|GridWorld|")
+        # player1 = config.load_player("TDPlayer_Black_ValueFunction|GridWorld|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 100000
+        TOTAL_GAMES = 200000
         EVALUATION_PERIOD = TOTAL_GAMES//4
 
         """ Execution """

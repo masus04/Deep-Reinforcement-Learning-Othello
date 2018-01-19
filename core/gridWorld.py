@@ -6,7 +6,7 @@ import core.config as config
 
 class GridWorldBoard:
 
-    def __init__(self, board=None, obstacles=15):
+    def __init__(self, board=None, obstacles=30):
         if board is not None:
             self.board = board
         else:
