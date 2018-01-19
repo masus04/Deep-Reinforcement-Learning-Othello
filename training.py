@@ -22,6 +22,7 @@ def generate_and_save_artefacts(players, experiment_name):
         player.plotter.plot_results(experiment_name)
         player.plotter.plot_scores(experiment_name)
         player.save(experiment_name)
+        # player.save("%s lr:%s" % (experiment_name, player.value_function.learning_rate))
 
 
 def train_and_evaluate(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME, silent=False):
