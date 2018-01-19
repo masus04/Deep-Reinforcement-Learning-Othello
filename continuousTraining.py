@@ -65,7 +65,7 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = TDPlayer(color=config.BLACK, strategy=HugeValueFunction, lr=0.1, alpha=0.3, e=0.005)
+    PLAYER = TDPlayer(color=config.BLACK, strategy=HugeValueFunction, lr=0.1, alpha=0.003, e=0.001)
     PLAYER2 = None
 
     # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
