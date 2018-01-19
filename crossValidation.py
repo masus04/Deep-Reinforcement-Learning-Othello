@@ -1,16 +1,15 @@
 from datetime import datetime
+from random import  randint
 
 import core.config as config
-from core.othello import Othello
 from core.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
 from core.valueFunction import ValueFunction, SimpleValueFunction, FCValueFunction
 import training
-from evaluation import evaluate
 
 PLAYER = TDPlayer
 EXPERIMENT_NAME = "|CROSS_VALIDATION|"
 
-evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__, "w+")
+evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__ + randint(0, 1000), "w+")
 
 
 def log_message(message):
@@ -49,13 +48,13 @@ if __name__ == "__main__":
     start_time = datetime.now()
 
     lr = 0.1
-    epsilons = [0.001, 0.0003, 0.0001, 0.00003, 0.00001]
     alphas = [0.03, 0.01, 0.003, 0.001]
+    epsilons = [0.001, 0.0003, 0.0001, 0.00003, 0.00001]
 
     TRAINING_GAMES = 200000     # Total training games per configuration
     EVALUATION_GAMES = 100      # Number of final evaluation games
 
-    results = [(evaluation(TRAINING_GAMES, EVALUATION_GAMES, lr, e, a, EXPERIMENT_NAME), lr, e, a) for e in epsilons for a in alphas]
+    results = [(evaluation(TRAINING_GAMES, EVALUATION_GAMES, lr, e, a, EXPERIMENT_NAME), lr, e, a) for a in alphas for e in epsilons]
     for r in sorted(results, reverse=True):
         log_message("score:%s lr:%s e:%s a:%s" % r)
 
