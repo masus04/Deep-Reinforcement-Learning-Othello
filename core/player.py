@@ -172,6 +172,7 @@ class DeepRLPlayer(Player):
         self.plotter = Plotter(self)
         self.training_samples = []
         self.training_labels = []
+        self.num_moves = 0
 
     def copy_with_inversed_color(self):
         player = self.__class__(color=config.other_color(self.color), strategy=self.value_function.__class__)
@@ -181,6 +182,7 @@ class DeepRLPlayer(Player):
         return player
 
     def get_move(self, board):
+        self.num_moves += 1
         return self.__behaviour_policy__(board)
 
     def register_winner(self, winner_color):
@@ -190,6 +192,7 @@ class DeepRLPlayer(Player):
             self.alpha *= config.ALPHA_REDUCE
         self.training_samples = []
         self.training_labels = []
+        self.num_moves = 0
 
     def __behaviour_policy__(self, board):
         raise NotImplementedError("function behaviour_policy must be implemented by subclass")
@@ -229,7 +232,7 @@ class MCPlayer(DeepRLPlayer):
         return afterstate[2]
 
     def __generate_training_labels__(self, winner_color):
-        self.training_labels = [config.get_result_label(winner_color, self.color) for sample in self.training_samples]
+        self.training_labels = [config.get_result_label(winner_color, self.color) - (0.01 * self.num_mooves) for sample in self.training_samples]
 
 
 class TDPlayer(MCPlayer):
@@ -237,7 +240,7 @@ class TDPlayer(MCPlayer):
     def __generate_training_labels__(self, winner_color):
         for i in range(len(self.training_samples)-1):
             self.training_labels.append(self.__td_target__(self.training_samples[i], self.training_samples[i + 1]))
-        self.training_labels.append(config.get_result_label(winner_color, self.color))
+        self.training_labels.append(config.get_result_label(winner_color, self.color) - (0.01 * self.num_mooves))
 
     def __td_target__(self, state, next_state):
         v_state = self.value_function.evaluate(state)
