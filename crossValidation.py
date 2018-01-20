@@ -51,7 +51,7 @@ if __name__ == "__main__":
     alphas = [0.03, 0.01, 0.003, 0.001]
     epsilons = [0.001, 0.0003, 0.0001, 0.00003, 0.00001]
 
-    TRAINING_GAMES = 200000     # Total training games per configuration
+    TRAINING_GAMES = 500000     # Total training games per configuration
     EVALUATION_GAMES = 100      # Number of final evaluation games
 
     results = [(evaluation(TRAINING_GAMES, EVALUATION_GAMES, lr, e, a, EXPERIMENT_NAME), lr, e, a) for a in alphas for e in epsilons]
