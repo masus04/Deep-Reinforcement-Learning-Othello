@@ -48,7 +48,7 @@ def train_and_evaluate(player1, player2, games, evaluation_period, experiment_na
 if __name__ == "__main__":
     """ This script is run in order to test if all available ValueFunctions can be trained as expected """
 
-    strategies = [vF.ValueFunction]
+    strategies = [vF.LargeValueFunction]
 
     for strategy in strategies:
         """ Parameters """
