@@ -3,6 +3,7 @@ from copy import deepcopy
 
 import torch
 import torch.nn.functional as F
+from torch.distributions import Categorical
 from torch.autograd import Variable
 
 import core.config as config
@@ -13,10 +14,11 @@ import core.config as config
 
 class Model(torch.nn.Module):
 
-    def __init__(self, decoupled=False):
+    def __init__(self, decoupled=False, policy_gradient=False):
         super(Model, self).__init__()
 
         self.input_channels = 3 if decoupled else 1
+        self.policy_gradient = policy_gradient
 
         self.conv_channels = 8
         self.conv_to_linear_params_size = self.conv_channels*8*8
@@ -28,7 +30,10 @@ class Model(torch.nn.Module):
         self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=1)
+
+        self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -38,8 +43,13 @@ class Model(torch.nn.Module):
         x = F.relu(self.conv5(x))
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
-        x = x.view(-1, self.conv_to_linear_params_size)
-        return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
+
+        if self.policy_gradient:
+            return self.final_conv(x)
+
+        else:
+            x = x.view(-1, self.conv_to_linear_params_size)
+            return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
 
 
 class LargeModel(torch.nn.Module):
@@ -58,8 +68,11 @@ class LargeModel(torch.nn.Module):
         self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
         self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=1)
+
+        self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -69,9 +82,14 @@ class LargeModel(torch.nn.Module):
         x = F.relu(self.conv5(x))
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
-        x = x.view(-1, self.conv_to_linear_params_size)
-        x = F.relu((self.fc1(x)))
-        return F.sigmoid(self.fc2(x)) + config.LABEL_LOSS
+
+        if self.policy_gradient:
+            return self.final_conv(x)
+
+        else:
+            x = x.view(-1, self.conv_to_linear_params_size)
+            x = F.relu((self.fc1(x)))
+            return F.sigmoid(self.fc2(x)) + config.LABEL_LOSS
 
 
 class HugeModel(torch.nn.Module):
@@ -90,10 +108,13 @@ class HugeModel(torch.nn.Module):
         self.conv5 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv6 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
+
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
         self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=self.conv_to_linear_params_size//4)
         self.fc3 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//4, out_features=self.conv_to_linear_params_size//8)
         self.fc4 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//8, out_features=1)
+
+        self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -103,11 +124,16 @@ class HugeModel(torch.nn.Module):
         x = F.relu(self.conv5(x))
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
-        x = x.view(-1, self.conv_to_linear_params_size)
-        x = F.relu((self.fc1(x)))
-        x = F.relu((self.fc2(x)))
-        x = F.relu((self.fc3(x)))
-        return F.sigmoid(self.fc4(x)) + config.LABEL_LOSS
+
+        if self.policy_gradient:
+            return self.final_conv(x)
+
+        else:
+            x = x.view(-1, self.conv_to_linear_params_size)
+            x = F.relu((self.fc1(x)))
+            x = F.relu((self.fc2(x)))
+            x = F.relu((self.fc3(x)))
+            return F.sigmoid(self.fc4(x)) + config.LABEL_LOSS
 
 
 class SimpleModel(torch.nn.Module):
@@ -237,6 +263,31 @@ class LargeDecoupledValueFunction(DecoupledValueFunction):
 class HugeDecoupledValueFunction(DecoupledValueFunction):
     def __init__(self, learning_rate=config.LEARNING_RATE, model=HugeModel(decoupled=True)):
         super(HugeDecoupledValueFunction, self).__init__(learning_rate=learning_rate, model=model)
+
+
+""" | ---------- Policy Gradient VFs ---------- | """
+
+
+class PGValueFunction(ValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=Model(policy_gradient=True)):
+        super(PGValueFunction, self).__init__(learning_rate=learning_rate, model=model)
+
+    def evaluate(self, board_sample):
+        tensor = self.data_reshape(board_sample)
+        probs = self.model(tensor)
+        distribution = Categorical
+
+
+    def data_reshape(self, board_sample):
+        return [board_sample]
+
+    def update(self, training_samples, training_labels):
+        pass
+
+
+class PGLargeValueFunction(PGValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=LargeModel(policy_gradient=True)):
+        super(PGValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
 
 """ | ---------- Special cases ---------- | """

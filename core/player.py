@@ -6,7 +6,7 @@ import core.config as config
 from core.game_ai import GameArtificialIntelligence
 from core.heuristic import OthelloHeuristic
 from core.gui import NoGui
-from core.valueFunction import ValueFunction, NoValueFunction
+from core.valueFunction import ValueFunction, NoValueFunction, PGValueFunction
 from core.board import Board
 from core.plotter import Plotter, NoPlotter
 
@@ -247,3 +247,15 @@ class TDPlayer(MCPlayer):
         v_state = self.value_function.evaluate(state)
         v_next_state = self.value_function.evaluate(next_state)
         return v_state + self.alpha * (v_next_state - v_state)
+
+
+class ReinforcePlayer(DeepRLPlayer):
+
+    def __init__(self, color, strategy=PGValueFunction, lr=config.LEARNING_RATE, alpha=config.ALPHA, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
+        super(ReinforcePlayer, self).__init__(color, strategy, lr, alpha, e, time_limit, gui);
+
+    def __behaviour_policy__(self, board):
+        return self.value_function.evaluate()
+
+    def __generate_training_labels__(self, winner_color):
+        pass
