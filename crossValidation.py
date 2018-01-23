@@ -9,7 +9,7 @@ import training
 PLAYER = TDPlayer
 EXPERIMENT_NAME = "|CROSS_VALIDATION|"
 
-evaluation_file = open("./plots/crossEvaluation_%s.txt" % PLAYER.__name__ + randint(0, 1000), "w+")
+evaluation_file = open("./plots/crossEvaluation_%s-%s.txt" % (PLAYER.__name__, randint(0, 1000)), "w+")
 
 
 def log_message(message):
