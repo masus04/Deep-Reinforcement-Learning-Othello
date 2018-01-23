@@ -159,11 +159,11 @@ class ValueFunction:
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
 
-    def data_reshaping(self, board_sample):
+    def data_reshape(self, board_sample):
         return [board_sample]
 
     def evaluate(self, board_sample):
-        tensor = torch.FloatTensor([self.data_reshaping(board_sample)])
+        tensor = torch.FloatTensor([self.data_reshape(board_sample)])
 
         if config.CUDA:
             tensor = tensor.cuda(0)
@@ -171,7 +171,7 @@ class ValueFunction:
         return self.model(Variable(tensor)).data[0][0]
 
     def update(self, training_samples, training_labels):
-        training_samples = [self.data_reshaping(sample) for sample in training_samples]
+        training_samples = [self.data_reshape(sample) for sample in training_samples]
         minibatches_s = self.__generate_minibatches__(training_samples)
         minibatches_l = self.__generate_minibatches__(training_labels)
 
@@ -196,8 +196,7 @@ class ValueFunction:
         return [Variable(torch.FloatTensor(lst[i:i+config.MINIBATCH_SIZE])) for i in range(0, len(lst), config.MINIBATCH_SIZE)]
 
     def copy(self):
-        value_function = self.__class__(learning_rate=self.learning_rate)
-        value_function.model = deepcopy(self.model)
+        value_function = self.__class__(learning_rate=self.learning_rate, model=deepcopy(self.model))
         value_function.optimizer = deepcopy(self.optimizer)
         return value_function
 
@@ -217,11 +216,14 @@ class SimpleValueFunction(ValueFunction):
         super(SimpleValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
 
+""" | ---------- Decoupled Value Functions ---------- | """
+
+
 class DecoupledValueFunction(ValueFunction):
     def __init__(self, learning_rate=config.LEARNING_RATE, model=Model(decoupled=True)):
         super(DecoupledValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
-    def data_reshaping(self, board_sample):
+    def data_reshape(self, board_sample):
         black_board = board_sample == config.BLACK
         white_board = board_sample == config.WHITE
         empty_board = board_sample == config.EMPTY

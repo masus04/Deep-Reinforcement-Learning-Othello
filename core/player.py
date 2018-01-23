@@ -213,12 +213,6 @@ class DeepRLPlayer(Player):
         map_location = None if config.CUDA else lambda storage, loc: storage
         return torch.load("./Players/%s.pth" % player_name, map_location=map_location)
 
-    def save_params(self):
-        """  DEPRECATED """
-        if not os.path.exists("./Weights"):
-            os.makedirs("./Weights")
-        torch.save(self.value_function, "./Weights/%s.pth" % self.player_name)
-
 
 class MCPlayer(DeepRLPlayer):
 

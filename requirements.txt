@@ -1,7 +1,6 @@
-pandas==0.20.3
+numpy==1.13.1
 matplotlib==2.0.2
 pygame==1.9.3
-bunch==1.0.1
-numpy==1.13.1
-torch==0.2.0.post3
+torch==0.3.0.post4
 scipy==1.0.0
+pandas==0.20.3
