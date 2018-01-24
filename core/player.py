@@ -253,6 +253,6 @@ class ReinforcePlayer(MCPlayer):
             raise Exception("Reinforce Player accepts only the following strategies: %s" % ACCEPTED_STRATEGIES)
 
     def __behaviour_policy__(self, board):
-        move = self.value_function.evaluate(board.get_representation(self.color), board.get_valid_moves(self.color))
+        move = self.value_function.evaluate(board.get_representation(self.color), board.get_legal_moves_map(self.color))
         self.training_samples.append(board.copy().apply_move(move, self.color).get_representation(self.color))
         return move

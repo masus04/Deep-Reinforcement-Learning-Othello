@@ -318,6 +318,14 @@ class Board:
 
         return np.array(representation, dtype=np.float64)
 
+    def get_legal_moves_map(self, color):
+
+        legal_moves_map = np.zeros([8, 8])
+        for move in self.get_valid_moves(color):
+            legal_moves_map[move[0]][move[1]] = 1
+
+        return legal_moves_map
+
     def copy(self):
         return Board(np.copy(self.board))
 
