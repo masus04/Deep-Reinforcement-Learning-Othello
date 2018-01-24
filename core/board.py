@@ -1,4 +1,4 @@
-from core.config import EMPTY, BLACK, WHITE
+from core.config import EMPTY, BLACK, WHITE, other_color
 import numpy as np
 from ctypes import *
 import random
@@ -7,6 +7,7 @@ import random
 class Board:
 
     LIBFUNCTIONS = cdll.LoadLibrary("./core/libfunctions.so")
+    BOARD_SIZE = 8
 
     def __init__(self, board = None):
         if board is not None:
@@ -24,6 +25,26 @@ class Board:
         self.valid_moves = []
         self.now_playing = BLACK
 
+    """
+    def get_valid_moves(self, color):
+        v = Board.LIBFUNCTIONS.get_valid_moves(c_void_p(self.board.ctypes.data), color)
+        c_int_p_p = POINTER(POINTER(c_int))
+        # print(v, c_int_p_p)
+        moves = cast(v, c_int_p_p)
+        valid_moves = [None] * moves[0][0]
+        for i in range(moves[0][0]):
+            valid_moves[i] = (moves[i + 1][0], moves[i + 1][1])
+        self.valid_moves = valid_moves
+        Board.LIBFUNCTIONS.free_moves(v, moves[0][0])
+        # ----------------------------------------------------------
+        python_moves = self.get_valid_moves_python(color)
+        if not (set(valid_moves) == set(python_moves)):
+            print(valid_moves, python_moves, set(valid_moves) == (python_moves))
+        # ----------------------------------------------------------
+        return valid_moves
+    """
+
+    """
     def get_possible_moves(self, row, column, color):
         if color == BLACK:
             other = WHITE
@@ -121,17 +142,6 @@ class Board:
 
         return moves
 
-    def get_valid_moves(self, color):
-        v = Board.LIBFUNCTIONS.get_valid_moves(c_void_p(self.board.ctypes.data), color)
-        c_int_p_p = POINTER(POINTER(c_int))
-        moves = cast(v, c_int_p_p)
-        valid_moves = [None] * moves[0][0]
-        for i in range(moves[0][0]):
-            valid_moves[i] = (moves[i+1][0], moves[i+1][1])
-        self.valid_moves = valid_moves
-        Board.LIBFUNCTIONS.free_moves(v, moves[0][0])
-        return valid_moves
-
     def get_valid_moves_python(self, color):
         if color == BLACK:
             num_pieces = self.black_pieces
@@ -170,6 +180,80 @@ class Board:
                             break
         self.valid_moves = moves
         return moves
+    """
+
+    def get_valid_moves(self, color):
+        if color == BLACK:
+            num_pieces = self.black_pieces
+        else:
+            num_pieces = self.white_pieces
+        if num_pieces < self.empty_spaces:
+            return self.get_valid_moves_occupied(color)
+        else:
+            return self.get_valid_moves_empty(color)
+
+    def get_valid_moves_occupied(self, color):
+        directions = []
+        for i in range(3):
+            for j in range(3):
+                if not (i == 1 and j == 1):
+                    directions.append((i-1, j-1))
+
+        moves = set()
+        for i in range(self.BOARD_SIZE):
+            for j in range(self.BOARD_SIZE):
+                if self.board[i][j] == color:
+                    for dir in directions:
+                        candidate = self.search_valid_moves_occupied((i, j), dir, color)
+                        if candidate:
+                            moves.add(candidate)
+        return list(moves)
+
+    def search_valid_moves_occupied(self, position, direction, color, depth=0):
+        i = position[0] + direction[0]
+        j = position[1] + direction[1]
+
+        if not self.in_bouds(i, j) or self.board[i][j] == color:
+            return None
+
+        if self.board[i][j] == EMPTY and depth != 0:
+            return i, j
+
+        if self.board[i][j] == other_color(color):
+            return self.search_valid_moves_occupied((i, j), direction, color, depth=depth+1)
+
+    def get_valid_moves_empty(self, color):
+        directions = []
+        for i in range(3):
+            for j in range(3):
+                if not (i == 1 and j == 1):
+                    directions.append((i - 1, j - 1))
+
+        moves = set()
+        for i in range(self.BOARD_SIZE):
+            for j in range(self.BOARD_SIZE):
+                if self.board[i][j] == EMPTY:
+                    for dir in directions:
+                        if self.search_valid_moves_empty((i, j), dir, color):
+                            moves.add((i, j))
+        return list(moves)
+
+    def search_valid_moves_empty(self, position, direction, color, depth=0):
+        i = position[0] + direction[0]
+        j = position[1] + direction[1]
+
+        if not self.in_bouds(i, j) or self.board[i][j] == EMPTY:
+            return False
+
+        if self.board[i][j] == color and depth > 0:
+            return True
+
+        if self.board[i][j] == other_color(color):
+            return self.search_valid_moves_empty((i, j), direction, color, depth=depth+1)
+
+    @staticmethod
+    def in_bouds(i, j):
+        return i >= 0 and i < 8 and j >= 0 and j < 8
 
     def apply_move(self, move, color):
         self.board[move[0]][move[1]] = color
@@ -263,6 +347,7 @@ class Board:
                 return EMPTY # returning EMPTY denotes a tie
         return None
 
+    """
     def child_nodes(self, color):
         moves = self.get_valid_moves(color)
         children = [None]*len(moves)
@@ -277,6 +362,7 @@ class Board:
             child.apply_move(move, color)
             children[i] = (child, move)
         return children
+    """
 
     # Function to print board for text based game
     def print_board(self):
