@@ -53,7 +53,7 @@ if __name__ == "__main__":
     for strategy in strategies:
         """ Parameters """
         player1 = ReinforcePlayer(color=config.BLACK, lr=0.1)
-        player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
+        player2 = ReinforcePlayer(color=config.BLACK, lr=0.1)
 
         """ Continue training """
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")

@@ -3,7 +3,7 @@ from datetime import datetime
 import core.config as config
 from training import train, generate_and_save_artefacts
 from evaluation import compare_players, evaluate_all
-from core.player import MCPlayer, TDPlayer
+from core.player import MCPlayer, TDPlayer, ReinforcePlayer
 from core.valueFunction import ValueFunction, SimpleValueFunction, HugeDecoupledValueFunction, HugeValueFunction, LargeDecoupledValueFunction, LargeValueFunction
 from core.plotter import Printer
 
@@ -65,7 +65,7 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = TDPlayer(color=config.BLACK, strategy=LargeValueFunction, lr=0.1, alpha=0.003, e=0.001)
+    PLAYER = ReinforcePlayer(color=config.BLACK, lr=0.1, alpha=0.003, e=0.001)
     PLAYER2 = None
 
     # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
