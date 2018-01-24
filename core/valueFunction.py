@@ -35,7 +35,7 @@ class Model(torch.nn.Module):
 
         self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
 
-    def forward(self, x, legal_moves_map=None):
+    def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
