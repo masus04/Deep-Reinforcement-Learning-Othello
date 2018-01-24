@@ -180,6 +180,9 @@ class ValueFunction:
             if config.CUDA:
                 minibatch_samples, minibatch_labels = minibatch_samples.cuda(0), minibatch_labels.cuda(0)
 
+            # Normalization from PyTorch examples
+            # minibatch_labels = (minibatch_labels - minibatch_labels.mean()) / (minibatch_labels.std() + np.finfo(np.float64).eps)
+
             self.optimizer.zero_grad()
             output = self.model(minibatch_samples)
             loss = self.criterion(output, minibatch_labels)
