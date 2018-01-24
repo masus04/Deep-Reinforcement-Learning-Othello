@@ -59,8 +59,8 @@ if __name__ == "__main__":
         # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
         # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
 
-        TOTAL_GAMES = 10000
-        EVALUATION_PERIOD = TOTAL_GAMES//4
+        TOTAL_GAMES = 1000000
+        EVALUATION_PERIOD = TOTAL_GAMES//100
 
         """ Execution """
         start = datetime.now()
