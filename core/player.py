@@ -6,7 +6,7 @@ import core.config as config
 from core.game_ai import GameArtificialIntelligence
 from core.heuristic import OthelloHeuristic
 from core.gui import NoGui
-from core.valueFunction import ValueFunction, NoValueFunction, PGValueFunction
+from core.valueFunction import ValueFunction, NoValueFunction, PGValueFunction, PGLargeValueFunction
 from core.board import Board
 from core.plotter import Plotter, NoPlotter
 
@@ -227,7 +227,7 @@ class MCPlayer(DeepRLPlayer):
         return afterstate[2]
 
     def __generate_training_labels__(self, winner_color):
-        self.training_labels = [config.get_result_label(winner_color, self.color) for sample in self.training_samples]
+        self.training_labels = [config.get_result_label(winner_color, self.color)] * len(self.training_samples)
 
 
 class TDPlayer(MCPlayer):
@@ -243,13 +243,16 @@ class TDPlayer(MCPlayer):
         return v_state + self.alpha * (v_next_state - v_state)
 
 
-class ReinforcePlayer(DeepRLPlayer):
+class ReinforcePlayer(MCPlayer):
 
     def __init__(self, color, strategy=PGValueFunction, lr=config.LEARNING_RATE, alpha=config.ALPHA, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(ReinforcePlayer, self).__init__(color, strategy, lr, alpha, e, time_limit, gui);
 
-    def __behaviour_policy__(self, board):
-        return self.value_function.evaluate()
+        ACCEPTED_STRATEGIES = [PGValueFunction, PGLargeValueFunction]
+        if strategy not in [PGValueFunction, PGLargeValueFunction]:
+            raise Exception("Reinforce Player accepts only the following strategies: %s" % ACCEPTED_STRATEGIES)
 
-    def __generate_training_labels__(self, winner_color):
-        pass
+    def __behaviour_policy__(self, board):
+        move = self.value_function.evaluate(board.get_representation(self.color), board.get_valid_moves(self.color))
+        self.training_samples.append(board.copy().apply_move(move, self.color).get_representation(self.color))
+        return move

@@ -45,7 +45,9 @@ class Model(torch.nn.Module):
         x = F.relu(self.conv7(x))
 
         if self.policy_gradient:
-            return self.final_conv(x)
+            x = F.relu(self.final_conv(x))
+            x = x.view(-1, 64)
+            return F.softmax(x, dim=1)
 
         else:
             x = x.view(-1, self.conv_to_linear_params_size)
@@ -53,10 +55,11 @@ class Model(torch.nn.Module):
 
 
 class LargeModel(torch.nn.Module):
-    def __init__(self, decoupled=False):
+    def __init__(self, decoupled=False, policy_gradient=False):
         super(LargeModel, self).__init__()
 
         self.input_channels = 3 if decoupled else 1
+        self.policy_gradient = policy_gradient
 
         self.conv_channels = 16
         self.conv_to_linear_params_size = self.conv_channels*8*8
@@ -84,7 +87,9 @@ class LargeModel(torch.nn.Module):
         x = F.relu(self.conv7(x))
 
         if self.policy_gradient:
-            return self.final_conv(x)
+            x = F.relu(self.final_conv(x))
+            x = x.view(-1, 64)
+            return F.softmax(x, dim=1)
 
         else:
             x = x.view(-1, self.conv_to_linear_params_size)
@@ -93,11 +98,12 @@ class LargeModel(torch.nn.Module):
 
 
 class HugeModel(torch.nn.Module):
-    def __init__(self, decoupled=False):
+    def __init__(self, decoupled=False, policy_gradient=False):
         super(HugeModel, self).__init__()
 
         self.input_channels = 3 if decoupled else 1
-
+        self.policy_gradient = policy_gradient
+        
         self.conv_channels = 32
         self.conv_to_linear_params_size = self.conv_channels*8*8
 
@@ -126,7 +132,9 @@ class HugeModel(torch.nn.Module):
         x = F.relu(self.conv7(x))
 
         if self.policy_gradient:
-            return self.final_conv(x)
+            x = F.relu(self.final_conv(x))
+            x = x.view(-1, 64)
+            return F.softmax(x, dim=1)
 
         else:
             x = x.view(-1, self.conv_to_linear_params_size)
@@ -273,18 +281,33 @@ class HugeDecoupledValueFunction(DecoupledValueFunction):
 class PGValueFunction(ValueFunction):
     def __init__(self, learning_rate=config.LEARNING_RATE, model=Model(policy_gradient=True)):
         super(PGValueFunction, self).__init__(learning_rate=learning_rate, model=model)
+        self.log_probs = []
 
-    def evaluate(self, board_sample):
-        tensor = self.data_reshape(board_sample)
-        probs = self.model(tensor)
-        distribution = Categorical
-
+    def evaluate(self, board_sample, legal_moves):
+        tensor = torch.FloatTensor([self.data_reshape(board_sample)])
+        # Set illegal move probabilities to 0
+        probs = self.model(Variable(tensor))
+        distribution = Categorical(probs)
+        action = distribution.sample()
+        move = (action.data[0] // 8, action.data[0] % 8)
+        self.log_probs.append(distribution.log_prob(action))
+        return move
 
     def data_reshape(self, board_sample):
         return [board_sample]
 
     def update(self, training_samples, training_labels):
-        pass
+        sample_batches = Variable(torch.FloatTensor(self.data_reshape(training_samples)))
+        label_batches = Variable(torch.FloatTensor(self.data_reshape(training_labels)))
+
+        self.optimizer.zero_grad()
+        policy_loss = [-log_prob*label for log_prob, label in zip(self.log_probs, label_batches)]
+        policy_loss = torch.cat(policy_loss).sum()
+        policy_loss.backward()
+        self.optimizer.step()
+        del self.log_probs[:]
+
+        return policy_loss.data[0]
 
 
 class PGLargeValueFunction(PGValueFunction):

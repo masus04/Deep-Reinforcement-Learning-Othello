@@ -3,7 +3,7 @@ from datetime import datetime
 import core.config as config
 from core.othello import Othello
 from core.plotter import Printer
-from core.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer
+from core.player import HeuristicPlayer, ComputerPlayer, RandomPlayer, MCPlayer, TDPlayer, ReinforcePlayer
 import core.valueFunction as vF
 
 import evaluation
@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     for strategy in strategies:
         """ Parameters """
-        player1 = TDPlayer(color=config.BLACK, strategy=strategy, lr=0.1)
+        player1 = ReinforcePlayer(color=config.BLACK, lr=0.1)
         player2 = HeuristicPlayer(color=config.WHITE, strategy=vF.NoValueFunction)
 
         """ Continue training """
