@@ -25,7 +25,6 @@ class Board:
         self.valid_moves = []
         self.now_playing = BLACK
 
-    """
     def get_valid_moves(self, color):
         v = Board.LIBFUNCTIONS.get_valid_moves(c_void_p(self.board.ctypes.data), color)
         c_int_p_p = POINTER(POINTER(c_int))
@@ -42,147 +41,8 @@ class Board:
             print(valid_moves, python_moves, set(valid_moves) == (python_moves))
         # ----------------------------------------------------------
         return valid_moves
-    """
-
-    """
-    def get_possible_moves(self, row, column, color):
-        if color == BLACK:
-            other = WHITE
-        else:
-            other = BLACK
-
-        moves = []
-
-        if row < 0 or row > 7 or column < 0 or column > 7:
-            return moves
-
-        # north
-        i = row - 1
-        if i >= 0 and self.board[i][column] == other:
-            i = i - 1
-            while i >= 0 and self.board[i][column] == other:
-                i = i - 1
-            if i >= 0 and self.board[i][column] == 0:
-                moves = moves + [( i, column)]
-
-        # northeast
-        i = row - 1
-        j = column + 1
-        if i >= 0 and j < 8 and self.board[i][j] == other:
-            i = i - 1
-            j = j + 1
-            while i >= 0 and j < 8 and self.board[i][j] == other:
-                i = i - 1
-                j = j + 1
-            if i >= 0 and j < 8 and self.board[i][j] == 0:
-                moves = moves + [(i, j)]
-
-        # east
-        j = column + 1
-        if j < 8 and self.board[row][j] == other:
-            j = j + 1
-            while j < 8 and self.board[row][j] == other:
-                j = j + 1
-            if j < 8 and self.board[row][j] == 0:
-                moves = moves + [(row, j)]
-
-        # southeast
-        i = row + 1
-        j = column + 1
-        if i < 8 and j < 8 and self.board[i][j] == other:
-            i = i + 1
-            j = j + 1
-            while i < 8 and j < 8 and self.board[i][j] == other:
-                i = i + 1
-                j = j + 1
-            if i < 8 and j < 8 and self.board[i][j] == 0:
-                moves = moves + [(i, j)]
-
-        # south
-        i = row + 1
-        if i < 8 and self.board[i][column] == other:
-            i = i + 1
-            while i < 8 and self.board[i][column] == other:
-                i = i + 1
-            if i < 8 and self.board[i][column] == 0:
-                moves = moves + [(i, column)]
-
-        # southwest
-        i = row + 1
-        j = column - 1
-        if i < 8 and j >= 0 and self.board[i][j] == other:
-            i = i + 1
-            j = j - 1
-            while i < 8 and j >= 0 and self.board[i][j] == other:
-                i = i + 1
-                j = j - 1
-            if i < 8 and j >= 0 and self.board[i][j] == 0:
-                moves = moves + [(i, j)]
-
-        # west
-        j = column - 1
-        if j >= 0 and self.board[row][j] == other:
-            j = j - 1
-            while j >= 0 and self.board[row][j] == other:
-                j = j - 1
-            if j >= 0 and self.board[row][j] == 0:
-                moves = moves + [(row, j)]
-
-        # northwest
-        i = row - 1
-        j = column - 1
-        if i >= 0 and j >= 0 and self.board[i][j] == other:
-            i = i - 1
-            j = j - 1
-            while i >= 0 and j >= 0 and self.board[i][j] == other:
-                i = i - 1
-                j = j - 1
-            if i >= 0 and j >= 0 and self.board[i][j] == 0:
-                moves = moves + [(i, j)]
-
-        return moves
 
     def get_valid_moves_python(self, color):
-        if color == BLACK:
-            num_pieces = self.black_pieces
-        else:
-            num_pieces = self.white_pieces
-        if num_pieces < self.empty_spaces:
-            return self.get_valid_moves_by_colored_squares(color)
-        else:
-            return self.get_valid_moves_by_empty_squares(color)
-
-    def get_valid_moves_by_colored_squares(self, color):
-
-        valid_moves = []
-
-        for i in range(8):
-            for j in range(8):
-                if self.board[i][j] == color:
-                    valid_moves = valid_moves + self.get_possible_moves(i, j, color)
-        valid_moves = list(set(valid_moves)) # Make each move in valid_moves unique
-        self.valid_moves = valid_moves
-        return valid_moves
-
-    def get_valid_moves_by_empty_squares(self, color):
-
-        moves = []
-
-        # For each empty space on the board, check if there are
-        # any of the opponents pieces available to flip
-        for i in range(8):
-            for j in range(8):
-                if self.board[i][j] == EMPTY:
-                    for direction in range(1,9):
-                        (num, valid) = self.pieces_to_flip_in_row((i, j), color, direction)
-                        if num > 0:
-                            moves = moves + [(i, j)]
-                            break
-        self.valid_moves = moves
-        return moves
-    """
-
-    def get_valid_moves(self, color):
         if color == BLACK:
             num_pieces = self.black_pieces
         else:
