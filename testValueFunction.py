@@ -103,7 +103,7 @@ def training():
 
     LABELING_STRATEGY = generate_heuristic_data_set
 
-    accuracies, player = test_with_parameters(games=200, strategy=vF.LargeValueFunction, labeling_strategy=LABELING_STRATEGY, test_set=LABELING_STRATEGY(10), learning_rate=0.1)
+    accuracies, player = test_with_parameters(games=10000, strategy=vF.LargeValueFunction, labeling_strategy=LABELING_STRATEGY, test_set=LABELING_STRATEGY(500), learning_rate=0.1)
 
 
 if __name__ == "__main__":
