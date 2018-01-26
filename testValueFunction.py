@@ -11,14 +11,14 @@ from generateDataSet import generate_greedy_data_set, generate_heuristic_data_se
 from core.plotter import Printer
 
 printer = Printer()
-STRATEGY = vF.HugeDecoupledValueFunction
-EXPERIMENT_NAME = "/testValueFunction/" + STRATEGY.__name__ + "/"
+STRATEGY = vF.LargeValueFunction
+EXPERIMENT_NAME = "testValueFunction %s" % STRATEGY.__name__
 
 if not os.path.exists("./plots/" + EXPERIMENT_NAME):
     os.makedirs("./plots/" + EXPERIMENT_NAME)
 
 
-evaluation_file = open("./plots" + EXPERIMENT_NAME + "testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
+evaluation_file = open("./plots/testValueFunction_evaluationfile_%s.txt" % STRATEGY.__name__, "w+")
 
 
 def log_message(message):
@@ -43,7 +43,7 @@ def test_with_parameters(games, strategy, labeling_strategy, test_set, learning_
 
     print("Evaluation:")
     player.plotter.plot_accuracy(experiment_name=EXPERIMENT_NAME, comment="labelingStrategy: {}".format(labeling_strategy.__name__) + "final score:{0:.3g}".format(player.plotter.accuracies.get_values()[-1]), path="/" + EXPERIMENT_NAME)
-    player.save("_labeling_strategy: %s lr:%s" % (label_strategy.__name__, lr), path=EXPERIMENT_NAME)
+    player.save("_labeling_strategy: %s lr:%s" % (labeling_strategy.__name__, learning_rate))
     return player.plotter.accuracies.get_values()[-1], player
 
 
@@ -71,11 +71,10 @@ def compare_afterstate_values(value_function, labeling_strategy):
         print(value)
 
 
-if __name__ == "__main__":
-
+def cross_validation():
     start_time = datetime.now()
 
-    GAMES = 100
+    GAMES = 200
 
     log_message("Crossvalidation of %s over %s games" % (STRATEGY.__name__, GAMES))
 
@@ -88,9 +87,9 @@ if __name__ == "__main__":
         test_set = label_strategy(100)
 
         for i, exponent in enumerate(range(1, 3)):
-            lr = float(round(0.1**exponent, 7))
+            lr = float(round(0.1 ** exponent, 7))
             results.append((lr, test_with_parameters(games=GAMES, strategy=STRATEGY, labeling_strategy=label_strategy, test_set=test_set, learning_rate=lr)[0]))
-            log_message("Simulation time: %s\n" % (str(datetime.now()-start_time)).split(".")[0])
+            log_message("Simulation time: %s\n" % (str(datetime.now() - start_time)).split(".")[0])
 
         results.sort()
         log_message("\nAccuracy scores:")
@@ -98,3 +97,16 @@ if __name__ == "__main__":
             log_message("lr: %s, accuracy: %s" % (result[0], result[1]))
 
     print("\nExperiment completed\n")
+
+
+def training():
+
+    LABELING_STRATEGY = generate_heuristic_data_set
+
+    accuracies, player = test_with_parameters(games=200, strategy=vF.LargeValueFunction, labeling_strategy=LABELING_STRATEGY, test_set=LABELING_STRATEGY(10), learning_rate=0.1)
+
+
+if __name__ == "__main__":
+
+    # cross_validation()
+    training()
