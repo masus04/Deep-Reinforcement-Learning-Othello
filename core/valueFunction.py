@@ -298,22 +298,20 @@ class PGValueFunction(ValueFunction):
         distribution = Categorical(probs)
         action = distribution.sample()
         move = (action.data[0] // 8, action.data[0] % 8)
-        self.log_probs.append(distribution.log_prob(action))
-        return move
+        log_prob = distribution.log_prob(action)
+        return move, log_prob
 
     def data_reshape(self, board_sample):
         return [board_sample]
 
-    def update(self, training_samples, training_labels):
-        # sample_batches = Variable(torch.FloatTensor(self.data_reshape(training_samples)))
+    def update(self, log_probs, training_labels):
         label_batches = Variable(torch.FloatTensor(self.data_reshape(training_labels)))
 
         self.optimizer.zero_grad()
-        policy_loss = [-log_prob*label for log_prob, label in zip(self.log_probs, label_batches)]
+        policy_loss = [-log_prob*label for log_prob, label in zip(log_probs, label_batches)]
         policy_loss = torch.cat(policy_loss).sum()
         policy_loss.backward()
         self.optimizer.step()
-        del self.log_probs[:]
 
         return policy_loss.data[0]
 
