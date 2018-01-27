@@ -18,6 +18,7 @@ class Model(torch.nn.Module):
         super(Model, self).__init__()
 
         self.input_channels = 3 if decoupled else 1
+        self.output_features = 64 if policy_gradient else 1
         self.policy_gradient = policy_gradient
 
         self.conv_channels = 8
@@ -44,14 +45,14 @@ class Model(torch.nn.Module):
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
 
+        x = x.view(-1, self.conv_to_linear_params_size)
+        x = self.fc1(x)
+
         if self.policy_gradient:
-            x = F.relu(self.final_conv(x))
-            x = x.view(-1, 64)
             return F.softmax(x, dim=1)
 
         else:
-            x = x.view(-1, self.conv_to_linear_params_size)
-            return F.sigmoid(self.fc1(x)) + config.LABEL_LOSS
+            return F.sigmoid(x) + config.LABEL_LOSS
 
 
 class LargeModel(torch.nn.Module):
@@ -59,6 +60,7 @@ class LargeModel(torch.nn.Module):
         super(LargeModel, self).__init__()
 
         self.input_channels = 3 if decoupled else 1
+        self.output_features = 64 if policy_gradient else 1
         self.policy_gradient = policy_gradient
 
         self.conv_channels = 16
@@ -73,9 +75,7 @@ class LargeModel(torch.nn.Module):
         self.conv7 = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=self.conv_channels, kernel_size=3, padding=1)
 
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
-        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=1)
-
-        self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
+        self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=self.output_features)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -86,15 +86,15 @@ class LargeModel(torch.nn.Module):
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
 
+        x = x.view(-1, self.conv_to_linear_params_size)
+        x = F.relu((self.fc1(x)))
+        x = self.fc2(x)
+
         if self.policy_gradient:
-            x = F.relu(self.final_conv(x))
-            x = x.view(-1, 64)
             return F.softmax(x, dim=1)
 
         else:
-            x = x.view(-1, self.conv_to_linear_params_size)
-            x = F.relu((self.fc1(x)))
-            return F.sigmoid(self.fc2(x)) + config.LABEL_LOSS
+            return F.sigmoid(x) + config.LABEL_LOSS
 
 
 class HugeModel(torch.nn.Module):
@@ -102,6 +102,7 @@ class HugeModel(torch.nn.Module):
         super(HugeModel, self).__init__()
 
         self.input_channels = 3 if decoupled else 1
+        self.output_features = 64 if policy_gradient else 1
         self.policy_gradient = policy_gradient
         
         self.conv_channels = 32
@@ -118,9 +119,7 @@ class HugeModel(torch.nn.Module):
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
         self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=self.conv_to_linear_params_size//4)
         self.fc3 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//4, out_features=self.conv_to_linear_params_size//8)
-        self.fc4 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//8, out_features=1)
-
-        self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
+        self.fc4 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//8, out_features=self.output_features)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -131,17 +130,17 @@ class HugeModel(torch.nn.Module):
         x = F.relu(self.conv6(x))
         x = F.relu(self.conv7(x))
 
+        x = x.view(-1, self.conv_to_linear_params_size)
+        x = F.relu((self.fc1(x)))
+        x = F.relu((self.fc2(x)))
+        x = F.relu((self.fc3(x)))
+        x = self.fc4(x)
+
         if self.policy_gradient:
-            x = F.relu(self.final_conv(x))
-            x = x.view(-1, 64)
             return F.softmax(x, dim=1)
 
         else:
-            x = x.view(-1, self.conv_to_linear_params_size)
-            x = F.relu((self.fc1(x)))
-            x = F.relu((self.fc2(x)))
-            x = F.relu((self.fc3(x)))
-            return F.sigmoid(self.fc4(x)) + config.LABEL_LOSS
+            return F.sigmoid(x) + config.LABEL_LOSS
 
 
 class SimpleModel(torch.nn.Module):
