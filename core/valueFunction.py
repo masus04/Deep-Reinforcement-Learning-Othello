@@ -3,10 +3,7 @@ from copy import deepcopy
 
 import torch
 import torch.nn.functional as F
-try:
-    from torch.distributions import Categorical
-except:
-    from torch.distributions import Multinomial as Categorical
+from torch.distributions import Categorical
 from torch.autograd import Variable
 
 import core.config as config
