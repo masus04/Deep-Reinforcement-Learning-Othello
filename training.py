@@ -38,8 +38,8 @@ def train_and_evaluate(player1, player2, games, evaluation_period, experiment_na
             Printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
         # save artifacts
-        player1.plotter.clear_plots(experiment_name)
         for player in (player1, player2):
+            player.plotter.clear_plots(experiment_name)
             player.plotter.plot_results(experiment_name)
             player.plotter.plot_scores(experiment_name)
             player.save(experiment_name)
@@ -52,12 +52,15 @@ if __name__ == "__main__":
 
     for strategy in strategies:
         """ Parameters """
-        player1 = ReinforcePlayer(color=config.BLACK, lr=0.1)
-        player2 = ReinforcePlayer(color=config.BLACK, lr=0.1)
+        # player1 = ReinforcePlayer(color=config.BLACK, lr=0.001)
+        # player2 = ReinforcePlayer(color=config.WHITE, lr=0.0001)
 
         """ Continue training """
-        # player1 = config.load_player("TDPlayer_Black_ValueFunction|TDvsMC|")
-        # player2 = config.load_player("MCPlayer_White_ValueFunction|TDvsMC|")
+        player1 = config.load_player("ReinforcePlayer_Black_PGValueFunction|Training|")
+        player2 = config.load_player("ReinforcePlayer_White_PGValueFunction|Training|")
+
+        assert player1.color == config.BLACK
+        assert player2.color == config.WHITE
 
         TOTAL_GAMES = 1000000
         EVALUATION_PERIOD = TOTAL_GAMES//100

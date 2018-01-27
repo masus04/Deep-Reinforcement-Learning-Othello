@@ -70,8 +70,8 @@ if __name__ == "__main__":
     # td_black = config.load_player("TDPlayer_Black_ValueFunction|Async|")
     # td_white = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
 
-    td_black = config.load_player("TDPlayer_Black_ValueFunction|Continuous|")
-    td_white = config.load_player("TDPlayer_White_ValueFunction|Continuous|")
+    td_black = config.load_player("ReinforcePlayer_Black_PGValueFunction|Training|")
+    td_white = config.load_player("ReinforcePlayer_White_PGValueFunction|Training|")
 
     assert td_black.color == config.BLACK
     assert td_white.color == config.WHITE
