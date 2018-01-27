@@ -57,12 +57,14 @@ class Model(torch.nn.Module):
         else:
             return F.sigmoid(x) + config.LABEL_LOSS
 
-    def legal_moves_for_policy_gradient(self, softmaxed_x, legal_moves_map):
-        x = F.softmax(softmaxed_x, dim=1)
+    def legal_moves_for_policy_gradient(self, x, legal_moves_map):
+        input = x
+        # Apply some smart regularization (before softmax?)
+        # x = F.softmax(x, dim=1)
 
         # Set illegal move probabilities to 0 and regularize so that they sum up to 1
         x = torch.mul(x, legal_moves_map)
-        x = x * 1 / x.sum()
+        x = x / x.sum()
         return x
 
 

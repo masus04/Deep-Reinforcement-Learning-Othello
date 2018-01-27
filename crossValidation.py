@@ -52,7 +52,7 @@ def evaluate_using_continuous_shared_vf_training(games, evaluation_period, strat
     player.score = player.plotter.evaluation_scores.get_values()[-1]
     player.plotter.plot_scores(EXPERIMENT_NAME)
     log_message("|--- LR:%s Score: %s Simulation time: %s ---|" % (lr, player.score / 2, str(datetime.now() - start_time).split(".")[0]))
-
+    return player.score, lr
 
 if __name__ == "__main__":
     learning_rates = [float("1e-%d" %i) for i in range(1, 7)]
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     results = [evaluate_using_continuous_shared_vf_training(games=TRAINING_GAMES, evaluation_period=EVALUATION_PERIOD, strategy=PGValueFunction, lr=lr) for lr in learning_rates]
     log_message("\n")
     for r in sorted(results):
-        log_message("score:%s lr:%s a:%s" % r)
+        log_message("score:%s lr:%s" % r)
 
     print("CrossValidation timer: %s" % str(datetime.now() - start_time).split(".")[0])
     evaluation_file.close()
