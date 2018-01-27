@@ -15,7 +15,7 @@ class Player(object):
 
     def __init__(self, color, strategy=None, time_limit=config.TIMEOUT, gui=NoGui()):
         self.color = color
-        self.player_name = "%s_%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color), strategy.__name__ if strategy else "")
+        self.player_name = "%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color))
         self.time_limit = time_limit
         self.gui = gui
         self.value_function = NoValueFunction()
@@ -166,14 +166,21 @@ class DeepRLPlayer(Player):
         super(DeepRLPlayer, self).__init__(color=color, strategy=strategy, time_limit=time_limit, gui=gui)
         self.e = e
         self.alpha = alpha
-        self.value_function = strategy(learning_rate=lr)
+        # strategy is an instance
+        try:
+            strategy.model and strategy.learning_rate
+            self.value_function = strategy
+        # strategy is a class
+        except:
+            self.value_function = strategy(learning_rate=lr)
+
+        self.player_name = "%s_%s_%s" % (self.__class__.__name__, config.get_color_from_player_number(self.color), self.value_function.__class__.__name__)
         self.plotter = Plotter(self)
         self.training_samples = []
         self.training_labels = []
 
-    def copy_with_inversed_color(self):
-        player = self.__class__(color=config.other_color(self.color), strategy=self.value_function.__class__)
-        player.value_function = self.value_function.copy()
+    def copy_with_inversed_color(self, shared_vf=False):
+        player = self.__class__(color=config.other_color(self.color), strategy=self.value_function if shared_vf else self.value_function.copy())
         player.plotter = self.plotter.copy()
         player.opponents = self.opponents.copy()
         return player
@@ -249,8 +256,8 @@ class ReinforcePlayer(MCPlayer):
         super(ReinforcePlayer, self).__init__(color, strategy, lr, alpha, e, time_limit, gui);
 
         ACCEPTED_STRATEGIES = [PGValueFunction, PGLargeValueFunction]
-        if strategy not in [PGValueFunction, PGLargeValueFunction]:
-            raise Exception("Reinforce Player accepts only the following strategies: %s" % ACCEPTED_STRATEGIES)
+        if strategy not in ACCEPTED_STRATEGIES and strategy.__class__ not in ACCEPTED_STRATEGIES:
+            raise Exception("Reinforce Player accepts only the following strategies: %s. Received %s" % (ACCEPTED_STRATEGIES, strategy))
 
     def __behaviour_policy__(self, board):
         move, log_probs = self.value_function.evaluate(board.get_representation(self.color), board.get_legal_moves_map(self.color))

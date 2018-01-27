@@ -13,7 +13,7 @@ EXPERIMENT_NAME = "|Training|"
 
 def train(player1, player2, games, experiment_name=EXPERIMENT_NAME, silent=False):
     simulation = Othello(player1, player2)
-    simulation.run_simulations(episodes=games, silent=silent)
+    return simulation.run_simulations(episodes=games, silent=silent)
 
 
 def generate_and_save_artefacts(players, experiment_name):
@@ -25,7 +25,7 @@ def generate_and_save_artefacts(players, experiment_name):
         # player.save("%s lr:%s" % (experiment_name, player.value_function.learning_rate))
 
 
-def train_and_evaluate(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME, silent=False):
+def train_and_evaluate(player1, player2, games, evaluation_period, experiment_name=EXPERIMENT_NAME, silent=False, plot_only_p1=False):
     simulation = Othello(player1, player2)
 
     start_time = datetime.now()
@@ -38,7 +38,7 @@ def train_and_evaluate(player1, player2, games, evaluation_period, experiment_na
             Printer.print_inplace("Episode %s/%s" % (evaluation_period*(i+1), games), evaluation_period*(i + 1) / games * 100, datetime.now() - start_time)
 
         # save artifacts
-        for player in (player1, player2):
+        for player in [player1] if plot_only_p1 else [player1, player2]:
             player.plotter.clear_plots(experiment_name)
             player.plotter.plot_results(experiment_name)
             player.plotter.plot_scores(experiment_name)

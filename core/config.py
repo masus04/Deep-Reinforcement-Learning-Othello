@@ -22,7 +22,7 @@ HUMAN = "Human"
 COMPUTER = "Computer"
 
 # LABEL_LOSS < prediction < LABEL_WIN
-LABEL_LOSS = 0
+LABEL_LOSS = -1
 LABEL_WIN = 1
 LABEL_DRAW = (LABEL_WIN + LABEL_LOSS) / 2
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import core.config as config
-from training import train, generate_and_save_artefacts
+from training import train, generate_and_save_artefacts, train_and_evaluate
 from evaluation import compare_players, evaluate_all
 from core.player import MCPlayer, TDPlayer, ReinforcePlayer
 from core.valueFunction import ValueFunction, SimpleValueFunction, HugeDecoupledValueFunction, HugeValueFunction, LargeDecoupledValueFunction, LargeValueFunction
@@ -62,14 +62,21 @@ def train_continuous_asymmetrical(player1, games, experiment_name, iterations, s
     return player1, best
 
 
+def train_with_shared_network(player, games, evaluation_period, experiment_name):
+    player1 = player
+    player2 = player.copy_with_inversed_color(shared_vf=True)
+    player2.train = False
+
+    evaluate_all([player1, player2], 8)
+    train_and_evaluate(player1, player2, games, evaluation_period, experiment_name, plot_only_p1=True)
+    return player1
+
+
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = ReinforcePlayer(color=config.BLACK, lr=0.01, alpha=0.003, e=0.001)
+    PLAYER = ReinforcePlayer(color=config.BLACK, lr=0.001, alpha=0.003, e=0.001)
     PLAYER2 = None
-
-    # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Async|")
-    # PLAYER2 = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
 
     # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Continuous|")
     # PLAYER2 = config.load_player("TDPlayer_White_ValueFunction|Continuous|")
@@ -78,11 +85,11 @@ if __name__ == "__main__":
     # assert PLAYER2.color == config.WHITE
 
     ITERATIONS = 100
-    GAMES_PER_ITERATION = 5000
+    GAMES_PER_ITERATION = 500
 
     """ Execution """
     start = datetime.now()
     # train_continuous(player1=PLAYER, player2=PLAYER2, games=GAMES_PER_ITERATION, experiment_name="|Continuous|training lr:%s a:%s|" % (PLAYER.value_function.learning_rate, PLAYER.alpha), iterations=ITERATIONS)
-    player1, best = train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, experiment_name="|Async training|", iterations=ITERATIONS)
-
+    # player1, best = train_continuous_asymmetrical(player1=PLAYER, best=PLAYER2, games=GAMES_PER_ITERATION, experiment_name="|Async training|", iterations=ITERATIONS)
+    p1 = train_with_shared_network(player=PLAYER, games=ITERATIONS*GAMES_PER_ITERATION, evaluation_period=GAMES_PER_ITERATION, experiment_name="|Continuous shared vF training|")
     print("Training completed, took %s" % str(datetime.now()-start).split(".")[0])
