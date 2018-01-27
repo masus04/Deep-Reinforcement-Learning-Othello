@@ -252,7 +252,7 @@ class TDPlayer(MCPlayer):
 
 class ReinforcePlayer(MCPlayer):
 
-    def __init__(self, color, strategy=PGValueFunction, lr=config.LEARNING_RATE, alpha=config.ALPHA, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
+    def __init__(self, color, strategy=PGLargeValueFunction, lr=config.LEARNING_RATE, alpha=config.ALPHA, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(ReinforcePlayer, self).__init__(color, strategy, lr, alpha, e, time_limit, gui);
 
         ACCEPTED_STRATEGIES = [PGValueFunction, PGLargeValueFunction, PGHugeValueFunction]

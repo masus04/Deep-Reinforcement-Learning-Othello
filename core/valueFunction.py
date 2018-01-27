@@ -294,7 +294,7 @@ class HugeDecoupledValueFunction(DecoupledValueFunction):
 
 
 class PGValueFunction(ValueFunction):
-    def __init__(self, learning_rate=config.LEARNING_RATE, model=LargeModel(policy_gradient=True)):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=Model(policy_gradient=True)):
         super(PGValueFunction, self).__init__(learning_rate=learning_rate, model=model)
         self.log_probs = []
 
