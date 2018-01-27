@@ -74,7 +74,7 @@ def compare_afterstate_values(value_function, labeling_strategy):
 def cross_validation():
     start_time = datetime.now()
 
-    GAMES = 200
+    GAMES = 200000
 
     log_message("Crossvalidation of %s over %s games" % (STRATEGY.__name__, GAMES))
 
