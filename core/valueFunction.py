@@ -326,6 +326,11 @@ class PGLargeValueFunction(PGValueFunction):
         super(PGValueFunction, self).__init__(learning_rate=learning_rate, model=model)
 
 
+class PGHugeValueFunction(PGValueFunction):
+    def __init__(self, learning_rate=config.LEARNING_RATE, model=HugeModel(policy_gradient=True)):
+        super(PGValueFunction, self).__init__(learning_rate=learning_rate, model=model)
+
+
 """ | ---------- Special cases ---------- | """
 
 

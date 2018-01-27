@@ -4,7 +4,7 @@ from core.othello import Othello
 from core.player import ComputerPlayer, RandomPlayer, HeuristicPlayer, MCPlayer, TDPlayer
 from core.valueFunction import ValueFunction, SimpleValueFunction
 
-EVALUATION_GAMES = 100
+EVALUATION_GAMES = 80
 EXPERIMENT_NAME = "Evaluation"
 
 

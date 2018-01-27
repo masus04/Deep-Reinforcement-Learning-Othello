@@ -6,7 +6,7 @@ import core.config as config
 from core.game_ai import GameArtificialIntelligence
 from core.heuristic import OthelloHeuristic
 from core.gui import NoGui
-from core.valueFunction import ValueFunction, NoValueFunction, PGValueFunction, PGLargeValueFunction
+from core.valueFunction import ValueFunction, NoValueFunction, PGValueFunction, PGLargeValueFunction, PGHugeValueFunction
 from core.board import Board
 from core.plotter import Plotter, NoPlotter
 
@@ -255,7 +255,7 @@ class ReinforcePlayer(MCPlayer):
     def __init__(self, color, strategy=PGValueFunction, lr=config.LEARNING_RATE, alpha=config.ALPHA, e=config.EPSILON, time_limit=config.TIMEOUT, gui=NoGui()):
         super(ReinforcePlayer, self).__init__(color, strategy, lr, alpha, e, time_limit, gui);
 
-        ACCEPTED_STRATEGIES = [PGValueFunction, PGLargeValueFunction]
+        ACCEPTED_STRATEGIES = [PGValueFunction, PGLargeValueFunction, PGHugeValueFunction]
         if strategy not in ACCEPTED_STRATEGIES and strategy.__class__ not in ACCEPTED_STRATEGIES:
             raise Exception("Reinforce Player accepts only the following strategies: %s. Received %s" % (ACCEPTED_STRATEGIES, strategy))
 
