@@ -52,7 +52,7 @@ class Model(torch.nn.Module):
             return x
 
         else:
-            return F.sigmoid(x) + config.LABEL_LOSS
+            return F.tanh(x)
 
 
 class LargeModel(Model):
@@ -94,7 +94,7 @@ class LargeModel(Model):
             return x
 
         else:
-            return F.sigmoid(x) + config.LABEL_LOSS
+            return F.tanh(x)
 
 
 class HugeModel(Model):
@@ -140,7 +140,7 @@ class HugeModel(Model):
             return x
 
         else:
-            return F.sigmoid(x) + config.LABEL_LOSS
+            return F.tanh(x)
 
 
 class SimpleModel(torch.nn.Module):
@@ -176,7 +176,7 @@ class SimpleModel(torch.nn.Module):
         x = F.relu(self.conv4(x))
 
         x = x.view(-1, self.conv_to_linear_params_size)
-        return F.sigmoid(self.final(x)) + config.LABEL_LOSS
+        return F.tanh(self.final(x))
 
 
 """ | ---------- ValueFunctions ---------- | """
@@ -345,7 +345,7 @@ class FCModel(torch.nn.Module):
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
 
-        return F.sigmoid(x) + config.LABEL_LOSS
+        return F.tanh(x)
 
 
 class FCValueFunction(ValueFunction):
