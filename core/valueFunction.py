@@ -289,11 +289,16 @@ class PGValueFunction(ValueFunction):
         input = Variable(torch.FloatTensor([self.data_reshape(board_sample)]))
         legal_moves_map = Variable(torch.FloatTensor(legal_moves_map)).view(-1, 64)
 
-        # Leave distribution produced by network unchanged but restrict the actions that can be sampled to legal moves
         probs = self.model(input)
-        distribution = Categorical(probs)
-        action = self.legal_moves_for_policy_gradient(probs, legal_moves_map)
 
+        # ------------ HACK ------------ #
+        legal_probs = probs * legal_moves_map  # set illegal move probs to 0
+        legal_probs = legal_probs + legal_probs.min().abs() + 1e-8  # shift to positive
+        legal_probs = legal_probs * legal_moves_map  # set illegal move probs to 0
+        # ------------ HACK ------------ #
+
+        distribution = Categorical(legal_probs)
+        action = distribution.sample()
         move = (action.data[0] // 8, action.data[0] % 8)
         log_prob = distribution.log_prob(action)
         return move, log_prob
@@ -311,27 +316,6 @@ class PGValueFunction(ValueFunction):
         self.optimizer.step()
 
         return policy_loss.data[0]
-
-    def legal_moves_for_policy_gradient(self, x, legal_moves_map):
-        input = x
-
-        # Improve this regularization step!
-        illegal_map = (legal_moves_map - 1)
-        x = torch.mul(x, legal_moves_map) - illegal_map * 1
-
-        x = F.softmax(x, dim=1)
-        x = torch.mul(x, legal_moves_map)
-
-        # DEBUG line
-        if x.sum().data[0] <= 0:
-            # Random move for now
-            return Categorical(legal_moves_map).sample()
-
-        x = x / torch.abs(x.sum())
-        # Possibly set everything except the max move to 0 for evaluation -> make player deterministic
-        legal_distribution = Categorical(x)
-        action = legal_distribution.sample()
-        return action
 
 
 class PGLargeValueFunction(PGValueFunction):

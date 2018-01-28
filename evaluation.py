@@ -67,11 +67,9 @@ def compare_players(player1, player2, games=EVALUATION_GAMES, silent=False):
 
 if __name__ == "__main__":
 
-    # td_black = config.load_player("TDPlayer_Black_ValueFunction|Async|")
-    # td_white = config.load_player("TDPlayer_White_ValueFunction_BEST|Async|")
-
     td_black = config.load_player("ReinforcePlayer_Black_PGLargeValueFunction|Continuous shared vF training|")
-    td_white = config.load_player("ReinforcePlayer_White_PGValueFunction|Training|")
+    td_white = HeuristicPlayer(config.WHITE)
+    # td_white = config.load_player("TDPlayer_White_HugeValueFunction-BEST-|Async training|")
 
     assert td_black.color == config.BLACK
     assert td_white.color == config.WHITE
