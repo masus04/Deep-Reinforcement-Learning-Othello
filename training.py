@@ -31,7 +31,7 @@ def train_and_evaluate(player1, player2, games, evaluation_period, experiment_na
     start_time = datetime.now()
 
     for i in range(games//evaluation_period):
-        simulation.run_simulations(episodes=evaluation_period, silent=silent)
+        simulation.run_simulations(episodes=evaluation_period, silent=True)
         evaluation.evaluate_all([player1, player2], 20)
 
         if not silent:
@@ -48,21 +48,21 @@ def train_and_evaluate(player1, player2, games, evaluation_period, experiment_na
 if __name__ == "__main__":
     """ This script is run in order to test if all available ValueFunctions can be trained as expected """
 
-    strategies = [vF.LargeValueFunction]
+    strategies = [vF.PGLargeValueFunction]
 
     for strategy in strategies:
         """ Parameters """
-        # player1 = ReinforcePlayer(color=config.BLACK, lr=0.001)
-        # player2 = ReinforcePlayer(color=config.WHITE, lr=0.0001)
+        player1 = ReinforcePlayer(color=config.BLACK, lr=0.001)
+        player2 = ReinforcePlayer(color=config.WHITE, lr=0.0001)
 
         """ Continue training """
-        player1 = config.load_player("ReinforcePlayer_Black_PGValueFunction|Training|")
-        player2 = config.load_player("ReinforcePlayer_White_PGValueFunction|Training|")
+        # player1 = config.load_player("ReinforcePlayer_Black_PGValueFunction|Training|")
+        # player2 = config.load_player("ReinforcePlayer_White_PGValueFunction|Training|")
 
         assert player1.color == config.BLACK
         assert player2.color == config.WHITE
 
-        TOTAL_GAMES = 1000000
+        TOTAL_GAMES = 100000
         EVALUATION_PERIOD = TOTAL_GAMES//100
 
         """ Execution """

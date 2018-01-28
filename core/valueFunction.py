@@ -36,7 +36,7 @@ class Model(torch.nn.Module):
 
         self.final_conv = torch.nn.Conv2d(in_channels=self.conv_channels, out_channels=1, kernel_size=1, padding=0)
 
-    def forward(self, x, legal_moves_map=None):
+    def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
@@ -49,20 +49,10 @@ class Model(torch.nn.Module):
         x = self.fc1(x)
 
         if self.policy_gradient:
-            return self.legal_moves_for_policy_gradient(x, legal_moves_map)
+            return x
 
         else:
             return F.sigmoid(x) + config.LABEL_LOSS
-
-    def legal_moves_for_policy_gradient(self, x, legal_moves_map):
-        input = x
-        # Apply some smart regularization (before softmax?)
-        # x = F.softmax(x, dim=1)
-
-        # Set illegal move probabilities to 0 and regularize so that they sum up to 1
-        x = torch.mul(x, legal_moves_map)
-        x = x / x.sum()
-        return x
 
 
 class LargeModel(Model):
@@ -87,7 +77,7 @@ class LargeModel(Model):
         self.fc1 = torch.nn.Linear(in_features=self.conv_to_linear_params_size, out_features=self.conv_to_linear_params_size//2)
         self.fc2 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//2, out_features=self.output_features)
 
-    def forward(self, x, legal_moves_map=None):
+    def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
@@ -101,7 +91,7 @@ class LargeModel(Model):
         x = self.fc2(x)
 
         if self.policy_gradient:
-            return self.legal_moves_for_policy_gradient(x, legal_moves_map)
+            return x
 
         else:
             return F.sigmoid(x) + config.LABEL_LOSS
@@ -131,7 +121,7 @@ class HugeModel(Model):
         self.fc3 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//4, out_features=self.conv_to_linear_params_size//8)
         self.fc4 = torch.nn.Linear(in_features=self.conv_to_linear_params_size//8, out_features=self.output_features)
 
-    def forward(self, x, legal_moves_map=None):
+    def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
@@ -147,7 +137,7 @@ class HugeModel(Model):
         x = self.fc4(x)
 
         if self.policy_gradient:
-            return self.legal_moves_for_policy_gradient(x, legal_moves_map)
+            return x
 
         else:
             return F.sigmoid(x) + config.LABEL_LOSS
@@ -199,7 +189,7 @@ class ValueFunction:
         if config.CUDA:
             self.model.cuda(0)
         self.learning_rate = learning_rate
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         self.criterion = torch.nn.MSELoss()
 
     def data_reshape(self, board_sample):
@@ -298,9 +288,12 @@ class PGValueFunction(ValueFunction):
     def evaluate(self, board_sample, legal_moves_map):
         input = Variable(torch.FloatTensor([self.data_reshape(board_sample)]))
         legal_moves_map = Variable(torch.FloatTensor(legal_moves_map)).view(-1, 64)
-        probs = self.model(input, legal_moves_map)
+
+        # Leave distribution produced by network unchanged but restrict the actions that can be sampled to legal moves
+        probs = self.model(input)
         distribution = Categorical(probs)
-        action = distribution.sample()
+        action = self.legal_moves_for_policy_gradient(probs, legal_moves_map)
+
         move = (action.data[0] // 8, action.data[0] % 8)
         log_prob = distribution.log_prob(action)
         return move, log_prob
@@ -318,6 +311,27 @@ class PGValueFunction(ValueFunction):
         self.optimizer.step()
 
         return policy_loss.data[0]
+
+    def legal_moves_for_policy_gradient(self, x, legal_moves_map):
+        input = x
+
+        # Improve this regularization step!
+        illegal_map = (legal_moves_map - 1)
+        x = torch.mul(x, legal_moves_map) - illegal_map * 1
+
+        x = F.softmax(x, dim=1)
+        x = torch.mul(x, legal_moves_map)
+
+        # DEBUG line
+        if x.sum().data[0] <= 0:
+            # Random move for now
+            return Categorical(legal_moves_map).sample()
+
+        x = x / torch.abs(x.sum())
+        # Possibly set everything except the max move to 0 for evaluation -> make player deterministic
+        legal_distribution = Categorical(x)
+        action = legal_distribution.sample()
+        return action
 
 
 class PGLargeValueFunction(PGValueFunction):
@@ -356,7 +370,7 @@ class FCValueFunction(ValueFunction):
         self.model = FCModel()
         if config.CUDA:
             self.model.cuda(0)
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
 
 
 class NoValueFunction:

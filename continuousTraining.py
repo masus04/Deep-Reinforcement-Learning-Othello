@@ -75,17 +75,17 @@ def train_with_shared_network(player, games, evaluation_period, experiment_name)
 if __name__ == "__main__":
 
     """ Parameters """
-    PLAYER = ReinforcePlayer(color=config.BLACK, lr=0.001, alpha=0.003, e=0.001)
+    PLAYER = ReinforcePlayer(color=config.BLACK, lr=0.001)
     PLAYER2 = None
 
-    # PLAYER = config.load_player("TDPlayer_Black_ValueFunction|Continuous|")
+    # PLAYER = config.load_player("ReinforcePlayer_Black_PGLargeValueFunction|Continuous shared vF training|")
     # PLAYER2 = config.load_player("TDPlayer_White_ValueFunction|Continuous|")
 
     assert PLAYER.color == config.BLACK
     # assert PLAYER2.color == config.WHITE
 
     ITERATIONS = 100
-    GAMES_PER_ITERATION = 500
+    GAMES_PER_ITERATION = 5000
 
     """ Execution """
     start = datetime.now()
