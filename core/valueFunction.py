@@ -49,7 +49,7 @@ class Model(torch.nn.Module):
         x = self.fc1(x)
 
         if self.policy_gradient:
-            return x
+            return F.softmax(F.sigmoid(x), dim=1)
 
         else:
             return F.tanh(x)
@@ -91,7 +91,7 @@ class LargeModel(Model):
         x = self.fc2(x)
 
         if self.policy_gradient:
-            return x
+            return F.softmax(F.sigmoid(x), dim=1)
 
         else:
             return F.tanh(x)
@@ -137,7 +137,7 @@ class HugeModel(Model):
         x = self.fc4(x)
 
         if self.policy_gradient:
-            return x
+            return F.softmax(F.sigmoid(x), dim=1)
 
         else:
             return F.tanh(x)
@@ -293,8 +293,6 @@ class PGValueFunction(ValueFunction):
 
         # ------------ HACK ------------ #
         legal_probs = probs * legal_moves_map  # set illegal move probs to 0
-        legal_probs = legal_probs + legal_probs.min().abs() + 1e-8  # shift to positive
-        legal_probs = legal_probs * legal_moves_map  # set illegal move probs to 0
         # ------------ HACK ------------ #
 
         distribution = Categorical(legal_probs)

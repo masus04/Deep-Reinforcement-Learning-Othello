@@ -85,7 +85,7 @@ if __name__ == "__main__":
     # assert PLAYER2.color == config.WHITE
 
     ITERATIONS = 100
-    GAMES_PER_ITERATION = 5000
+    GAMES_PER_ITERATION = 2500
 
     """ Execution """
     start = datetime.now()
