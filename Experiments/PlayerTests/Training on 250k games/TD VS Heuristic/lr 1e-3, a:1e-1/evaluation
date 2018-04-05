@@ -1,6 +1,0 @@
-Evaluating TDPlayer_Black_ValueFunction:
-Episode 100/100 |**********|100%|**********| Time: 0:00:17
-TDPlayer_Black_ValueFunction won 14% of games against HeuristicPlayer_White_
-Episode 100/100 |**********|100%|**********| Time: 0:00:12
-TDPlayer_Black_ValueFunction won 54% of games against RandomPlayer_White_
-|-- TDPlayer_Black_ValueFunction achieved an evaluation score of: 34.0 --|
